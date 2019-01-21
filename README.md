@@ -1,5 +1,5 @@
-# ProgrammingLearning
-Grupa wspólnej nauki poprzez rozwiązywanie wylistowanych projektów. W skrócie użytkownicy tworzą projekty, po zrealizowaniu projektu następuje sprawdzanie rozwiązania przez innych uczestników.
+# Stowarzyszenie Nauki Javy
+Grupa wspólnej nauki ucząca się poprzez rozwiązywanie wylistowanych projektów. W skrócie użytkownicy tworzą projekty, po zrealizowaniu projektu następuje sprawdzanie rozwiązania przez innych uczestników.
 
 # Jak zączać
 Aby zacząć naukę nie trzeba do nikogo pisać i prosić o pozwolenie, wystarczy wykonać poniższe kroki.
