@@ -5,7 +5,7 @@ Grupa wspólnej nauki ucząca się poprzez rozwiązywanie wylistowanych projekt�
 Aby zacząć naukę nie trzeba do nikogo pisać i prosić o pozwolenie, wystarczy wykonać poniższe kroki.
 
 1. Załóż konto na github.com
-2. Zrób fork tego repozytorium.
+2. Zrób fork tego repozytorium.  https://help.github.com/articles/fork-a-repo/#fork-an-example-repository
 3. Sklonuj repozytorium na dysk komendą:
 ```
 git clone https://github.com/1024kb-pl/StowarzyszenieNaukiJavy.git
