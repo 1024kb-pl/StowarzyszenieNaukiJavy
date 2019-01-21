@@ -49,5 +49,7 @@ Pamiętaj, aby wcześniej zacomitować swoje zmiany (git add + commit).
 https://github.com/<nazwa-konta-github>/StowarzyszenieNaukiJavy/branches
 ```
 i tak samo jak podczas rejestracji wykonaj Pull Request swojego branchu do mastera.
+
 6. Nadszedł czas sprawdzenia twojego kodu - mogą to robić wszyscy inni uczestnicy grupy. Jeśli otrzymasz co najmniej 3 approve Twój projekt zostanie dołączony do gałęzi master.
-7. Właśnie ukończyłeś projekt. Wybierz kolejny i kontynuuj naukę.
+
+7. Gratulację, właśnie ukończyłeś swój pierwszy projekt. Wybierz kolejny i kontynuuj naukę.
