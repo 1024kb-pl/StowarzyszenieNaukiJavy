@@ -27,6 +27,7 @@ git push origin --all
 https://github.com/<nazwa-konta-github>/StowarzyszenieNaukiJavy/branches
 ```
 i przy nazwie swojego brancha kliknij "New Pull Request".
+
 9. Ważne żeby merge był z Twojego brancha na gałąź master. Naciśnij "Create pull request".
 10. Po zaakceptowaniu pull requesta jesteś gotowy do rozpoczęcia nauki
 11. Po jakimś czasie otrzymasz zaproszenie do repozytorium StowarzyszenieNaukiJavy, przyjęcie go pozwoli Ci oceniać kod innych uczestników
