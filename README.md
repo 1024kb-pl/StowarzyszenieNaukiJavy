@@ -8,7 +8,7 @@ Aby zacząć naukę nie trzeba do nikogo pisać i prosić o pozwolenie, wystarcz
 2. Zrób fork tego repozytorium.
 3. Sklonuj repozytorium na dysk komendą:
 ```
-git clone https://github.com/1024kb-pl/ProgrammingLearning.git
+git clone https://github.com/1024kb-pl/StowarzyszenieNaukiJavy.git
 ```
 4. Utwórz swój branch (np. login, imię+nazwisko) komendą:
 ```
@@ -22,7 +22,7 @@ git add *
 git commit -m "Register <twoja-nazwa>"
 git push origin --all
 ```
-8. Następnie wejdź na stronę https://github.com/<nazwa-konta-github>/ProgrammingLearning/branches i przy nazwie swojego brancha kliknij "New Pull Request".
+8. Następnie wejdź na stronę https://github.com/<nazwa-konta-github>/StowarzyszenieNaukiJavy/branches i przy nazwie swojego brancha kliknij "New Pull Request".
 9. Ważne żeby merge był z Twojego brancha na gałąź master. Naciśnij "Create pull request".
 10. Po zaakceptowaniu pull requesta jesteś gotowy do rozpoczęcia nauki
 
@@ -37,6 +37,6 @@ W repozytorium znajdziesz listę projektów, które możesz wykonać. Wybierz so
 git push origin <nazwa-twojego-brancha>
 ```
 Pamiętaj, aby wcześniej zacomitować swoje zmiany (git add + commit).
-5. Jeśli czujesz, że projekt jest gotowy to wejdź na stronę https://github.com/1024kb-pl/ProgrammingLearning/pulls i tak samo jak podczas rejestracji wykonaj Pull Request swojego branchu do mastera.
+5. Jeśli czujesz, że projekt jest gotowy to wejdź na stronę https://github.com/<nazwa-konta-github>/StowarzyszenieNaukiJavy/branches i tak samo jak podczas rejestracji wykonaj Pull Request swojego branchu do mastera.
 6. Nadszedł czas sprawdzenia twojego kodu - mogą to robić wszyscy inni uczestnicy grupy. Jeśli otrzymasz co najmniej 3 approve Twój projekt zostanie dołączony do gałęzi master.
 7. Właśnie ukończyłeś projekt. Wybierz kolejny i kontynuuj naukę.
