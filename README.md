@@ -43,6 +43,7 @@ W repozytorium znajdziesz listę projektów, które możesz wykonać. Wybierz so
 git push origin <nazwa-twojego-brancha>
 ```
 Pamiętaj, aby wcześniej zacomitować swoje zmiany (git add + commit).
+
 5. Jeśli czujesz, że projekt jest gotowy to wejdź na stronę 
 ```
 https://github.com/<nazwa-konta-github>/StowarzyszenieNaukiJavy/branches
