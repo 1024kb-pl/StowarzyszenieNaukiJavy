@@ -2,7 +2,7 @@
 name: Mam problem
 about: Użyj tego szablonu jeśli masz problem z implementacją - np. coś nie działa
 title: "[HELP] "
-labels: ''
+labels: help
 assignees: ''
 
 ---
