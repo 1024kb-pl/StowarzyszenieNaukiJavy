@@ -33,7 +33,7 @@ i przy nazwie swojego brancha kliknij "New Pull Request".
 11. Po jakimś czasie otrzymasz zaproszenie do repozytorium StowarzyszenieNaukiJavy, przyjęcie go pozwoli Ci oceniać kod innych uczestników
 
 # Jak się uczyć
-W repozytorium znajdziesz listę projektów, które możesz wykonać. Wybierz sobie jeden z nich i wykonaj następujące kroki:
+W repozytorium znajdziesz listę projektów (https://github.com/1024kb-pl/StowarzyszenieNaukiJavy/wiki/Lista-projekt%C3%B3w-do-wykonania), które możesz wykonać. Wybierz sobie jeden z nich i wykonaj następujące kroki:
 
 1. Przejdź do swojego katalogu w projekcie (nazwa podczas rejestracji)
 2. Utwórz w nim projekt z nazwą projektu jaki wybrałeś z listy
