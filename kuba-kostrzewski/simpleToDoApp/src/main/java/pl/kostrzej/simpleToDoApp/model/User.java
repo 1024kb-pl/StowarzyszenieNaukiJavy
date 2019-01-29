@@ -19,14 +19,17 @@ public class User implements Serializable {
     private String email;
     @Column(nullable = false)
     private String question;
+    @Column(nullable = false)
+    private String answer;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Task> tasks = new ArrayList<>();
 
-    public User(String login, String password, String email, String question, List<Task> tasks) {
+    public User(String login, String password, String email, String question, String answer, List<Task> tasks) {
         this.login = login;
         this.password = password;
         this.email = email;
         this.question = question;
+        this.answer = answer;
         this.tasks = tasks;
     }
 
@@ -73,6 +76,14 @@ public class User implements Serializable {
         this.question = question;
     }
 
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
     public List<Task> getTasks() {
         return tasks;
     }
@@ -89,6 +100,7 @@ public class User implements Serializable {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
                 ", tasks=" + tasks +
                 '}';
     }
