@@ -1,4 +1,6 @@
-package pl.kostrzej.simpleToDoApp.model;
+package pl.kostrzej.simpleToDoApp.components.user;
+
+import pl.kostrzej.simpleToDoApp.components.task.Task;
 
 import javax.persistence.*;
 import java.io.Serializable;

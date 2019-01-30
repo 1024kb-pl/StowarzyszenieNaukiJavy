@@ -1,11 +1,9 @@
-package pl.kostrzej.simpleToDoApp.service;
+package pl.kostrzej.simpleToDoApp.components.task;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import pl.kostrzej.simpleToDoApp.model.Task;
-import pl.kostrzej.simpleToDoApp.model.User;
-import pl.kostrzej.simpleToDoApp.repository.TaskRepository;
-import pl.kostrzej.simpleToDoApp.repository.UserRepository;
+import org.springframework.stereotype.Controller;
+import pl.kostrzej.simpleToDoApp.components.user.User;
+import pl.kostrzej.simpleToDoApp.components.validator.FieldValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,40 +12,41 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
-@Service
-public class TaskService {
+@Controller
+public class TaskConsoleController implements TaskController {
 
-    Scanner scanner;
-    TaskRepository taskRepository;
-    UserRepository userRepository;
+    private Scanner scanner;
+    private TaskService taskService;
+    private FieldValidator fieldValidator;
 
     @Autowired
-    public TaskService(Scanner scanner, TaskRepository taskRepository, UserRepository userRepository) {
+    public TaskConsoleController(Scanner scanner, TaskService taskService, FieldValidator fieldValidator) {
         this.scanner = scanner;
-        this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
+        this.taskService = taskService;
+        this.fieldValidator = fieldValidator;
     }
 
+    @Override
     public User addTask(User user){
-        Task taskToAdd = new Task();
-        taskToAdd.setUser(user);
-        String title;
+        String title, description;
+        Date date;
+        boolean done;
         do {
             System.out.println("Podaj tytuł:");
             title = scanner.nextLine();
-        } while (isFieldEmpty(title, "Tytuł"));
-        taskToAdd.setTitle(title);
+        } while (fieldValidator.isFieldEmpty(title, "Tytuł"));
         System.out.println("Podaj opis lub zostaw puste:");
-        taskToAdd.setDescription(scanner.nextLine());
-        taskToAdd.setDate(readDate());
-        taskToAdd.setDone(readDone());
-        taskRepository.save(taskToAdd);
-        return userRepository.findByLogin(user.getLogin());
+        description = scanner.nextLine();
+        date = readDate();
+        done = readDone();
+        return taskService.addTask(user, title, description, date, done);
     }
-    public void showAllTasks(User user){
+
+    @Override
+    public void showAllUserTasks(User user){
         System.out.println("Lista zadań:");
         List<Task> userTasks = user.getTasks();
-        if (userTasks.size() == 0 || userTasks == null){
+        if (userTasks.isEmpty() || userTasks == null){
             System.out.println("Brak zadań");
         } else {
             IntStream
@@ -61,12 +60,6 @@ public class TaskService {
                             }
                     );
         }
-    }
-    private boolean isFieldEmpty(String value, String name){
-        if (value == null || value.equals("")){
-            System.out.println("Pole \"" + name + "\" nie może być puste!");
-            return true;
-        } else return false;
     }
     private boolean readDone(){
         do {
@@ -86,8 +79,8 @@ public class TaskService {
     private Date readDate(){
         Date date = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        StringBuilder builder = new StringBuilder();
         while (date == null){
+            StringBuilder builder = new StringBuilder();
             System.out.println("Podaj rok w formacie yyyy: ");
             builder.append(scanner.nextLine() + "-");
             System.out.println("Podaj miesiąc w formacie MM: ");
