@@ -1,5 +1,7 @@
 package pl.kostrzej.simpleToDoApp.components.task;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.kostrzej.simpleToDoApp.components.user.User;
 
 import javax.persistence.*;
@@ -7,6 +9,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "tasks")
 public class Task implements Serializable {
 
@@ -30,68 +34,5 @@ public class Task implements Serializable {
         this.description = description;
         this.date = date;
         this.done = done;
-    }
-
-    public Task() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public boolean isDone() {
-        return done;
-    }
-
-    public void setDone(boolean done) {
-        this.done = done;
-    }
-
-    @Override
-    public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", user_id=" + user.getId() +
-                ", title=" + title +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", done=" + done +
-                '}';
     }
 }

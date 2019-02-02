@@ -1,5 +1,6 @@
 package pl.kostrzej.simpleToDoApp.components.task;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import pl.kostrzej.simpleToDoApp.components.user.User;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 @Controller
+@Slf4j
 public class TaskConsoleController implements TaskController {
 
     private Scanner scanner;
@@ -30,7 +32,6 @@ public class TaskConsoleController implements TaskController {
     public User addTask(User user){
         String title, description;
         Date date;
-        boolean done;
         do {
             System.out.println("Podaj tytuł:");
             title = scanner.nextLine();
@@ -38,17 +39,20 @@ public class TaskConsoleController implements TaskController {
         System.out.println("Podaj opis lub zostaw puste:");
         description = scanner.nextLine();
         date = readDate();
-        done = readDone();
-        return taskService.addTask(user, title, description, date, done);
+        log.info("Date: " + date);
+        return taskService.addTask(user, title, description, date, false);
     }
 
     @Override
     public void showAllUserTasks(User user){
+        log.info("Show all tasks process initialized.");
         System.out.println("Lista zadań:");
         List<Task> userTasks = user.getTasks();
         if (userTasks.isEmpty() || userTasks == null){
+            log.info("Empty task list");
             System.out.println("Brak zadań");
         } else {
+            log.info("Task list size = " + userTasks.size());
             IntStream
                     .range(0, userTasks.size())
                     .forEach(i -> {
@@ -61,22 +65,8 @@ public class TaskConsoleController implements TaskController {
                     );
         }
     }
-    private boolean readDone(){
-        do {
-            System.out.println("Zadanie wykonanie (T/N)?");
-            switch (scanner.nextLine()){
-                case "T":
-                case "t":
-                    return true;
-                case "N":
-                case "n":
-                    return false;
-                default:
-                    System.out.println("Niepoprawna wartość! Wpisz T lub N");
-            }
-        }while (true);
-    }
     private Date readDate(){
+        log.info("Read date process initialized.");
         Date date = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         while (date == null){
@@ -93,8 +83,11 @@ public class TaskConsoleController implements TaskController {
             builder.append(scanner.nextLine());
             try {
                 date = dateFormat.parse(builder.toString());
+                log.info("Date format is valid.");
             } catch (ParseException e){
                 System.out.println("Podane dane są niewłaściwe!");
+                log.info("Date format is invalid. " + e.getClass());
+                log.info("Invalid date: " + builder.toString());
             }
         }
         return date;

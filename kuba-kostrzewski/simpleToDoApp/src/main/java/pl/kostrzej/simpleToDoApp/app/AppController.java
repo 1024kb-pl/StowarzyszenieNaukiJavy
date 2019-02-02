@@ -1,5 +1,6 @@
 package pl.kostrzej.simpleToDoApp.app;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import pl.kostrzej.simpleToDoApp.components.login.LoginController;
@@ -11,9 +12,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 @Controller
+@Slf4j
 public class AppController {
-
-
 
     private Scanner scanner;
     private LoginController loginController;
@@ -23,6 +23,7 @@ public class AppController {
     @Autowired
     public AppController(Scanner scanner, LoginController loginController, UserController userController,
                          TaskController taskController) {
+
         this.scanner = scanner;
         this.loginController = loginController;
         this.userController = userController;
@@ -36,14 +37,18 @@ public class AppController {
             switch (chooseWelcomeMenuOption()) {
                 case LOGIN:
                     user = loginController.logIn();
+                    log.info("Logging user finished. User: " + user);
                     break;
                 case REGISTER:
                     userController.addUser();
+                    log.info("Registration finished.");
                     break;
                 case EXIT:
+                    log.info("Exit");
                     exit = true;
                     break;
                 default:
+                    log.info("Undefined option");
                     System.out.println("Podano błędny nr");
             }
         }
@@ -52,14 +57,19 @@ public class AppController {
             switch (chooseMainMenuOption()){
                 case SHOW_ALL_TASKS:
                     taskController.showAllUserTasks(user);
+                    log.info("Show all tasks finished");
                     break;
                 case ADD_NEW_TASK:
+                    log.info("User's task list size before adding new task = " + user.getTasks().size());
                     user = taskController.addTask(user);
+                    log.info("User's task list size after adding new task = " + user.getTasks().size());
                     break;
                 case EXIT:
+                    log.info("Exit");
                     exit = true;
                     break;
                 default:
+                    log.info("Undefined option");
                     System.out.println("Podano błędny nr");
             }
         }
@@ -73,6 +83,7 @@ public class AppController {
         Arrays.stream(WelcomeMenuOptions.values()).forEach(System.out::println);
     }
     private WelcomeMenuOptions chooseWelcomeMenuOption(){
+        log.info("Choose welcome menu option process initialized.");
         boolean isOptionCorrect = false;
         WelcomeMenuOptions option = null;
         while (!isOptionCorrect){
@@ -81,15 +92,18 @@ public class AppController {
             scanner.nextLine();
             try {
                 option = WelcomeMenuOptions.returnIfCorrect(optionId);
+                log.info("Correct option " + option);
                 isOptionCorrect = true;
             } catch (InvalidOptionException e) {
+                log.info("Incorrect option. " + e.getClass());
                 System.err.println(e.getMessage());
             }
         }
-
+        log.info("Choose welcome menu option process finished.");
         return option;
     }
     private MainMenuOptions chooseMainMenuOption(){
+        log.info("Choose main menu option process initialized.");
         boolean isOptionCorrect = false;
         MainMenuOptions option = null;
         while (!isOptionCorrect){
@@ -98,11 +112,14 @@ public class AppController {
             scanner.nextLine();
             try {
                 option = MainMenuOptions.returnIfCorrect(optionId);
+                log.info("Correct option " + option);
                 isOptionCorrect = true;
             } catch (InvalidOptionException e) {
+                log.info("Incorrect option. " + e.getClass());
                 System.err.println(e.getMessage());
             }
         }
+        log.info("Choose main menu option process finished");
         return option;
     }
 }

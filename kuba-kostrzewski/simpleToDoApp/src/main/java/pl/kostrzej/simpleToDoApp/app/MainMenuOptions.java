@@ -1,5 +1,10 @@
 package pl.kostrzej.simpleToDoApp.app;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Arrays;
+
+@Slf4j
 public enum MainMenuOptions {
 
     SHOW_ALL_TASKS(1, "Pokaż listę wszystkich zadań"),
@@ -14,9 +19,10 @@ public enum MainMenuOptions {
         this.number = number;
     }
     static MainMenuOptions returnIfCorrect(int number){
-        if (number<1 || number>values().length)
-            throw new InvalidOptionException();
-        return values()[number-1];
+        return Arrays.stream(values())
+                .filter(value -> value.number == number)
+                .findAny()
+                .orElseThrow(() -> new InvalidOptionException());
     }
 
     @Override

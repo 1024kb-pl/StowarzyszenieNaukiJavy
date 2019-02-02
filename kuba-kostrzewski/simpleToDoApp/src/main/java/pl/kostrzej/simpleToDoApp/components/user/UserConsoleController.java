@@ -1,5 +1,6 @@
 package pl.kostrzej.simpleToDoApp.components.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import pl.kostrzej.simpleToDoApp.components.validator.FieldValidator;
@@ -8,6 +9,7 @@ import pl.kostrzej.simpleToDoApp.components.validator.UserAlreadyExistsException
 import java.util.Scanner;
 
 @Controller
+@Slf4j
 public class UserConsoleController implements UserController{
 
     private UserService userService;
@@ -23,6 +25,7 @@ public class UserConsoleController implements UserController{
 
     @Override
     public void addUser(){
+        log.info("Register new user process initialized.");
         User user = new User();
         String login, password, email, question, answer;
         do {
@@ -48,22 +51,30 @@ public class UserConsoleController implements UserController{
             answer = scanner.nextLine();
         } while (fieldValidator.isFieldEmpty(answer, "Odpowiedź"));
         user.setAnswer(answer);
+        log.info("User to save: " + user);
         try{
             userService.addUser(user);
+            log.info("User saved successfully.");
             System.out.println("Użytkownik został poprawnie zarejestrowany\n" +
                     "Możesz się teraz zalogować");
         } catch (UserAlreadyExistsException e){
+            log.info("User already exists." + e.getClass());
             System.err.println(e.getMessage());
         }
     }
     private boolean isPasswordCorrect(String password){
         if (fieldValidator.isFieldEmpty(password, "Hasło")){
+            log.info("Password is empty.");
             return false;
         }
         System.out.println("Powtórz hasło:");
         if (!password.equals(scanner.nextLine())){
+            log.info("Password not match.");
             System.out.println("Podane hasła są różne!");
             return false;
-        } else return true;
+        } else {
+            log.info("Password correct.");
+            return true;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package pl.kostrzej.simpleToDoApp.components.user;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.kostrzej.simpleToDoApp.components.task.Task;
 
 import javax.persistence.*;
@@ -8,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "users")
 public class User implements Serializable {
 
@@ -35,75 +39,12 @@ public class User implements Serializable {
         this.tasks = tasks;
     }
 
-    public User() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", question='" + question + '\'' +
-                ", answer='" + answer + '\'' +
-                ", tasks=" + tasks +
+                ", tasks size=" + tasks.size() +
                 '}';
     }
 }

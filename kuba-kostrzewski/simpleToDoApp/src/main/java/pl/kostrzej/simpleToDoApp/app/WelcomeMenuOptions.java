@@ -1,5 +1,7 @@
 package pl.kostrzej.simpleToDoApp.app;
 
+import java.util.Arrays;
+
 public enum WelcomeMenuOptions{
 
     LOGIN(1, "Zaloguj się"),
@@ -14,9 +16,10 @@ public enum WelcomeMenuOptions{
         this.name = name;
     }
     static WelcomeMenuOptions returnIfCorrect(int number){
-        if (number<1 || number>values().length)
-            throw new InvalidOptionException();
-        return values()[number-1];
+        return Arrays.stream(values())
+                .filter(value -> value.number == number)
+                .findAny()
+                .orElseThrow(() ->new InvalidOptionException());
     }
 
     @Override
