@@ -64,6 +64,11 @@ public class AppController {
                     user = taskController.addTask(user);
                     log.info("User's task list size after adding new task = " + user.getTasks().size());
                     break;
+                case DELETE_TASK:
+                    log.info("User's task list size before deleting task = " + user.getTasks().size());
+                    user = taskController.deleteTask(user);
+                    log.info("User's task list size after deleting task = " + user.getTasks().size());
+                    break;
                 case EXIT:
                     log.info("Exit");
                     exit = true;

@@ -6,5 +6,6 @@ public interface TaskController {
 
     User addTask(User user);
     void showAllUserTasks(User user);
+    User deleteTask(User user);
 
 }

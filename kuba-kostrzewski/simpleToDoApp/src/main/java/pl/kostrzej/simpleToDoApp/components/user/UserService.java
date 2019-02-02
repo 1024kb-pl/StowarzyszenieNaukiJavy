@@ -24,5 +24,9 @@ public class UserService {
         userRepository.save(user);
         log.info("User saved in database successfully.");
     }
+    public User getUser(long id){
+        log.info("Get user by id process initialized.");
+        return userRepository.findById(id).get();
+    }
 
 }

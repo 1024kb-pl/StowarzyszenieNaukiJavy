@@ -27,7 +27,7 @@ public class User implements Serializable {
     private String question;
     @Column(nullable = false)
     private String answer;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Task> tasks = new ArrayList<>();
 
     public User(String login, String password, String email, String question, String answer, List<Task> tasks) {

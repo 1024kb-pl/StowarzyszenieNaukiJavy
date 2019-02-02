@@ -26,13 +26,13 @@ public class Task implements Serializable {
     private String description;
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
-    private boolean done;
+    private TaskStatus status;
 
-    public Task(User user, String title, String description, Date date, boolean done) {
+    public Task(User user, String title, String description, Date date, TaskStatus status) {
         this.user = user;
         this.title = title;
         this.description = description;
         this.date = date;
-        this.done = done;
+        this.status = status;
     }
 }

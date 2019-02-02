@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import pl.kostrzej.simpleToDoApp.components.user.User;
+import pl.kostrzej.simpleToDoApp.components.user.UserService;
 import pl.kostrzej.simpleToDoApp.components.validator.FieldValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
@@ -19,17 +21,20 @@ public class TaskConsoleController implements TaskController {
 
     private Scanner scanner;
     private TaskService taskService;
+    private UserService userService;
     private FieldValidator fieldValidator;
 
     @Autowired
-    public TaskConsoleController(Scanner scanner, TaskService taskService, FieldValidator fieldValidator) {
+    public TaskConsoleController(Scanner scanner, TaskService taskService, UserService userService, FieldValidator fieldValidator) {
         this.scanner = scanner;
         this.taskService = taskService;
+        this.userService = userService;
         this.fieldValidator = fieldValidator;
     }
 
     @Override
     public User addTask(User user){
+        log.info("Adding new task process initialized.");
         String title, description;
         Date date;
         do {
@@ -40,7 +45,30 @@ public class TaskConsoleController implements TaskController {
         description = scanner.nextLine();
         date = readDate();
         log.info("Date: " + date);
-        return taskService.addTask(user, title, description, date, false);
+        return taskService.addTask(user, title, description, date);
+    }
+
+    @Override
+    public User deleteTask(User user) {
+        log.info("Deleting task process initialized.");
+        Integer taskToDeleteIndex = null;
+        showAllUserTasks(user);
+        System.out.println("Podaj nr zadania do usunięcia:");
+        try {
+            taskToDeleteIndex = readTaskIndex(user.getTasks());
+            taskService.deleteTask(user.getTasks().get(taskToDeleteIndex));
+            log.info("Task successfully deleted.");
+            return userService.getUser(user.getId());
+        } catch (InputMismatchException e){
+            log.info("Invalid data type");
+            System.out.println("Wpisano niewłaściwe dane! Podaj liczbę!");
+            return user;
+        } catch (IndexOutOfBoundsException e){
+            System.err.println(e.getMessage());
+            log.info("Invalid task number! Task list size= " + user.getTasks().size()
+                    + " Value typed to console = " + taskToDeleteIndex + " " + e.getCause().toString());
+            return user;
+        }
     }
 
     @Override
@@ -60,7 +88,7 @@ public class TaskConsoleController implements TaskController {
                                 System.out.println(i + 1 + ".\ttytuł: " + task.getTitle() + "\n" +
                                         "\topis: " + task.getDescription() + "\n" +
                                         "\tdata: " + task.getDate() + "\n" +
-                                        "\tzakończone: " + task.isDone());
+                                        "\tzakończone: " + task.getStatus());
                             }
                     );
         }
@@ -91,5 +119,17 @@ public class TaskConsoleController implements TaskController {
             }
         }
         return date;
+    }
+
+    private int readTaskIndex(List<Task> tasks){
+        int taskIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+        log.info("Correct data type.");
+        if (taskIndex<tasks.size() || taskIndex < 0) {
+            log.info("Correct index value");
+            return taskIndex;
+        }
+        log.info("Choosen no out of bounds. Choosen index: " + taskIndex + "Table size: " + tasks.size());
+        throw new IndexOutOfBoundsException("Zadanie o nr " + taskIndex + " nie istnieje!");
     }
 }
