@@ -1,0 +1,5 @@
+Cześć wszystkim, 
+Jestem Mario, mam 37 lat, od lat programuję obrabiarki numeryczne. Nudzi mnie już to.
+Uwielbiam babrać się w kodzie (ostatnio mało czasu miałem, teraz chcę nadrobić).
+Moje główne języki to Java i Python, ogarniam wzorce projektowe, UML, bazy danych,
+HTML/CSS w mniejszym lub większym stopniu. Hobbysta zwyczajnie.
