@@ -69,6 +69,10 @@ public class AppController {
                     user = taskController.deleteTask(user);
                     log.info("User's task list size after deleting task = " + user.getTasks().size());
                     break;
+                case CHANGE_TASK_STATUS:
+                    user = taskController.changeTaskStatus(user);
+                    log.info("User's task status changing process finished.");
+                    break;
                 case EXIT:
                     log.info("Exit");
                     exit = true;

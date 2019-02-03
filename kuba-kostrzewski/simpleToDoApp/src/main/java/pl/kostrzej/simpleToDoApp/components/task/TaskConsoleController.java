@@ -72,6 +72,46 @@ public class TaskConsoleController implements TaskController {
     }
 
     @Override
+    public User changeTaskStatus(User user) {
+        log.info("Changing task status process initialized.");
+        Integer taskToChangeIndex = null;
+        showAllUserTasks(user);
+        System.out.println("Podaj nr zadania, którego status chcesz zmienić:");
+        try {
+            taskToChangeIndex = readTaskIndex(user.getTasks());
+            log.info("Task index is valid.");
+            Task task = user.getTasks().get(taskToChangeIndex);
+            System.out.println("Obecny status zadania: " + task.getStatus());
+            log.info("Task status before change: " + task.getStatus());
+            System.out.println("Czy chcesz zmienić status? (Y/N)");
+            boolean answer = answerYes();
+            if (answer && task.getStatus().equals(TaskStatus.DONE)){
+                task.setStatus(TaskStatus.UNDONE);
+                log.info("Task status changed. Status: " + task.getStatus());
+                taskService.saveTask(task);
+                return userService.getUser(user.getId());
+            } else if (answer && task.getStatus().equals(TaskStatus.UNDONE)){
+                task.setStatus(TaskStatus.DONE);
+                log.info("Task status changed. Status: " + task.getStatus());
+                taskService.saveTask(task);
+                return userService.getUser(user.getId());
+            }
+        } catch (InputMismatchException e){
+            log.info("Invalid data type");
+            System.out.println("Wpisano niewłaściwe dane! Podaj liczbę!");
+        } catch (IndexOutOfBoundsException e){
+            System.err.println(e.getMessage());
+            log.info("Invalid task number! Task list size= " + user.getTasks().size()
+                    + " Value typed to console = " + taskToChangeIndex + " " + e.getCause().toString());
+        } catch (InvalidAnswerException e){
+            System.err.println(e.getMessage());
+            log.info("Invalid answer.");
+        }
+        log.info("Task status not changed.");
+        return user;
+    }
+
+    @Override
     public void showAllUserTasks(User user){
         log.info("Show all tasks process initialized.");
         System.out.println("Lista zadań:");
@@ -131,5 +171,18 @@ public class TaskConsoleController implements TaskController {
         }
         log.info("Choosen no out of bounds. Choosen index: " + taskIndex + "Table size: " + tasks.size());
         throw new IndexOutOfBoundsException("Zadanie o nr " + taskIndex + " nie istnieje!");
+    }
+    private boolean answerYes(){
+        String answer = scanner.nextLine();
+        if (answer.toUpperCase().equals("Y")){
+            log.info("Answer valid Y");
+            return true;
+        }
+        if (answer.toUpperCase().equals("N")){
+            log.info("Answer valid N");
+            return false;
+        }
+        log.info("Answer invalid " + answer);
+        throw new InvalidAnswerException();
     }
 }

@@ -3,7 +3,6 @@ package pl.kostrzej.simpleToDoApp.components.task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pl.kostrzej.simpleToDoApp.components.user.User;
 import pl.kostrzej.simpleToDoApp.components.user.UserRepository;
 
@@ -40,5 +39,10 @@ public class TaskService {
         log.info("Deleting task from database process initialized.");
         taskRepository.delete(task);
         log.info("Task deleted successfully.");
+    }
+    public void saveTask(Task task){
+        log.info("Saving " + task + " in database process initialized.");
+        taskRepository.save(task);
+        log.info("Task saved in database successfully.");
     }
 }
