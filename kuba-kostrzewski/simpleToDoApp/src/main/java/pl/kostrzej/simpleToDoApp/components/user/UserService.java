@@ -1,22 +1,17 @@
 package pl.kostrzej.simpleToDoApp.components.user;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kostrzej.simpleToDoApp.components.validator.UserValidator;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class UserService {
 
     private UserRepository userRepository;
     private UserValidator userValidator;
-
-    @Autowired
-    public UserService(UserRepository userRepository, UserValidator userValidator) {
-        this.userRepository = userRepository;
-        this.userValidator = userValidator;
-    }
 
     public void addUser(User user) {
         log.info("Add new user to database process initialized.");

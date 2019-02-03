@@ -1,18 +1,21 @@
 package pl.kostrzej.simpleToDoApp.app;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import pl.kostrzej.simpleToDoApp.components.login.LoginController;
+import pl.kostrzej.simpleToDoApp.components.task.Task;
 import pl.kostrzej.simpleToDoApp.components.task.TaskController;
 import pl.kostrzej.simpleToDoApp.components.user.User;
 import pl.kostrzej.simpleToDoApp.components.user.UserController;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 @Controller
 @Slf4j
+@AllArgsConstructor
 public class AppController {
 
     private Scanner scanner;
@@ -20,15 +23,6 @@ public class AppController {
     private UserController userController;
     private TaskController taskController;
 
-    @Autowired
-    public AppController(Scanner scanner, LoginController loginController, UserController userController,
-                         TaskController taskController) {
-
-        this.scanner = scanner;
-        this.loginController = loginController;
-        this.userController = userController;
-        this.taskController = taskController;
-    }
     public void run() {
         boolean exit = false;
         User user = null;
@@ -66,14 +60,32 @@ public class AppController {
                     break;
                 case DELETE_TASK:
                     log.info("User's task list size before deleting task = " + user.getTasks().size());
-                    taskController.deleteTask(user.getTasks());
-                    user = userController.getUser(user.getId());
-                    log.info("User's task list size after deleting task = " + user.getTasks().size());
+                    System.out.println("USUWANIE ZADANIA");
+                    Task taskToDelete = taskController.getTaskFromList(user.getTasks());
+                    if (taskToDelete != null){
+                        taskController.deleteTask(taskToDelete);
+                        user = userController.getUser(user.getId());
+                        log.info("User's task list size after deleting task = " + user.getTasks().size());
+                    }
                     break;
                 case CHANGE_TASK_STATUS:
-                    taskController.changeTaskStatus(user.getTasks());
-                    user = userController.getUser(user.getId());
+                    System.out.println("ZMIANA STATUSU ZADANIA");
+                    Task taskToChangeStatus = taskController.getTaskFromList(user.getTasks());
+                    log.info("Task before change status: " + taskToChangeStatus);
+                    if (taskToChangeStatus != null){
+                        Task editedTask = taskController.changeTaskStatus(taskToChangeStatus);
+                        user = userController.getUser(user.getId());
+                        log.info("Task after change status: " + editedTask);
+                    }
                     log.info("User's task status changing process finished.");
+                    break;
+                case EDIT_TASK:
+                    System.out.println("EDYCJA ZADANIA");
+                    Task taskToEdit = taskController.getTaskFromList(user.getTasks());
+                    log.info("Task before edit: " + taskToEdit);
+                    Task editedTask = taskController.editTask(taskToEdit);
+                    log.info("Task after edit: " + editedTask);
+                    user = userController.getUser(user.getId());
                     break;
                 case EXIT:
                     log.info("Exit");
@@ -99,15 +111,19 @@ public class AppController {
         WelcomeMenuOptions option = null;
         while (!isOptionCorrect){
             System.out.println("Podaj nr opcji:");
-            int optionId = scanner.nextInt();
-            scanner.nextLine();
             try {
+                int optionId = scanner.nextInt();
+                scanner.nextLine();
                 option = WelcomeMenuOptions.returnIfCorrect(optionId);
                 log.info("Correct option " + option);
                 isOptionCorrect = true;
             } catch (InvalidOptionException e) {
                 log.info("Incorrect option. " + e.getClass());
                 System.err.println(e.getMessage());
+            } catch (InputMismatchException e){
+                scanner.nextLine();
+                log.info("Invalid data type. " + e.getClass());
+                System.err.println("Podaj liczbę!");
             }
         }
         log.info("Choose welcome menu option process finished.");
@@ -119,16 +135,19 @@ public class AppController {
         MainMenuOptions option = null;
         while (!isOptionCorrect){
             System.out.println("Podaj nr opcji:");
-            int optionId = scanner.nextInt();
-            scanner.nextLine();
             try {
+                int optionId = scanner.nextInt();
                 option = MainMenuOptions.returnIfCorrect(optionId);
                 log.info("Correct option " + option);
                 isOptionCorrect = true;
             } catch (InvalidOptionException e) {
                 log.info("Incorrect option. " + e.getClass());
                 System.err.println(e.getMessage());
+            } catch (InputMismatchException e){
+                log.info("Invalid data type. " + e.getClass());
+                System.err.println("Podaj liczbę!");
             }
+            scanner.nextLine();
         }
         log.info("Choose main menu option process finished");
         return option;

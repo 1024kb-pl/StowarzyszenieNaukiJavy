@@ -11,7 +11,8 @@ public enum MainMenuOptions {
     ADD_NEW_TASK(2, "Dodaj nowe zadanie"),
     DELETE_TASK(3, "Usuń zadanie"),
     CHANGE_TASK_STATUS(4, "Zmień status zadania"),
-    EXIT(5, "Koniec");
+    EDIT_TASK(5, "Edytuj zadanie"),
+    EXIT(6, "Koniec");
 
     private int number;
     private String name;

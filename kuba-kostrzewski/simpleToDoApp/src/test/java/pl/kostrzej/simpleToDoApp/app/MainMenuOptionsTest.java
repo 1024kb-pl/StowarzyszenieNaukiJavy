@@ -12,12 +12,13 @@ public class MainMenuOptionsTest {
         assertEquals(MainMenuOptions.ADD_NEW_TASK,MainMenuOptions.returnIfCorrect(2));
         assertEquals(MainMenuOptions.DELETE_TASK, MainMenuOptions.returnIfCorrect(3));
         assertEquals(MainMenuOptions.CHANGE_TASK_STATUS, MainMenuOptions.returnIfCorrect(4));
-        assertEquals(MainMenuOptions.EXIT,MainMenuOptions.returnIfCorrect(5));
+        assertEquals(MainMenuOptions.EDIT_TASK,MainMenuOptions.returnIfCorrect(5));
+        assertEquals(MainMenuOptions.EXIT,MainMenuOptions.returnIfCorrect(6));
     }
 
     @Test(expected = InvalidOptionException.class)
     public void choseTooHighOption(){
-        MainMenuOptions.returnIfCorrect(6);
+        MainMenuOptions.returnIfCorrect(7);
     }
 
     @Test(expected = InvalidOptionException.class)

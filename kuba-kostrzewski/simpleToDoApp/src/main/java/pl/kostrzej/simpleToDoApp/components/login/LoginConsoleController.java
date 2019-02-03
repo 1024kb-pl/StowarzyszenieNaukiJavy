@@ -1,7 +1,7 @@
 package pl.kostrzej.simpleToDoApp.components.login;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import pl.kostrzej.simpleToDoApp.components.user.User;
 import pl.kostrzej.simpleToDoApp.components.validator.FieldValidator;
@@ -10,18 +10,13 @@ import java.util.Scanner;
 
 @Controller
 @Slf4j
+@AllArgsConstructor
 public class LoginConsoleController implements LoginController {
 
     private Scanner scanner;
     private LoginService loginService;
     private FieldValidator fieldValidator;
 
-    @Autowired
-    public LoginConsoleController(Scanner scanner, LoginService loginService, FieldValidator fieldValidator) {
-        this.scanner = scanner;
-        this.loginService = loginService;
-        this.fieldValidator = fieldValidator;
-    }
 
     @Override
     public User logIn() {
