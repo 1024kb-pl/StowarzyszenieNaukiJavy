@@ -21,7 +21,7 @@ public class TaskService {
         this.userRepository = userRepository;
     }
 
-    public User addTask(User user, String title, String description, Date date){
+    public void addTask(User user, String title, String description, Date date){
         log.info("Adding new task to database process initialized.");
         Task task = new Task();
         task.setUser(user);
@@ -32,7 +32,6 @@ public class TaskService {
         log.info("Task to save in database: " + task);
         taskRepository.save(task);
         log.info("Task saved in database successfully.");
-        return userRepository.findByLogin(user.getLogin()).get();
 
     }
     public void deleteTask(Task task){

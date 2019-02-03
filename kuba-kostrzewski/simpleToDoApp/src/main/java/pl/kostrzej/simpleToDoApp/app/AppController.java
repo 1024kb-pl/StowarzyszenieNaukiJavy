@@ -56,21 +56,23 @@ public class AppController {
             printMainMenu(user);
             switch (chooseMainMenuOption()){
                 case SHOW_ALL_TASKS:
-                    taskController.showAllUserTasks(user);
+                    taskController.showAllTasks(user.getTasks());
                     log.info("Show all tasks finished");
                     break;
                 case ADD_NEW_TASK:
                     log.info("User's task list size before adding new task = " + user.getTasks().size());
-                    user = taskController.addTask(user);
+                    user = userController.addTask(user);
                     log.info("User's task list size after adding new task = " + user.getTasks().size());
                     break;
                 case DELETE_TASK:
                     log.info("User's task list size before deleting task = " + user.getTasks().size());
-                    user = taskController.deleteTask(user);
+                    taskController.deleteTask(user.getTasks());
+                    user = userController.getUser(user.getId());
                     log.info("User's task list size after deleting task = " + user.getTasks().size());
                     break;
                 case CHANGE_TASK_STATUS:
-                    user = taskController.changeTaskStatus(user);
+                    taskController.changeTaskStatus(user.getTasks());
+                    user = userController.getUser(user.getId());
                     log.info("User's task status changing process finished.");
                     break;
                 case EXIT:

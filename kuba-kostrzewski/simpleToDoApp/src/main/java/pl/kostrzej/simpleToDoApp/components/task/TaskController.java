@@ -1,12 +1,12 @@
 package pl.kostrzej.simpleToDoApp.components.task;
 
-import pl.kostrzej.simpleToDoApp.components.user.User;
+
+import java.util.List;
 
 public interface TaskController {
 
-    User addTask(User user);
-    void showAllUserTasks(User user);
-    User deleteTask(User user);
-    User changeTaskStatus(User user);
+    void showAllTasks(List<Task> tasks);
+    void deleteTask(List<Task> tasks);
+    void changeTaskStatus(List<Task> tasks);
 
 }
