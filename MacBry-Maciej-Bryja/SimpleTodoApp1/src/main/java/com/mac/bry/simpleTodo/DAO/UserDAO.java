@@ -128,12 +128,12 @@ public class UserDAO implements DAOUserAPI {
 		return user.getPassword().equals(tempPassword); 
 	}
 
-	@SuppressWarnings("unchecked")
+
 	@Override
 	public boolean logingCheck(User user) {
 		List<User> userList;
 		Session session = factory.getCurrentSession();
-		session.beginTransaction();
+		//session.beginTransaction();
 		userList = session.createQuery("from User user where user.login='" + user.getLogin() + "' and user.password='" + user.getPassword() +"'").getResultList();
 		session.getTransaction().commit();
 		//session.close();
@@ -145,7 +145,7 @@ public class UserDAO implements DAOUserAPI {
 
 	@Override
 	public boolean login(User user) {
-		List<User>users = getAllUsers();
+		
 		if(logingCheck(user)) {
 			System.out.println("Login correct!");
 			if(passwordCheck(findUserByLogin(user.getLogin()), user.getPassword())){
@@ -163,15 +163,8 @@ public class UserDAO implements DAOUserAPI {
 		}
 	}
 	
-	public void updateUser(User tempUser) {
-		Session session = factory.getCurrentSession();
-		session.beginTransaction();
-		session.update(tempUser);
-		session.getTransaction().commit();
-		session.close();
-	}
-	
-	public void addTask(User loggedUser, Task taskToAdd) {
+	@Override
+	public void addTaskToUser(User loggedUser, Task taskToAdd) {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 		loggedUser.add(taskToAdd);
@@ -179,12 +172,19 @@ public class UserDAO implements DAOUserAPI {
 		session.getTransaction().commit();
 		session.close();
 	}
-	public List<Task> getTasks(User tempUser) {
+
+	@Override
+	public boolean isEmailExist(String tempMail) {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		List<Task> tempList = session.createQuery("from Task task where task.user='" + tempUser + "'").getResultList();
-		session.getTransaction().commit();
-		session.close();
-		return tempList;
+		List<User> tempUserList = session.createQuery("from User user where user.password='" + tempMail + "'").getResultList();
+		if(tempUserList.isEmpty()) {
+			return false;
+		}
+		return true;
 	}
+	
+	
+	
+	
 }

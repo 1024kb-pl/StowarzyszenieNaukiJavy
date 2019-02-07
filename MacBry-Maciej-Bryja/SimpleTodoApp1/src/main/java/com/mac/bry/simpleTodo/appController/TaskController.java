@@ -1,6 +1,9 @@
 package com.mac.bry.simpleTodo.appController;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import com.mac.bry.simpleTodo.DAO.TaskDAO;
 import com.mac.bry.simpleTodo.DAO.UserDAO;
@@ -15,6 +18,8 @@ import com.mac.bry.simpleTodo.utilitis.TaskReader;
 import com.mac.bry.simpleTodo.utilitis.API.TaskReaderAPI;
 
 public class TaskController {
+	
+	private Logger logger = Logger.getLogger(TaskController.class.getName());
 
 	private TaskReaderAPI taskReader;
 	private UserDAO userDAO;
@@ -108,24 +113,36 @@ public class TaskController {
 	}
 
 	private void logout() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		this.mainController = new MainController();
 		mainController.programLoop();
 
 	}
 
 	private void sortTasksByDate() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		List<Task> tasks = taskDAO.getAllTasks();
 		tasks.sort(new TaskComparatorByDateOfCompletion());
 		TaskPrintProcessor.printTasks(tasks);
 	}
 
 	private void sortTasksByStatus() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		List<Task> tasks = taskDAO.getAllTasks();
 		tasks.sort(new TaskComparatorByStatus());
 		TaskPrintProcessor.printTasks(tasks);
 	}
 
 	private void sortTasksByName() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		List<Task> tasks = taskDAO.getAllTasks();
 		tasks.sort(new TaskComparatorByName());
 		TaskPrintProcessor.printTasks(tasks);
@@ -133,24 +150,39 @@ public class TaskController {
 	}
 
 	private void showTasksByDate() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		List<Task> tasks = taskDAO.selectTasksByDataOfCompletion(taskReader.readAndCreateDate());
 		TaskPrintProcessor.printTasks(tasks);
 	}
 
 	private void showTasksByStatus() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		List<Task> tasks = taskDAO.selectTasksByStatus(taskReader.readBoolean("true or false"));
 		TaskPrintProcessor.printTasks(tasks);
 	}
 
 	private void deletTask() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		taskDAO.deleteTaskByID(taskReader.readNumber("Task ID"));
 	}
 
 	private void editTaskStatus() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		taskDAO.changeTaskStatus(taskDAO.selectTaskByID(taskReader.readNumber("Task ID")));
 	}
 
 	private void editTaskNam() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		Task tempTask = taskDAO.selectTaskByID(taskReader.readNumber("ID"));
 		taskDAO.editTaskName(tempTask, taskReader.readString("new Task name"));
 		taskLoop();
@@ -158,6 +190,9 @@ public class TaskController {
 	}
 
 	private void showTasks() {
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
 		TaskPrintProcessor.printTasks(taskDAO.getAllTasks());
 	}
 
@@ -169,6 +204,9 @@ public class TaskController {
 	}
 
 	private void addTask() {
-		userDAO.addTask(loggedUser, taskReader.readAndCreateTask());
+		String name = new Object(){}.getClass().getEnclosingMethod().getName();
+		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		
+		userDAO.addTaskToUser(loggedUser, taskReader.readAndCreateTask());
 	}
 }

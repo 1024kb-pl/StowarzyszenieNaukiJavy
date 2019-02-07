@@ -103,7 +103,7 @@ public class User {
 	
 	public void add (Task tempTask) {
 		if (tasksList == null) {
-			tasksList = new ArrayList<>();
+			tasksList = new ArrayList<Task>();
 		}
 		
 		tempTask.setUser(this);

@@ -10,16 +10,11 @@ import javax.mail.Session;
 
 public class EmailSender {
 	
+	
+	
 	public static void configureEmail(String reciver, String newPassword) {
-		Properties properties = new Properties();
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream stream = classLoader.getResourceAsStream("mail.properties");
-		try {
-			properties.load(stream);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		Properties properties = PropertiesFileLoader.loadPropertiesFile("mail.properties");
 		
 		final String fromEmail = properties.getProperty("sender"); //requires valid gmail id
 		final String password = properties.getProperty("password"); // correct password for gmail id
@@ -27,12 +22,12 @@ public class EmailSender {
 		
 		System.out.println("SSLEmail Start");
 		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.wp.pl"); //SMTP Host
-		props.put("mail.smtp.socketFactory.port", "465"); //SSL Port
+		props.put("mail.smtp.host", properties.getProperty("smtp.host")); //SMTP Host
+		props.put("mail.smtp.socketFactory.port", properties.get("SSL.port")); //SSL Port
 		props.put("mail.smtp.socketFactory.class",
 				"javax.net.ssl.SSLSocketFactory"); //SSL Factory Class
 		props.put("mail.smtp.auth", "true"); //Enabling SMTP Authentication
-		props.put("mail.smtp.port", "465"); //SMTP Port
+		props.put("mail.smtp.port", properties.get("SMTP.port")); //SMTP Port
 		
 		Authenticator auth = new Authenticator() {
 			//override the getPasswordAuthentication method

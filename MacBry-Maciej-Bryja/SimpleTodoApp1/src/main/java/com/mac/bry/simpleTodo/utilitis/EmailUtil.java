@@ -1,6 +1,7 @@
 package com.mac.bry.simpleTodo.utilitis;
 
 import java.util.Date;
+import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -18,6 +19,9 @@ public class EmailUtil {
 	 * @param body
 	 */
 	public static void sendEmail(Session session, String toEmail, String subject, String body){
+		
+		Properties properties = PropertiesFileLoader.loadPropertiesFile("mail.properties");
+		
 		try
 	    {
 	      MimeMessage msg = new MimeMessage(session);
@@ -26,9 +30,9 @@ public class EmailUtil {
 	      msg.addHeader("format", "flowed");
 	      msg.addHeader("Content-Transfer-Encoding", "8bit");
 
-	      msg.setFrom(new InternetAddress("maciej.bryja@wp.pl", "NoReply-JD"));
+	      msg.setFrom(new InternetAddress(properties.getProperty("sender"), "NoReply-JD"));
 
-	      msg.setReplyTo(InternetAddress.parse("maciej.bryja@wp.pl", false));
+	      msg.setReplyTo(InternetAddress.parse(properties.getProperty("sender"), false));
 
 	      msg.setSubject(subject, "UTF-8");
 
