@@ -1,4 +1,4 @@
-package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets;
+package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,8 +10,6 @@ import java.io.IOException;
 @WebServlet("/getTaskInfo")
 public class GetTaskInfoServlet extends HttpServlet
 {
-
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
     {

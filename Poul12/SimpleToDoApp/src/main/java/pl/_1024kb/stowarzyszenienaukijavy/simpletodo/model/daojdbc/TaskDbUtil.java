@@ -27,7 +27,7 @@ public class TaskDbUtil implements TaskDao
     }
 
     @Override
-    public String saveTask(Task task, long userId)
+    public void saveTask(Task task, long userId) throws SQLException
     {
         String sqlQuery = "INSERT INTO tasks(title, date, description, username_id) VALUES(?, ?, ?, ?)";
         try(Connection connection = ConnectionProvider.getConnection();
@@ -40,14 +40,7 @@ public class TaskDbUtil implements TaskDao
             statement.setLong(4, userId);
 
             statement.execute();
-
-        }catch(SQLException e)
-        {
-            e.printStackTrace();
-            return "Cannot save the user in the Data Base!";
         }
-
-        return "Pomyślnie zapisano zadanie ;)";
     }
 
     @Override
@@ -73,7 +66,6 @@ public class TaskDbUtil implements TaskDao
                 tasksList.add(task);
             }
 
-
         } catch (SQLException e)
         {
             e.printStackTrace();
@@ -83,7 +75,7 @@ public class TaskDbUtil implements TaskDao
     }
 
     @Override
-    public void updateCheckTask(String checkTask, long task_id)
+    public void updateCheckTask(String checkTask, long task_id) throws SQLException
     {
         String sqlQuery = "UPDATE tasks SET task_done=? WHERE task_id=?";
         try(Connection connection = ConnectionProvider.getConnection();
@@ -93,15 +85,11 @@ public class TaskDbUtil implements TaskDao
             statement.setLong(2, task_id);
 
             statement.executeUpdate();
-
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
         }
     }
 
     @Override
-    public String updateTask(Task task)
+    public void updateTask(Task task) throws SQLException
     {
         String sqlQuery = "UPDATE tasks SET title=?, date=?, description=? WHERE task_id=?";
         try(Connection connection = ConnectionProvider.getConnection();
@@ -114,18 +102,11 @@ public class TaskDbUtil implements TaskDao
             statement.setLong(4, task.getId());
 
             statement.executeUpdate();
-
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
-            return "Nie udało się zaktualizować zadania";
         }
-
-        return "Pomyślnie zaktualizowano zadanie :)";
     }
 
     @Override
-    public void deleteTaskById(long taskId)
+    public void deleteTaskById(long taskId) throws SQLException
     {
         String sqlQuery = "DELETE FROM tasks WHERE task_id=?";
         try(Connection connection = ConnectionProvider.getConnection();
@@ -135,9 +116,6 @@ public class TaskDbUtil implements TaskDao
 
             statement.executeUpdate();
 
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
         }
     }
 }

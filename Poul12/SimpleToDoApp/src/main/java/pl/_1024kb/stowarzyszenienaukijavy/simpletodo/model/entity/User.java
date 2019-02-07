@@ -5,6 +5,7 @@ public class User
     private Long id;
     private String username;
     private String password;
+    private String repeatedPassword;
     private String email;
 
     public User(Long id, String username, String password, String email)
@@ -26,6 +27,14 @@ public class User
     {
         this.username = username;
         this.password = password;
+    }
+
+    public User(String username, String password, String repeatedPassword, String email)
+    {
+        this.username = username;
+        this.password = password;
+        this.repeatedPassword = repeatedPassword;
+        this.email = email;
     }
 
     public Long getId()
@@ -66,5 +75,13 @@ public class User
     public void setEmail(String email)
     {
         this.email = email;
+    }
+
+    public String getRepeatedPassword() {
+        return repeatedPassword;
+    }
+
+    public void setRepeatedPassword(String repeatedPassword) {
+        this.repeatedPassword = repeatedPassword;
     }
 }

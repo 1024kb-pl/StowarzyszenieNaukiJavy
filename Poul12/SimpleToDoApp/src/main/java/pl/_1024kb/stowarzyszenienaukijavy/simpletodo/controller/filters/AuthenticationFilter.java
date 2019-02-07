@@ -1,4 +1,4 @@
-package main.java.pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.filters;
+package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.filters;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

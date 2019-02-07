@@ -1,4 +1,4 @@
-package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets;
+package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.TaskServiceImpl;
 
@@ -12,10 +12,10 @@ import java.io.IOException;
 @WebServlet("/checkTask")
 public class CheckTaskServlet extends HttpServlet
 {
-    TaskServiceImpl taskService = TaskServiceImpl.getInstance();
+    private TaskServiceImpl taskService = TaskServiceImpl.getInstance();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String checkDone = request.getParameter("checktask");
         System.out.println(checkDone);

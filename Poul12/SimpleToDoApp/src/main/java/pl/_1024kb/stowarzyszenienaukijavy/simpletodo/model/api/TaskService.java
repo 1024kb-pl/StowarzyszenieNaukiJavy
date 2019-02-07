@@ -10,9 +10,9 @@ public interface TaskService
 
     List<Task> getAllTasksByUserId(String username);
 
-    void setCheckTask(String checkTask, long taskId);
+    String setCheckTask(String checkTask, long taskId);
 
     String changeTask(Task task);
 
-    void deleteTaskById(long taskId);
+    String deleteTaskById(long taskId);
 }

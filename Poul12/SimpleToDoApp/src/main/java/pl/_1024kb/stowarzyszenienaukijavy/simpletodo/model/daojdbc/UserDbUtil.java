@@ -28,7 +28,7 @@ public class UserDbUtil implements UserDao
     }
 
     @Override
-    public String saveUser(User user, String message)
+    public void saveUser(User user, String message) throws SQLException
     {
         String sqlQuery = "INSERT INTO users(username, password, email) VALUES(?, ?, ?)";
         try(Connection connection = ConnectionProvider.getConnection();
@@ -41,18 +41,11 @@ public class UserDbUtil implements UserDao
             statement.setString(3, user.getEmail());
 
             statement.execute();
-
-        }catch(SQLException e)
-        {
-            e.printStackTrace();
-            return "Cannot save the user in the Data Base!";
         }
-
-        return message;
     }
      
     @Override
-    public User getUserByUsername(String username)
+    public User getUserByUsername(String username) throws SQLException
     {
         String selectQuery = String.format("SELECT * FROM users WHERE username='%s'", username);
         try(Connection connection = ConnectionProvider.getConnection();
@@ -60,18 +53,12 @@ public class UserDbUtil implements UserDao
             ResultSet resultSet = statement.executeQuery(selectQuery))
         {
 
-            while(resultSet.next())
+            while (resultSet.next())
             {
                 System.out.println(resultSet.getString("username"));
                 return getUser(resultSet);
             }
-
-
-       }catch (SQLException e)
-       {
-           System.out.println("Can't get the user from MySQL database");
-           e.printStackTrace();
-       }
+        }
 
        return DEFAULT_USER;
     }

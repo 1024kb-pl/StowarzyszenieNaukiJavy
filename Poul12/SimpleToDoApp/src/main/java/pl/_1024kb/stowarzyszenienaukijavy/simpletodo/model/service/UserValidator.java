@@ -1,10 +1,7 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.IncorrectLoginException;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.NotValidUserEmailException;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.TooShortPasswordLengthException;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.TooShortUsernameLengthException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.*;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.utility.MD5Hash;
 
 import java.util.regex.Pattern;
@@ -38,8 +35,7 @@ public class UserValidator
         throw new IncorrectLoginException("Login is incorrect!");
     }
     
-    
-    public boolean isUserValid(User user) throws TooShortUsernameLengthException, TooShortPasswordLengthException, NotValidUserEmailException
+    public boolean isUserValid(User user) throws TooShortUsernameLengthException, TooShortPasswordLengthException, NotValidUserEmailException, NotTheSamePasswordException
     {
         if(!isUsernameValid(user.getUsername()))
             throw new TooShortUsernameLengthException("User's name is too short!");
@@ -49,6 +45,9 @@ public class UserValidator
 
         if(!isEmailValid(user.getEmail()))
          throw new NotValidUserEmailException("User's email is not valid!");
+
+        if(!isPasswordTheSame(user.getPassword(), user.getRepeatedPassword()))
+            throw new NotTheSamePasswordException("User's passwords are not the same!");
 
          return true;
     }
@@ -66,6 +65,11 @@ public class UserValidator
     private boolean isEmailValid(String email)
     {
         return email.matches(EMAIL_PATTERN);
+    }
+
+    private boolean isPasswordTheSame(String password, String repeatedPassword)
+    {
+        return password.equals(repeatedPassword);
     }
 }
 

@@ -1,4 +1,4 @@
-package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets;
+package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.user;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.UserServiceImpl;
@@ -23,14 +23,10 @@ public class RegisterServlet extends HttpServlet
         String repeatedPass = request.getParameter("repeated-pass");
         String email = request.getParameter("email");
 
-        String message = "Passwords are not the same!";
-
-        if(password.equals(repeatedPass) && !userServiceImpl.isUsernameAlreadyExist(username))
-            message = userServiceImpl.createUser(new User(username, password, email));
+        String message = userServiceImpl.createUser(new User(username, password, repeatedPass, email));
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);
-
     }
 }
 

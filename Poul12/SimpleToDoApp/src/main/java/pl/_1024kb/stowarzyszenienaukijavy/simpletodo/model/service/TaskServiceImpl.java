@@ -1,9 +1,12 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.TaskService;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.TaskDbUtil;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class TaskServiceImpl implements TaskService
@@ -11,6 +14,7 @@ public class TaskServiceImpl implements TaskService
     private static TaskServiceImpl instance;
     private TaskDbUtil jdbcDao = TaskDbUtil.getInstance();
     private UserServiceImpl userService = UserServiceImpl.getInstance();
+    private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     private TaskServiceImpl(){
         if(instance != null)
@@ -28,34 +32,95 @@ public class TaskServiceImpl implements TaskService
     @Override
     public String createTask(Task task, String username)
     {
-        long userId = userService.getUserByUsername(username).getId();
+        long userId = 0L;
 
-        return jdbcDao.saveTask(task, userId);
+        if(userService.getUserByUsername(username).isPresent())
+            userId = userService.getUserByUsername(username).get().getId();
+
+        try
+        {
+            jdbcDao.saveTask(task, userId);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            String messageError = "Nie udało się zapisać zadania!";
+            logger.error(messageError + " - " + task.getTitle());
+            return messageError;
+        }
+
+        String messageInfo = "Pomyślnie zapisano zadanie ;)";
+        logger.info(messageInfo + " - " + task.getTitle());
+        return messageInfo;
     }
 
     @Override
     public List<Task> getAllTasksByUserId(String username)
     {
-        long userId = userService.getUserByUsername(username).getId();
+        long userId = 0L;
+
+        if(userService.getUserByUsername(username).isPresent())
+            userId = userService.getUserByUsername(username).get().getId();
 
         return jdbcDao.getAllTasksByUserId(userId);
     }
 
     @Override
-    public void setCheckTask(String checkTask, long taskId)
+    public String setCheckTask(String checkTask, long taskId)
     {
-        jdbcDao.updateCheckTask(checkTask, taskId);
+        try
+        {
+            jdbcDao.updateCheckTask(checkTask, taskId);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            String messageError = "Nie udało się zmienić statusu zadania";
+            logger.error(messageError + " - id: " + taskId);
+            return messageError;
+        }
+
+        String messageInfo = "Pomyślnie zmieniono status zadania";
+        logger.info(messageInfo + " - id: " + taskId);
+        return messageInfo;
     }
 
     @Override
     public String changeTask(Task task)
     {
-        return jdbcDao.updateTask(task);
+        try
+        {
+            jdbcDao.updateTask(task);
+
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            String messageError = "Nie udało się zaktualizować zadania";
+            logger.error(messageError + " - " + task.getTitle());
+            return messageError;
+        }
+
+        String messageInfo = "Pomyślnie zaktualizowano zadanie :)";
+        logger.info(messageInfo + " - " + task.getTitle());
+        return messageInfo;
     }
 
     @Override
-    public void deleteTaskById(long taskId)
+    public String deleteTaskById(long taskId)
     {
-        jdbcDao.deleteTaskById(taskId);
+        try
+        {
+            jdbcDao.deleteTaskById(taskId);
+
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            String messageError = "Nie udało się usunąć zadania";
+            logger.error(messageError + " - id: " + taskId);
+            return messageError;
+        }
+
+        String messageInfo = "Pomyślnie usunięto zadanie";
+        logger.info(messageInfo + " - id: " + taskId);
+        return messageInfo;
     }
 }

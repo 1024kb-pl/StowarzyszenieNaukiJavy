@@ -60,7 +60,7 @@
         <td><%=task.getDate()%></td>
         <td><%=task.getDescription()%></td>
         <td>
-            <form action="checkTask" method="post">
+            <form action="checkTask" method="get">
             <input type="checkbox" name="checktask" value="yes"
                 <% if(task.getTaskDone().equals("yes")){%>
                    checked

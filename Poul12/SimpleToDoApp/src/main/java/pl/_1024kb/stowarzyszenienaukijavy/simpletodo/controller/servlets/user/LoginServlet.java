@@ -1,4 +1,4 @@
-package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets;
+package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.user;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.UserServiceImpl;
 
@@ -20,11 +20,11 @@ public class LoginServlet extends HttpServlet
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         
-        String message = "Login failed :(";
-        
+        String message = "Nie udało się zalogować :(";
+
         if(userServiceImpl.loginVerification(username, password))
         {
-            message = "Welcome " + username + " :)";
+            message = "Witaj " + username + " :)";
             request.getSession(true).setAttribute("username", username);
         }
         

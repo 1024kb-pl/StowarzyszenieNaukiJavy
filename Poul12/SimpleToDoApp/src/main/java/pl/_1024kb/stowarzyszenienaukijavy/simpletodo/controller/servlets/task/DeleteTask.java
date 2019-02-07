@@ -1,4 +1,4 @@
-package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets;
+package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.TaskServiceImpl;
 
