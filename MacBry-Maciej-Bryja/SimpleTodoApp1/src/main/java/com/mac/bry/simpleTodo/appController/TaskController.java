@@ -13,7 +13,7 @@ import com.mac.bry.simpleTodo.entity.User;
 import com.mac.bry.simpleTodo.entity.comparators.TaskComparatorByDateOfCompletion;
 import com.mac.bry.simpleTodo.entity.comparators.TaskComparatorByName;
 import com.mac.bry.simpleTodo.entity.comparators.TaskComparatorByStatus;
-import com.mac.bry.simpleTodo.utilitis.TaskPrintProcessor;
+import com.mac.bry.simpleTodo.printProcessors.TaskPrintProcessor;
 import com.mac.bry.simpleTodo.utilitis.TaskReader;
 import com.mac.bry.simpleTodo.utilitis.API.TaskReaderAPI;
 
@@ -46,7 +46,7 @@ public class TaskController {
 		TaskOption option;
 		printTaskOptions();
 
-		while ((option = TaskOption.createFromInt(taskReader.readNumber())) != TaskOption.LOGOUT) {
+		while ((option = TaskOption.createFromInt(taskReader.readNumber())) != TaskOption.BACK) {
 			switch (option) {
 			case ADD_TASK:
 				System.out.println("add task");
@@ -99,8 +99,8 @@ public class TaskController {
 				taskLoop();
 				break;
 
-			case LOGOUT:
-				logout();
+			case BACK:
+				back();
 				break;
 
 			default:
@@ -112,7 +112,7 @@ public class TaskController {
 
 	}
 
-	private void logout() {
+	private void back() {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
 		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
 		

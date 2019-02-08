@@ -11,7 +11,7 @@ public enum TaskOption {
 	SORT_TASKS_BY_NAME(7, "Sort tasks by Name"),
 	SORT_TASKS_BY_STATUS(8, "Sort tasks by Status"),
 	SORT_TASKS_BY_DATA(9, "Sort Task by Data"),
-	LOGOUT(10, "Logout");
+	BACK(10, "Back");
 
 	
 	private int value;

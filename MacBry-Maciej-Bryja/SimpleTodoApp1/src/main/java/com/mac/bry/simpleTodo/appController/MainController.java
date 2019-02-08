@@ -20,14 +20,14 @@ public class MainController {
 	
 	private DataReader dataReader;
 	private UserDAO userDAO;
-	private TaskController taskController;
+	private MenuController menuController;
 	private User loggedUser;
 
 	public MainController() {
 		super();
 		this.dataReader = new DataReader();
 		this.userDAO = new UserDAO();
-		this.taskController = new TaskController();
+		this.menuController = new MenuController();
 	}
 
 	public void programLoop() {
@@ -39,7 +39,7 @@ public class MainController {
 			case LOGIN:
 				if (login()) {
 					;
-					taskController.taskLoop();
+					menuController.menuLoop();
 				} else {
 					System.out.println("Try again");
 					login();
@@ -96,7 +96,8 @@ public class MainController {
 		
 		User tempUser = dataReader.readUser();
 		this.loggedUser = userDAO.findUserByLogin(tempUser.getLogin());
-		taskController.setLoggedUser(this.loggedUser);
+		menuController.setLoggedUser(this.loggedUser);
+		menuController.setMainController(this);
 		return userDAO.login(tempUser);
 	}
 

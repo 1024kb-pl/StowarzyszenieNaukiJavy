@@ -184,7 +184,15 @@ public class UserDAO implements DAOUserAPI {
 		return true;
 	}
 	
-	
+	@Override
+	public void editEmail(User user, String newEmail) {
+		String oldEmail = user.getEmailAdress();
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		user.setEmailAdress(newEmail);
+		session.getTransaction().commit();
+		System.out.println("You have changed email adress from " + oldEmail + " to " + user.getEmailAdress());
+	}
 	
 	
 }

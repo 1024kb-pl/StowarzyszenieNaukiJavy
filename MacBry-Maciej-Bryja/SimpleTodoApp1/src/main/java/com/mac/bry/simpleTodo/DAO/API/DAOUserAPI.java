@@ -22,4 +22,5 @@ public interface DAOUserAPI {
 	public boolean login(User user);
 	public void addTaskToUser(User loggedUser, Task taskToAdd);
 	public boolean isEmailExist(String tempMail);
+	public void editEmail(User user, String newEmail);
 }
