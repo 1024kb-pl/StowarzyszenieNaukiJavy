@@ -1,3 +1,4 @@
+<%@ page import="java.time.LocalDate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -46,7 +47,7 @@
     <input type="text" name="title" size="50" placeholder="Nazwa zadania">
     <br><br>
     <div>Data:</div>
-    <input type="date" name="taskdate">
+    <input type="date" name="taskdate" value="<%=LocalDate.now()%>">
     <br><br>
     <div>Opis:</div>
     <textarea rows="5" cols="50" name="description" wrap="hard" maxlength ="150" placeholder="Opis zadania... (max 150 znaków)"></textarea>

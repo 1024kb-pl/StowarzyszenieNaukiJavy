@@ -54,10 +54,7 @@ public class UserDbUtil implements UserDao
         {
 
             while (resultSet.next())
-            {
-                System.out.println(resultSet.getString("username"));
                 return getUser(resultSet);
-            }
         }
 
        return DEFAULT_USER;

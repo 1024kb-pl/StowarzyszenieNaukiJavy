@@ -7,7 +7,10 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.TaskDbUtil;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskServiceImpl implements TaskService
 {
@@ -122,5 +125,45 @@ public class TaskServiceImpl implements TaskService
         String messageInfo = "Pomyślnie usunięto zadanie";
         logger.info(messageInfo + " - id: " + taskId);
         return messageInfo;
+    }
+
+    @Override
+    public List<Task> getAllTasksByDate(String username, LocalDate dateFilter)
+    {
+        return getAllTasksByUserId(username).stream()
+                .filter(task -> task.getDate().equals(dateFilter))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Task> getAllTasksByTaskDone(String username, String doneFilter)
+    {
+        return getAllTasksByUserId(username).stream()
+                .filter(task -> task.getTaskDone().equals(doneFilter))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Task> getAllTasksOrderedByTitle(String username)
+    {
+        return getAllTasksByUserId(username).stream()
+                .sorted(Comparator.comparing(Task::getTitle))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Task> getAllTasksOrderedByDate(String username)
+    {
+        return getAllTasksByUserId(username).stream()
+                .sorted(Comparator.comparing(Task::getDate))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Task> getAllTasksOrderedByStatus(String username)
+    {
+        return getAllTasksByUserId(username).stream()
+                .sorted(Comparator.comparing(Task::getTaskDone))
+                .collect(Collectors.toList());
     }
 }

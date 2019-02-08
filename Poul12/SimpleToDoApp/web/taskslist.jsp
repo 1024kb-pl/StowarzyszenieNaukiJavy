@@ -3,6 +3,7 @@
          pageEncoding="UTF-8"%>
 <%@ page import="pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.time.LocalDate" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +19,6 @@
         form
         {
             color: #007599;
-            text-align: center;
         }
 
         table
@@ -34,6 +34,30 @@
 <body>
 
 <h2>Lista zadań</h2>
+
+<form action="tasks" method="get">
+    Filtry:
+    <select name="filter">
+        <option></option>
+        <option value="yes">Wykonane</option>
+        <option value="no">Niewykonane</option>
+        <option value="date">Data</option>
+    </select>
+    <input type="date" name="dateFilter">
+    <input type="submit" value="Filtruj">
+</form>
+<br>
+<form action="tasks" method="get">
+    Sortuj:
+    <select name="sort">
+        <option></option>
+        <option value="title">Tytuł</option>
+        <option value="date">Data</option>
+        <option value="status">Status</option>
+    </select>
+    <input type="submit" value="Sortuj">
+</form>
+<br><br>
 
 <table style="width:50%" border="1">
     <tr>
@@ -59,18 +83,9 @@
         <td><%=task.getTitle()%></td>
         <td><%=task.getDate()%></td>
         <td><%=task.getDescription()%></td>
+        <td><%=task.getTaskDone()%></td>
         <td>
-            <form action="checkTask" method="get">
-            <input type="checkbox" name="checktask" value="yes"
-                <% if(task.getTaskDone().equals("yes")){%>
-                   checked
-                <%}%>>Wykonane
-            <input type="hidden" name="task_id" value="<%=task.getId()%>">
-            <input type="submit" value="Potwierdź">
-            </form>
-        </td>
-        <td>
-            <p><a href="getTaskInfo?id=<%=task.getId()%>&title=<%=task.getTitle()%>&date=<%=task.getDate()%>&description=<%=task.getDescription()%>"><button type="button">Edytuj</button></a></p>
+            <p><a href="getTaskInfo?id=<%=task.getId()%>&title=<%=task.getTitle()%>&date=<%=task.getDate()%>&description=<%=task.getDescription()%>&done=<%=task.getTaskDone()%>"><button type="button">Edytuj</button></a></p>
             <p><a href="deleteTask?id=<%=task.getId()%>"><button type="button">Usuń</button></a></p>
         </td>
     </tr>

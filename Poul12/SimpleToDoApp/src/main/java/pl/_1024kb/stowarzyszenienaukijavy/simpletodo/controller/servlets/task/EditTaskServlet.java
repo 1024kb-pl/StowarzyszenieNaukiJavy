@@ -25,8 +25,11 @@ public class EditTaskServlet extends HttpServlet
         String dateStr = request.getParameter("taskdate");
         LocalDate date = LocalDate.parse(dateStr);
         String description = request.getParameter("description");
+        String taskDone = request.getParameter("checktask");
+        if(taskDone == null)
+            taskDone = "no";
 
-        Task task = new Task(taskId, title, date, description);
+        Task task = new Task(taskId, title, date, description, taskDone);
         String message = taskService.changeTask(task);
 
         request.setAttribute("message", message);

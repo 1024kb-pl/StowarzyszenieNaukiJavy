@@ -91,7 +91,7 @@ public class TaskDbUtil implements TaskDao
     @Override
     public void updateTask(Task task) throws SQLException
     {
-        String sqlQuery = "UPDATE tasks SET title=?, date=?, description=? WHERE task_id=?";
+        String sqlQuery = "UPDATE tasks SET title=?, date=?, description=?, task_done=? WHERE task_id=?";
         try(Connection connection = ConnectionProvider.getConnection();
             PreparedStatement statement = connection.prepareStatement(sqlQuery))
 
@@ -99,7 +99,8 @@ public class TaskDbUtil implements TaskDao
             statement.setString(1, task.getTitle());
             statement.setDate(2, Date.valueOf(task.getDate()));
             statement.setString(3, task.getDescription());
-            statement.setLong(4, task.getId());
+            statement.setString(4, task.getTaskDone());
+            statement.setLong(5, task.getId());
 
             statement.executeUpdate();
         }

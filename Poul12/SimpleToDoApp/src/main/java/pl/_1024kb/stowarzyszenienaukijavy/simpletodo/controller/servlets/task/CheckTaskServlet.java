@@ -18,7 +18,6 @@ public class CheckTaskServlet extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String checkDone = request.getParameter("checktask");
-        System.out.println(checkDone);
         if(checkDone == null)
             checkDone = "no";
 
@@ -27,6 +26,6 @@ public class CheckTaskServlet extends HttpServlet
 
         taskService.setCheckTask(checkDone, checkId);
 
-        request.getRequestDispatcher("tasks").forward(request, response);
+        request.getRequestDispatcher("tasks.jsp").forward(request, response);
     }
 }

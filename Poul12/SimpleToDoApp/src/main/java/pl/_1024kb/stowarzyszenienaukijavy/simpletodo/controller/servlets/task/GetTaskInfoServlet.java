@@ -19,11 +19,13 @@ public class GetTaskInfoServlet extends HttpServlet
         String title = request.getParameter("title");
         String date = request.getParameter("date");
         String description = request.getParameter("description");
+        String doneTask = request.getParameter("done");
 
         request.setAttribute("id", id);
         request.setAttribute("title", title);
         request.setAttribute("date", date);
         request.setAttribute("description", description);
+        request.setAttribute("done", doneTask);
         request.getRequestDispatcher("edittask.jsp").forward(request, response);
     }
 }

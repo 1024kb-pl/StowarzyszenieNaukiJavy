@@ -52,7 +52,12 @@
     <div>Opis:</div>
     <textarea rows="5" cols="50" name="description" wrap="hard" maxlength ="150" placeholder="Opis zadania... (max 150 znaków)"><%=request.getAttribute("description")%></textarea>
     <br><br>
+    <input type="checkbox" name="checktask" value="yes" <%
+                                            if(request.getAttribute("done").equals("yes")){%>
+                                                checked
+                                            <%}%>>Wykonane
     <input type="hidden" name="task_id" value="<%=request.getAttribute("id")%>">
+    <br><br>
     <input type="submit" value="Zaktualizuj zadanie">
     <br><br>
 </form>

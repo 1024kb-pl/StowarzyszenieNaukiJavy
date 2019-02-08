@@ -28,13 +28,6 @@
 
         }
 
-        div
-        {
-            font-family: verdana;
-            font-size: 16px;
-            text-align: center;
-        }
-
     </style>
 </head>
 <body>
