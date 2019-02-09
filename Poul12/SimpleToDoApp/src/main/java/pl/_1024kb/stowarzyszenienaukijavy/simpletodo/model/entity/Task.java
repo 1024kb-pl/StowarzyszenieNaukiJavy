@@ -113,4 +113,11 @@ public class Task
     public void setTaskDone(String taskDone) {
         this.taskDone = taskDone;
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "title='" + title + '\'' +
+                '}';
+    }
 }

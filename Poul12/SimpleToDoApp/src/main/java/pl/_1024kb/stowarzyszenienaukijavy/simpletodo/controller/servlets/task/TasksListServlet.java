@@ -1,6 +1,7 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.OrderOption;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.TaskServiceImpl;
 
 import javax.servlet.ServletException;
@@ -26,8 +27,36 @@ public class TasksListServlet extends HttpServlet
 
         taskList = taskService.getAllTasksByUserId(username);
 
+        filterTask(username, request);
+
+        String sortList = request.getParameter("sort");
+        if(sortList != null)
+            sortTaskList(username, sortList);
+
+        request.setAttribute("tasksList", taskList);
+        request.getRequestDispatcher("taskslist.jsp").forward(request, response);
+    }
+
+    private void sortTaskList(String username, String sortList)
+    {
+        OrderOption orderOption = OrderOption.valueOf(sortList.toUpperCase());
+        switch (orderOption)
+        {
+            case TITLE:
+                taskList = taskService.getAllTasksOrderedByTitle(username);
+                break;
+            case DATE:
+                taskList = taskService.getAllTasksOrderedByDate(username);
+                break;
+            case STATUS:
+                taskList = taskService.getAllTasksOrderedByStatus(username);
+                break;
+        }
+    }
+
+    private void filterTask(String username, HttpServletRequest request)
+    {
         String filterOption = request.getParameter("filter");
-        System.out.println("doneFilter: " + filterOption);
         if(filterOption != null && !filterOption.isEmpty())
         {
             if (!filterOption.equals("date"))
@@ -41,30 +70,6 @@ public class TasksListServlet extends HttpServlet
                 taskList = taskService.getAllTasksByDate(username, dateFilter);
                 request.setAttribute("date_filter", dateFilter);
             }
-        }
-
-        String sortList = request.getParameter("sort");
-        System.out.println("sortList: " + sortList);
-        if(sortList != null)
-            sortTaskList(username, sortList);
-
-        request.setAttribute("tasksList", taskList);
-        request.getRequestDispatcher("taskslist.jsp").forward(request, response);
-    }
-
-    private void sortTaskList(String username, String sortList)
-    {
-        switch (sortList)
-        {
-            case "title":
-                taskList = taskService.getAllTasksOrderedByTitle(username);
-                break;
-            case "date":
-                taskList = taskService.getAllTasksOrderedByDate(username);
-                break;
-            case "status":
-                taskList = taskService.getAllTasksOrderedByStatus(username);
-                break;
         }
     }
 

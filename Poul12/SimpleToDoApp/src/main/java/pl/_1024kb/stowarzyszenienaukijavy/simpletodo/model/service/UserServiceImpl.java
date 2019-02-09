@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService
     private static UserServiceImpl instance;
     private UserDbUtil jdbcDao = UserDbUtil.getInstance();
     private UserValidator validator = UserValidator.getInstance();
-    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     private UserServiceImpl()
     {
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService
             return e.getMessage();
         }
 
-        logger.error(messageInfo + " - " + user.getUsername());
+        logger.info(messageInfo + " - " + user.getUsername());
         return messageInfo;
     }
     
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService
             logger.error("Nie udało się pobrać użytkownika {} z bazy", username);
         }
 
-        logger.debug("Pomyślnie udało się pobrać użytkownika {} z bazy", username);
+        logger.info("Pomyślnie udało się pobrać użytkownika {} z bazy", username);
         return Optional.empty();
     }
     

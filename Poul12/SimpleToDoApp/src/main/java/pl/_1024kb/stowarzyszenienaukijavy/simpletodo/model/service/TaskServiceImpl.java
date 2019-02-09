@@ -1,5 +1,6 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.TaskService;
@@ -17,7 +18,7 @@ public class TaskServiceImpl implements TaskService
     private static TaskServiceImpl instance;
     private TaskDbUtil jdbcDao = TaskDbUtil.getInstance();
     private UserServiceImpl userService = UserServiceImpl.getInstance();
-    private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     private TaskServiceImpl(){
         if(instance != null)
@@ -163,7 +164,7 @@ public class TaskServiceImpl implements TaskService
     public List<Task> getAllTasksOrderedByStatus(String username)
     {
         return getAllTasksByUserId(username).stream()
-                .sorted(Comparator.comparing(Task::getTaskDone))
+                .sorted(Comparator.comparing(Task::getTaskDone).reversed())
                 .collect(Collectors.toList());
     }
 }
