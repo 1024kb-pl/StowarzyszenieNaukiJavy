@@ -19,6 +19,8 @@ public class EditTaskServlet extends HttpServlet
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        request.setCharacterEncoding("UTF-8");
+
         String idStr = request.getParameter("task_id");
         long taskId = Long.parseLong(idStr);
         String title = request.getParameter("title");

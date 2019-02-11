@@ -38,11 +38,12 @@ public class UserServiceImpl implements UserService
         String messageInfo = "Pomyślnie udało się zapisać użytkownika do bazy :)";
         try
         {
-            if(validator.isUserValid(user) && isUsernameAlreadyExist(user.getUsername()))
+            if(validator.isUserValid(user) && !isUsernameAlreadyExist(user.getUsername()))
             {
                 try
                 {
-                    jdbcDao.saveUser(user, messageInfo);
+                    jdbcDao.saveUser(user);
+                    logger.info(messageInfo + " - " + user.getUsername());
 
                 }catch(SQLException e)
                 {
@@ -60,25 +61,65 @@ public class UserServiceImpl implements UserService
             return e.getMessage();
         }
 
-        logger.info(messageInfo + " - " + user.getUsername());
         return messageInfo;
     }
-    
+
+    @Override
+    public String changeUser(User user, String username)
+    {
+        String message = "Pomyślnie zmieniono dane użytownika";
+        try
+        {
+            if(validator.isUserValid(user))
+            {
+                jdbcDao.updateUser(user, username);
+                logger.info(message);
+            }
+
+        } catch (SQLException | TooShortUsernameLengthException | TooShortPasswordLengthException | NotValidUserEmailException | NotTheSamePasswordException e)
+        {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+
+        return message;
+    }
+
+    @Override
+    public String removeUser(String username)
+    {
+        String message = "Pomyślnie usunięto użytkownika";
+        try
+        {
+            jdbcDao.deleteUser(username);
+            logger.info(message);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            message = "Nie udało się usunąć użytkownika";
+            logger.error(message);
+        }
+
+        return message;
+    }
+
     @Override
     public Optional<User> getUserByUsername(String username)
     {
+        Optional<User> user;
         try
         {
-            return Optional.of(jdbcDao.getUserByUsername(username));
+            logger.debug("Pomyślnie udało się pobrać użytkownika {} z bazy", username);
+            user = jdbcDao.getUserByUsername(username);
 
         } catch (SQLException e)
         {
             e.printStackTrace();
             logger.error("Nie udało się pobrać użytkownika {} z bazy", username);
+            return Optional.empty();
         }
 
-        logger.info("Pomyślnie udało się pobrać użytkownika {} z bazy", username);
-        return Optional.empty();
+        return user;
     }
     
     @Override
@@ -92,7 +133,7 @@ public class UserServiceImpl implements UserService
     {
         Optional<User> userFound = getUserByUsername(username);
 
-        return userFound.map(user1 -> user1.getUsername()
+        return userFound.map(user -> user.getUsername()
                 .equals(username))
                 .orElse(false);
     }
@@ -107,6 +148,7 @@ public class UserServiceImpl implements UserService
         {
             if(expectedUser.isPresent())
                 isLoginCorrect = validator.isLoginCorrect(expectedUser.get(), new User(username, password));
+
 
             logger.info("Weryfikacja użytkownika {} przeszła pomyślnie", username);
 

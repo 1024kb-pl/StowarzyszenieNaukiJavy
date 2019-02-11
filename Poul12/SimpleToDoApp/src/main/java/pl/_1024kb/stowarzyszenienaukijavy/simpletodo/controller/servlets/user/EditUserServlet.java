@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/register")
-public class RegisterServlet extends HttpServlet
+@WebServlet("/editUser")
+public class EditUserServlet extends HttpServlet
 {
     private UserServiceImpl userServiceImpl = UserServiceImpl.getInstance();
 
@@ -25,11 +25,10 @@ public class RegisterServlet extends HttpServlet
         String repeatedPass = request.getParameter("repeated-pass");
         String email = request.getParameter("email");
 
-
-        String message = userServiceImpl.createUser(new User(username, password, repeatedPass, email));
+        String sessionUsername = (String) request.getSession(false).getAttribute("username") ;
+        String message = userServiceImpl.changeUser(new User(username, password, repeatedPass, email), sessionUsername);
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);
     }
 }
-

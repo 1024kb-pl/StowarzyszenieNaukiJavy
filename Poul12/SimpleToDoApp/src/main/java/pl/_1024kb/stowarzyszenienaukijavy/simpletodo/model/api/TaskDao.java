@@ -12,4 +12,5 @@ public interface TaskDao
     void updateCheckTask(String checkTask, long taskId) throws SQLException;
     void updateTask(Task task) throws SQLException;
     void deleteTaskById(long taskId) throws SQLException;
+    void deleteAllTasks(long userId) throws SQLException;
 }

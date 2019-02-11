@@ -2,6 +2,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +14,7 @@ import java.io.IOException;
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet
 {
-    private static Logger logger = LoggerFactory.getLogger(LogoutServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogoutServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -25,6 +26,7 @@ public class LogoutServlet extends HttpServlet
             request.getSession().invalidate();
             message = "Wylogowano ;)";
             logger.info("Pomyślnie wylogowano użytkownika {}", username);
+            MDC.remove("user");
         }
         else
             logger.error("Błąd podczas wylogowywania się uzytkownika {}", username);

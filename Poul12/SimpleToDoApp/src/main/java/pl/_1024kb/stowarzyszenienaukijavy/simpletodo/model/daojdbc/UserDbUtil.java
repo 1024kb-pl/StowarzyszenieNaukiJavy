@@ -7,6 +7,7 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.utility.MD5Hash;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDbUtil implements UserDao
 {
@@ -28,24 +29,47 @@ public class UserDbUtil implements UserDao
     }
 
     @Override
-    public void saveUser(User user, String message) throws SQLException
+    public void saveUser(User user) throws SQLException
     {
         String sqlQuery = "INSERT INTO users(username, password, email) VALUES(?, ?, ?)";
         try(Connection connection = ConnectionProvider.getConnection();
             PreparedStatement statement = connection.prepareStatement(sqlQuery))
         {
-            String hashPassword = MD5Hash.encode(user.getPassword());
-            
-            statement.setString(1, user.getUsername());
-            statement.setString(2, hashPassword);
-            statement.setString(3, user.getEmail());
+            setUser(statement, user);
 
             statement.execute();
         }
     }
-     
+
     @Override
-    public User getUserByUsername(String username) throws SQLException
+    public void updateUser(User user, String username) throws SQLException
+    {
+        String sqlQuery = "UPDATE users SET username=?, password=?, email=? WHERE username=?";
+        try(Connection connection = ConnectionProvider.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sqlQuery))
+
+        {
+            setUser(statement, user);
+            statement.setString(4, username);
+            statement.executeUpdate();
+        }
+    }
+
+    @Override
+    public void deleteUser(String username) throws SQLException
+    {
+        String sqlQuery = "DELETE FROM users WHERE username=?";
+        try(Connection connection = ConnectionProvider.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sqlQuery))
+        {
+            statement.setString(1, username);
+
+            statement.executeUpdate();
+        }
+    }
+
+    @Override
+    public Optional<User> getUserByUsername(String username) throws SQLException
     {
         String selectQuery = String.format("SELECT * FROM users WHERE username='%s'", username);
         try(Connection connection = ConnectionProvider.getConnection();
@@ -54,10 +78,10 @@ public class UserDbUtil implements UserDao
         {
 
             while (resultSet.next())
-                return getUser(resultSet);
+                return Optional.of(getUser(resultSet));
         }
 
-       return DEFAULT_USER;
+       return Optional.empty();
     }
     
     
@@ -93,4 +117,14 @@ public class UserDbUtil implements UserDao
 
         return new User(userId, username, password, email);
     }
+
+    private void setUser(PreparedStatement statement, User user) throws SQLException
+    {
+        String hashPassword = MD5Hash.encode(user.getPassword());
+
+        statement.setString(1, user.getUsername());
+        statement.setString(2, hashPassword);
+        statement.setString(3, user.getEmail());
+    }
+
 }

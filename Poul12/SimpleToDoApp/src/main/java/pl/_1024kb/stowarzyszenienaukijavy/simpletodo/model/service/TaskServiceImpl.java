@@ -1,6 +1,5 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.TaskService;
@@ -36,6 +35,7 @@ public class TaskServiceImpl implements TaskService
     @Override
     public String createTask(Task task, String username)
     {
+        String messageInfo = "Pomyślnie zapisano zadanie ;)";
         long userId = 0L;
 
         if(userService.getUserByUsername(username).isPresent())
@@ -44,6 +44,7 @@ public class TaskServiceImpl implements TaskService
         try
         {
             jdbcDao.saveTask(task, userId);
+            logger.info(messageInfo + " - " + task.getTitle());
         }
         catch(SQLException e)
         {
@@ -53,8 +54,6 @@ public class TaskServiceImpl implements TaskService
             return messageError;
         }
 
-        String messageInfo = "Pomyślnie zapisano zadanie ;)";
-        logger.info(messageInfo + " - " + task.getTitle());
         return messageInfo;
     }
 
@@ -70,31 +69,13 @@ public class TaskServiceImpl implements TaskService
     }
 
     @Override
-    public String setCheckTask(String checkTask, long taskId)
-    {
-        try
-        {
-            jdbcDao.updateCheckTask(checkTask, taskId);
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
-            String messageError = "Nie udało się zmienić statusu zadania";
-            logger.error(messageError + " - id: " + taskId);
-            return messageError;
-        }
-
-        String messageInfo = "Pomyślnie zmieniono status zadania";
-        logger.info(messageInfo + " - id: " + taskId);
-        return messageInfo;
-    }
-
-    @Override
     public String changeTask(Task task)
     {
+        String messageInfo = "Pomyślnie zaktualizowano zadanie :)";
         try
         {
             jdbcDao.updateTask(task);
-
+            logger.info(messageInfo + " - " + task.getTitle());
         } catch (SQLException e)
         {
             e.printStackTrace();
@@ -103,17 +84,17 @@ public class TaskServiceImpl implements TaskService
             return messageError;
         }
 
-        String messageInfo = "Pomyślnie zaktualizowano zadanie :)";
-        logger.info(messageInfo + " - " + task.getTitle());
         return messageInfo;
     }
 
     @Override
     public String deleteTaskById(long taskId)
     {
+        String messageInfo = "Pomyślnie usunięto zadanie";
         try
         {
             jdbcDao.deleteTaskById(taskId);
+            logger.info(messageInfo + " - id: " + taskId);
 
         } catch (SQLException e)
         {
@@ -122,10 +103,26 @@ public class TaskServiceImpl implements TaskService
             logger.error(messageError + " - id: " + taskId);
             return messageError;
         }
-
-        String messageInfo = "Pomyślnie usunięto zadanie";
-        logger.info(messageInfo + " - id: " + taskId);
         return messageInfo;
+    }
+
+    @Override
+    public void deleteAllTasks(String username)
+    {
+        long userId = 0L;
+
+        if(userService.getUserByUsername(username).isPresent())
+            userId = userService.getUserByUsername(username).get().getId();
+
+        try
+        {
+            jdbcDao.deleteAllTasks(userId);
+            logger.info("Usunięto wszystkie zadania użytkownika {}", username);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            logger.error("Nie udało się usunąć wszystkich zadań użytkownika {}", username);
+        }
     }
 
     @Override

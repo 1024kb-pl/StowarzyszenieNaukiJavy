@@ -47,6 +47,7 @@
   }else
   {
 %>
+<p><a href="userpanel.jsp"><button type="button">Panel użytkownika</button></a></p>
 <p><a href="logout"><button type="button">Wyloguj się</button></a></p>
 <%
   }

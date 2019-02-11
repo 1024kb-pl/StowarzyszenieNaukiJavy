@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Tasks</title>
+    <title>User Panel</title>
     <style>
 
         body
@@ -16,7 +16,7 @@
             text-align: center;
         }
 
-        p, form
+        p
         {
             font-family: verdana;
             font-size: 16px;
@@ -27,15 +27,12 @@
 </head>
 <body>
 
-<h1>Zadania</h1>
-
-<p><a href="index.jsp"><button type="button">Menu</button></a></p>
+<h1>Panel użytkownika</h1>
 
 <br>
 
-<p><a href="logout"><button type="button">Wyloguj się</button></a></p>
-<p><a href="addtask.jsp"><button type="button">Stwórz nowe zadanie</button></a></p>
-<p><a href="tasks"><button type="button">Lista zadań</button></a></p>
+<p><a href="edituser.jsp"><button type="button">Edycja konta</button></a></p>
+<p><a href="deleteUser"><button type="button">Usuń konto</button></a></p>
 
 </body>
 </html>

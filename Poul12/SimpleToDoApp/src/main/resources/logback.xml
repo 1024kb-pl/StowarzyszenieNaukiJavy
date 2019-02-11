@@ -6,7 +6,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
-                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+                %X{user} %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n
             </Pattern>
         </layout>
     </appender>
@@ -16,7 +16,7 @@
         <file>${DEV_HOME}/logger.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
-                %d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n
+                %X{user} %d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n
             </Pattern>
         </encoder>
 
@@ -31,7 +31,6 @@
 
     </appender>
 
-    <!-- Send logs to both console and file audit -->
     <logger name="simpleToDo" level="debug"
             additivity="false">
         <appender-ref ref="STDOUT" />

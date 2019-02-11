@@ -23,6 +23,13 @@
             margin-left: 25px;
         }
 
+        p
+        {
+            font-family: verdana;
+            font-size: 16px;
+            text-align: right;
+        }
+
         form
         {
             text-align: center;
@@ -39,6 +46,8 @@
 <body>
 
 <h1>Edytuj zadanie</h1>
+
+<p><a href="index.jsp"><button type="button">Menu</button></a></p>
 
 <br>
 <form action="editTask" method="post" id="taskform">

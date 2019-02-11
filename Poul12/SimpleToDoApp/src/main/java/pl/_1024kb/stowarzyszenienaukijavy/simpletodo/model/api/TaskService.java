@@ -11,11 +11,11 @@ public interface TaskService
 
     List<Task> getAllTasksByUserId(String username);
 
-    String setCheckTask(String checkTask, long taskId);
-
     String changeTask(Task task);
 
     String deleteTaskById(long taskId);
+
+    void deleteAllTasks(String username);
 
     List<Task> getAllTasksByDate(String username, LocalDate dateFilter);
 

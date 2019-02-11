@@ -116,7 +116,19 @@ public class TaskDbUtil implements TaskDao
             statement.setLong(1, taskId);
 
             statement.executeUpdate();
+        }
+    }
 
+    @Override
+    public void deleteAllTasks(long userId) throws SQLException
+    {
+        String sqlQuery = "DELETE FROM tasks WHERE username_id=?";
+        try(Connection connection = ConnectionProvider.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sqlQuery))
+        {
+            statement.setLong(1, userId);
+
+            statement.executeUpdate();
         }
     }
 }
