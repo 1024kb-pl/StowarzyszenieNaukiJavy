@@ -14,16 +14,12 @@ public class WelcomMenuOptionsTest {
 
     @Test(expected = InvalidOptionException.class)
     public void choseTooHighOption(){
-        MainMenuOptions.returnIfCorrect(4);
+        WelcomeMenuOptions.returnIfCorrect(4);
     }
 
     @Test(expected = InvalidOptionException.class)
-    public void chooseTooLowOption(){
-        MainMenuOptions.returnIfCorrect(0);
-    }
+    public void chooseTooLowOption(){ WelcomeMenuOptions.returnIfCorrect(0); }
 
     @Test(expected = InvalidOptionException.class)
-    public void chooseNegativeOption(){
-        MainMenuOptions.returnIfCorrect(-1);
-    }
+    public void chooseNegativeOption(){ WelcomeMenuOptions.returnIfCorrect(-1); }
 }

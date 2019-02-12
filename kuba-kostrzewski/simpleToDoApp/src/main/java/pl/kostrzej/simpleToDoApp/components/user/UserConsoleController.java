@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import pl.kostrzej.simpleToDoApp.app.DateController;
+import pl.kostrzej.simpleToDoApp.components.task.Task;
 import pl.kostrzej.simpleToDoApp.components.task.TaskService;
+import pl.kostrzej.simpleToDoApp.components.task.TaskStatus;
 import pl.kostrzej.simpleToDoApp.components.validator.FieldValidator;
-import pl.kostrzej.simpleToDoApp.components.validator.UserAlreadyExistsException;
 
-import java.util.Date;
 import java.util.Scanner;
 
 @Controller
@@ -25,18 +25,20 @@ public class UserConsoleController implements UserController{
 
     @Override
     public User addTask(User user){
+        Task task = new Task();
+        String title;
         log.info("Adding new task process initialized.");
-        String title, description;
-        Date date;
         do {
             System.out.println("Podaj tytuł:");
             title = scanner.nextLine();
         } while (fieldValidator.isFieldEmpty(title, "Tytuł"));
+        task.setTitle(title);
         System.out.println("Podaj opis lub zostaw puste:");
-        description = scanner.nextLine();
-        date = dateController.readDate();
-        log.info("Date: " + date);
-        taskService.addTask(user, title, description, date);
+        task.setDescription(scanner.nextLine());
+        task.setDate(dateController.readDate());
+        task.setUser(user);
+        task.setStatus(TaskStatus.UNDONE);
+        taskService.addTask(task);
         return getUser(user.getId());
     }
 
@@ -74,14 +76,17 @@ public class UserConsoleController implements UserController{
             answer = scanner.nextLine();
         } while (fieldValidator.isFieldEmpty(answer, "Odpowiedź"));
         user.setAnswer(answer);
-        log.info("User to save: " + user);
+        log.info("User to save: {}", user);
         try{
             userService.addUser(user);
             log.info("User saved successfully.");
             System.out.println("Użytkownik został poprawnie zarejestrowany\n" +
                     "Możesz się teraz zalogować");
         } catch (UserAlreadyExistsException e){
-            log.info("User already exists." + e.getClass());
+            log.info("User already exists. {}", e.getClass());
+            System.err.println(e.getMessage());
+        } catch (IllegalArgumentException e){
+            log.info("Illegal user argument {}", e.getMessage());
             System.err.println(e.getMessage());
         }
     }

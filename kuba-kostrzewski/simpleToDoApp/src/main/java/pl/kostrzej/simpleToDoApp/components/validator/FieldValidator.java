@@ -9,7 +9,7 @@ public class FieldValidator {
 
     public boolean isFieldEmpty(String value, String name){
         if (value.isEmpty()){
-            log.info("Field " + name + " is empty.");
+            log.info("Field {} is empty.", name);
             System.out.println("Pole \"" + name + "\" nie może być puste!");
             return true;
         }

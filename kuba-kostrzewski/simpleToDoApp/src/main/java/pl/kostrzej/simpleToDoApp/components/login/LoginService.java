@@ -16,7 +16,7 @@ public class LoginService {
     public User logIn(String login, String password){
         log.info("Checking if user exists in database");
         User user = userRepository.findByLogin(login).orElseThrow(() -> {
-            log.info("User \"" + login + "\" not exists. Authorization failed.");
+            log.info("User \"{}\" not exists. Authorization failed.", login);
             return new InvalidLoginDataException();
         });
         log.info("User: " + user);

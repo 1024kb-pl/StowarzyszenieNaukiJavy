@@ -37,10 +37,11 @@ public class DateController {
                 log.info("Date format is valid.");
             } catch (ParseException e){
                 System.out.println("Podane dane są niewłaściwe!");
-                log.info("Date format is invalid. " + e.getClass());
-                log.info("Invalid date: " + builder.toString());
+                log.info("Date format is invalid. {}", e.getClass());
+                log.info("Invalid date: {}", builder.toString());
             }
         }
+        log.info("Date: {}", date);
         return date;
     }
 }

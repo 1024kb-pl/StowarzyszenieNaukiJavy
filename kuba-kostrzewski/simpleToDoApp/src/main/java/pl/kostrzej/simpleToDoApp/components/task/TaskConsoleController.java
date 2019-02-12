@@ -19,7 +19,6 @@ public class TaskConsoleController implements TaskController {
 
     private Scanner scanner;
     private TaskService taskService;
-    private UserService userService;
     private DateController dateController;
     private FieldValidator fieldValidator;
 
@@ -64,8 +63,8 @@ public class TaskConsoleController implements TaskController {
                 System.out.println("Wpisano niewłaściwe dane! Podaj liczbę!");
             } catch (IndexOutOfBoundsException e){
                 System.err.println(e.getMessage());
-                log.info("Invalid task number! Task list size= " + tasks.size()
-                        + " Value typed to console = " + taskIndex + " " + e.getClass().toString());
+                log.info("Invalid task number! Task list size= {} Value typed to console = {} {}",
+                        tasks.size(), taskIndex, e.getClass().toString());
             }
         }
         return null;
@@ -85,11 +84,11 @@ public class TaskConsoleController implements TaskController {
                 boolean answer = answerYes();
                 if (answer && task.getStatus().equals(TaskStatus.DONE)){
                     task.setStatus(TaskStatus.UNDONE);
-                    log.info("Task status changed. Status: " + task.getStatus());
+                    log.info("Task status changed. Status: {}", task.getStatus());
                     taskService.saveTask(task);
                 } else if (answer && task.getStatus().equals(TaskStatus.UNDONE)){
                     task.setStatus(TaskStatus.DONE);
-                    log.info("Task status changed. Status: " + task.getStatus());
+                    log.info("Task status changed. Status: {}", task.getStatus());
                     taskService.saveTask(task);
                 }
             } catch (InvalidAnswerException e){
@@ -108,7 +107,7 @@ public class TaskConsoleController implements TaskController {
             log.info("Empty task list");
             System.out.println("Brak zadań");
         } else {
-            log.info("Task list size = " + tasks.size());
+            log.info("Task list size = {}", tasks.size());
             IntStream
                     .range(0, tasks.size())
                     .forEach(i -> {
@@ -130,7 +129,7 @@ public class TaskConsoleController implements TaskController {
             log.info("Correct index value");
             return taskIndex;
         }
-        log.info("Choosen no out of bounds. Choosen index: " + taskIndex + "Table size: " + tasks.size());
+        log.info("Choosen no out of bounds. Choosen index: {} Table size: {}", taskIndex, tasks.size());
         throw new IndexOutOfBoundsException("Zadanie o nr " + (taskIndex + 1)+ " nie istnieje!");
     }
     private boolean answerYes(){
@@ -143,7 +142,7 @@ public class TaskConsoleController implements TaskController {
             log.info("Answer valid N");
             return false;
         }
-        log.info("Answer invalid " + answer);
+        log.info("Answer invalid {}", answer);
         throw new InvalidAnswerException();
     }
 }

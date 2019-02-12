@@ -35,7 +35,7 @@ public class LoginConsoleController implements LoginController {
             log.info("Login successful.");
             return user;
         } catch (InvalidLoginDataException e){
-            log.info("Invalid login data. " + e.getClass());
+            log.info("Invalid login data. {}", e.getClass());
             System.err.println(e.getMessage());
             return null;
         }

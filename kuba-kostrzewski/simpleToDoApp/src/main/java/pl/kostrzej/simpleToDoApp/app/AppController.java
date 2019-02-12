@@ -31,7 +31,7 @@ public class AppController {
             switch (chooseWelcomeMenuOption()) {
                 case LOGIN:
                     user = loginController.logIn();
-                    log.info("Logging user finished. User: " + user);
+                    log.info("Logging user finished. {}", user);
                     break;
                 case REGISTER:
                     userController.addUser();
@@ -54,37 +54,37 @@ public class AppController {
                     log.info("Show all tasks finished");
                     break;
                 case ADD_NEW_TASK:
-                    log.info("User's task list size before adding new task = " + user.getTasks().size());
+                    log.info("User's task list size before adding new task = {}", user.getTasks().size());
                     user = userController.addTask(user);
-                    log.info("User's task list size after adding new task = " + user.getTasks().size());
+                    log.info("User's task list size after adding new task = {}", user.getTasks().size());
                     break;
                 case DELETE_TASK:
-                    log.info("User's task list size before deleting task = " + user.getTasks().size());
+                    log.info("User's task list size before deleting task = {}", user.getTasks().size());
                     System.out.println("USUWANIE ZADANIA");
                     Task taskToDelete = taskController.getTaskFromList(user.getTasks());
                     if (taskToDelete != null){
                         taskController.deleteTask(taskToDelete);
                         user = userController.getUser(user.getId());
-                        log.info("User's task list size after deleting task = " + user.getTasks().size());
+                        log.info("User's task list size after deleting task = {}", user.getTasks().size());
                     }
                     break;
                 case CHANGE_TASK_STATUS:
                     System.out.println("ZMIANA STATUSU ZADANIA");
                     Task taskToChangeStatus = taskController.getTaskFromList(user.getTasks());
-                    log.info("Task before change status: " + taskToChangeStatus);
+                    log.info("Task before change status: {}", taskToChangeStatus);
                     if (taskToChangeStatus != null){
                         Task editedTask = taskController.changeTaskStatus(taskToChangeStatus);
                         user = userController.getUser(user.getId());
-                        log.info("Task after change status: " + editedTask);
+                        log.info("Task after change status: {}", editedTask);
                     }
                     log.info("User's task status changing process finished.");
                     break;
                 case EDIT_TASK:
                     System.out.println("EDYCJA ZADANIA");
                     Task taskToEdit = taskController.getTaskFromList(user.getTasks());
-                    log.info("Task before edit: " + taskToEdit);
+                    log.info("Task before edit: {}", taskToEdit);
                     Task editedTask = taskController.editTask(taskToEdit);
-                    log.info("Task after edit: " + editedTask);
+                    log.info("Task after edit: {}", editedTask);
                     user = userController.getUser(user.getId());
                     break;
                 case EXIT:
@@ -115,14 +115,14 @@ public class AppController {
                 int optionId = scanner.nextInt();
                 scanner.nextLine();
                 option = WelcomeMenuOptions.returnIfCorrect(optionId);
-                log.info("Correct option " + option);
+                log.info("Correct option {}", option);
                 isOptionCorrect = true;
             } catch (InvalidOptionException e) {
-                log.info("Incorrect option. " + e.getClass());
+                log.info("Incorrect option. {}", e.getClass());
                 System.err.println(e.getMessage());
             } catch (InputMismatchException e){
                 scanner.nextLine();
-                log.info("Invalid data type. " + e.getClass());
+                log.info("Invalid data type. {}", e.getClass());
                 System.err.println("Podaj liczbę!");
             }
         }
@@ -138,13 +138,13 @@ public class AppController {
             try {
                 int optionId = scanner.nextInt();
                 option = MainMenuOptions.returnIfCorrect(optionId);
-                log.info("Correct option " + option);
+                log.info("Correct option {}", option);
                 isOptionCorrect = true;
             } catch (InvalidOptionException e) {
-                log.info("Incorrect option. " + e.getClass());
+                log.info("Incorrect option. {}", e.getClass());
                 System.err.println(e.getMessage());
             } catch (InputMismatchException e){
-                log.info("Invalid data type. " + e.getClass());
+                log.info("Invalid data type. {}", e.getClass());
                 System.err.println("Podaj liczbę!");
             }
             scanner.nextLine();
