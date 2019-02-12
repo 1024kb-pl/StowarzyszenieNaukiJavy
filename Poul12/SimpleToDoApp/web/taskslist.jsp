@@ -39,8 +39,8 @@
     Filtry:
     <select name="filter">
         <option></option>
-        <option value="yes">Wykonane</option>
-        <option value="no">Niewykonane</option>
+        <option value="true">Wykonane</option>
+        <option value="false">Niewykonane</option>
         <option value="date">Data</option>
     </select>
     <input type="date" name="dateFilter">

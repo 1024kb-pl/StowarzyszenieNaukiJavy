@@ -30,7 +30,7 @@ public class TasksListServlet extends HttpServlet
         filterTask(username, request);
 
         String sortList = request.getParameter("sort");
-        if(sortList != null)
+        if(sortList != null && !sortList.isEmpty())
             sortTaskList(username, sortList);
 
         request.setAttribute("tasksList", taskList);
@@ -39,6 +39,7 @@ public class TasksListServlet extends HttpServlet
 
     private void sortTaskList(String username, String sortList)
     {
+        System.out.println("sortList: " + sortList);
         OrderOption orderOption = OrderOption.valueOf(sortList.toUpperCase());
         switch (orderOption)
         {
@@ -61,7 +62,16 @@ public class TasksListServlet extends HttpServlet
         {
             if (!filterOption.equals("date"))
             {
-                taskList = taskService.getAllTasksByTaskDone(username, filterOption);
+                try
+                {
+                    boolean doneFilter = Boolean.parseBoolean(filterOption);
+                    taskList = taskService.getAllTasksByTaskDone(username, doneFilter);
+
+                }catch (IllegalArgumentException e)
+                {
+                    e.printStackTrace();
+                }
+
                 request.setAttribute("done_filter", filterOption);
             } else
             {

@@ -134,10 +134,10 @@ public class TaskServiceImpl implements TaskService
     }
 
     @Override
-    public List<Task> getAllTasksByTaskDone(String username, String doneFilter)
+    public List<Task> getAllTasksByTaskDone(String username, boolean doneFilter)
     {
         return getAllTasksByUserId(username).stream()
-                .filter(task -> task.getTaskDone().equals(doneFilter))
+                .filter(task -> task.getTaskDone() == doneFilter)
                 .collect(Collectors.toList());
     }
 

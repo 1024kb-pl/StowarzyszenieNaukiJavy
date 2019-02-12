@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="DEV_HOME" value="c:/logs" />
+    <property name="LOG_HOME" value="c:/logs" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -13,7 +13,7 @@
 
     <appender name="FILE-LOG"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${DEV_HOME}/logger.log</file>
+        <file>${LOG_HOME}/logger.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
                 %X{user} %d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n
@@ -21,7 +21,7 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${DEV_HOME}/archived/logger.%d{yyyy-MM-dd}.%i.log
+            <fileNamePattern>${LOG_HOME}/archived/logger.%d{yyyy-MM-dd}.%i.log
             </fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">

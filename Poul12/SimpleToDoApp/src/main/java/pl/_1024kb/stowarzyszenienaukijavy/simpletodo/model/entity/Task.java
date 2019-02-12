@@ -8,7 +8,7 @@ public class Task
     private String title;
     private LocalDate date;
     private String description;
-    private String taskDone;
+    private boolean taskDone;
     private long username_id;
     private User user;
 
@@ -43,14 +43,14 @@ public class Task
         this.description = description;
     }
 
-    public Task(String title, LocalDate date, String description, String taskDone) {
+    public Task(String title, LocalDate date, String description, boolean taskDone) {
         this.title = title;
         this.date = date;
         this.description = description;
         this.taskDone = taskDone;
     }
 
-    public Task(long id, String title, LocalDate date, String description, String taskDone) {
+    public Task(long id, String title, LocalDate date, String description, boolean taskDone) {
         this.id = id;
         this.title = title;
         this.date = date;
@@ -106,11 +106,11 @@ public class Task
         this.user = user;
     }
 
-    public String getTaskDone() {
+    public boolean getTaskDone() {
         return taskDone;
     }
 
-    public void setTaskDone(String taskDone) {
+    public void setTaskDone(boolean taskDone) {
         this.taskDone = taskDone;
     }
 

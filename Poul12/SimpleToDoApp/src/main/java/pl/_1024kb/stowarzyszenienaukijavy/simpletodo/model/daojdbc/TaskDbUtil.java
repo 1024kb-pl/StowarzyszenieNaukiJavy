@@ -58,7 +58,7 @@ public class TaskDbUtil implements TaskDao
                 String title = resultSet.getString("title");
                 Date date = resultSet.getDate("date");
                 String description = resultSet.getString("description");
-                String taskDone = resultSet.getString("task_done");
+                boolean taskDone = resultSet.getBoolean("task_done");
 
                 LocalDate taskDate = date.toLocalDate();
 
@@ -99,7 +99,7 @@ public class TaskDbUtil implements TaskDao
             statement.setString(1, task.getTitle());
             statement.setDate(2, Date.valueOf(task.getDate()));
             statement.setString(3, task.getDescription());
-            statement.setString(4, task.getTaskDone());
+            statement.setBoolean(4, task.getTaskDone());
             statement.setLong(5, task.getId());
 
             statement.executeUpdate();

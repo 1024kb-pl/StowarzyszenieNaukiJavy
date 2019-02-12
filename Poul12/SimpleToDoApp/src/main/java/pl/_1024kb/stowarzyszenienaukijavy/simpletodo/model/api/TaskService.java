@@ -19,7 +19,7 @@ public interface TaskService
 
     List<Task> getAllTasksByDate(String username, LocalDate dateFilter);
 
-    List<Task> getAllTasksByTaskDone(String username, String doneFilter);
+    List<Task> getAllTasksByTaskDone(String username, boolean doneFilter);
 
     List<Task> getAllTasksOrderedByTitle(String username);
 
