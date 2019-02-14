@@ -39,7 +39,6 @@ public class TasksListServlet extends HttpServlet
 
     private void sortTaskList(String username, String sortList)
     {
-        System.out.println("sortList: " + sortList);
         OrderOption orderOption = OrderOption.valueOf(sortList.toUpperCase());
         switch (orderOption)
         {
