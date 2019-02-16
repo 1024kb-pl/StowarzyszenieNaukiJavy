@@ -25,8 +25,11 @@ public class EditUserServlet extends HttpServlet
         String repeatedPass = request.getParameter("repeated-pass");
         String email = request.getParameter("email");
 
-        String sessionUsername = (String) request.getSession(false).getAttribute("username") ;
-        String message = userServiceImpl.changeUser(new User(username, password, repeatedPass, email), sessionUsername);
+        String sessionUsername = (String) request.getSession(false).getAttribute("username");
+        if(!sessionUsername.equals(username))
+            request.getSession(false).setAttribute("username", username);
+
+        String message = userServiceImpl.editUser(new User(username, password, repeatedPass, email), sessionUsername);
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);

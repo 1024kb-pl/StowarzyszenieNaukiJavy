@@ -2,15 +2,20 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity;
 
 public class User
 {
-    private Long id;
+    private Long user_id;
     private String username;
     private String password;
     private String repeatedPassword;
     private String email;
 
-    public User(Long id, String username, String password, String email)
+    public User()
     {
-        this.id = id;
+
+    }
+
+    public User(Long user_id, String username, String password, String email)
+    {
+        this.user_id = user_id;
         this.username = username;
         this.password = password;
         this.email = email;
@@ -37,14 +42,14 @@ public class User
         this.email = email;
     }
 
-    public Long getId()
+    public Long getUser_id()
     {
-        return id;
+        return user_id;
     }
     
-    public void setId(Long id)
+    public void setUser_id(Long user_id)
     {
-        this.id = id;
+        this.user_id = user_id;
     }
         
     public String getUsername()

@@ -22,7 +22,7 @@ public class EditTaskServlet extends HttpServlet
         request.setCharacterEncoding("UTF-8");
 
         String idStr = request.getParameter("task_id");
-        long taskId = Long.parseLong(idStr);
+        Long taskId = Long.parseLong(idStr);
         String title = request.getParameter("title");
         String dateStr = request.getParameter("taskdate");
         LocalDate date = LocalDate.parse(dateStr);

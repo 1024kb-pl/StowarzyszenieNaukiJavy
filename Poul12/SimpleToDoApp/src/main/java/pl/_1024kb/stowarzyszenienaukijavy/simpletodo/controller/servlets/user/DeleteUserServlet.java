@@ -21,8 +21,17 @@ public class DeleteUserServlet extends HttpServlet
     {
         String username = (String) request.getSession(false).getAttribute("username");
 
-        taskService.deleteAllTasks(username);
-        String message = userService.removeUser(username);
+        String message = "Błąd podczas usuwania użytkownika";
+        try
+        {
+            taskService.deleteAllTasks(username);
+            message = userService.removeUser(username);
+            request.getSession(false).invalidate();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);

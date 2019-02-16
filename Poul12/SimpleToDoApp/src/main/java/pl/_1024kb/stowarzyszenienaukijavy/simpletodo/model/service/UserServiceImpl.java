@@ -2,10 +2,12 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.UserDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.UserService;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.UserDbUtil;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.DaoFactory;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.*;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.utility.MD5Hash;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,7 +16,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService
 {
     private static UserServiceImpl instance;
-    private UserDbUtil jdbcDao = UserDbUtil.getInstance();
+    private DaoFactory factory = DaoFactory.getDaoFactory(DaoFactory.MYSQL_DAO);
+    private UserDao dao = factory.getUserDao();
+    //private MysqlUserDao jdbcDao = MysqlUserDao.getInstance();
     private UserValidator validator = UserValidator.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
@@ -42,7 +46,8 @@ public class UserServiceImpl implements UserService
             {
                 try
                 {
-                    jdbcDao.saveUser(user);
+                    user.setPassword(encodePassword(user));
+                    dao.create(user);
                     logger.info(messageInfo + " - " + user.getUsername());
 
                 }catch(SQLException e)
@@ -65,14 +70,19 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public String changeUser(User user, String username)
+    public String editUser(User user, String username)
     {
         String message = "Pomyślnie zmieniono dane użytownika";
+
+        Long userId = getUserId(username);
+
         try
         {
             if(validator.isUserValid(user))
             {
-                jdbcDao.updateUser(user, username);
+                user.setUser_id(userId);
+                user.setPassword(encodePassword(user));
+                dao.update(user);
                 logger.info(message);
             }
 
@@ -85,13 +95,21 @@ public class UserServiceImpl implements UserService
         return message;
     }
 
+    private String encodePassword(User user)
+    {
+        return MD5Hash.encode(user.getPassword());
+    }
+
     @Override
     public String removeUser(String username)
     {
         String message = "Pomyślnie usunięto użytkownika";
+
+        Long userId = getUserId(username);
+
         try
         {
-            jdbcDao.deleteUser(username);
+            dao.delete(userId);
             logger.info(message);
         } catch (SQLException e)
         {
@@ -103,14 +121,25 @@ public class UserServiceImpl implements UserService
         return message;
     }
 
+    private long getUserId(String username)
+    {
+        Long userId = 0L;
+
+        if(getUserByUsername(username).isPresent())
+            userId = getUserByUsername(username).get().getUser_id();
+
+        return userId;
+    }
+
     @Override
     public Optional<User> getUserByUsername(String username)
     {
         Optional<User> user;
+
         try
         {
             logger.debug("Pomyślnie udało się pobrać użytkownika {} z bazy", username);
-            user = jdbcDao.getUserByUsername(username);
+            user = dao.read(username);
 
         } catch (SQLException e)
         {
@@ -125,7 +154,7 @@ public class UserServiceImpl implements UserService
     @Override
     public List<User> getAllUsers()
     {
-        return jdbcDao.getAllUsers();
+        return dao.getAllUsers();
     }
     
     @Override

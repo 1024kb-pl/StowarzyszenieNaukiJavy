@@ -4,29 +4,33 @@ import java.time.LocalDate;
 
 public class Task
 {
-    private long id;
+    private Long task_id;
     private String title;
     private LocalDate date;
     private String description;
-    private boolean taskDone;
-    private long username_id;
+    private boolean task_done;
+    private Long user_id;
     private User user;
 
+    public Task()
+    {
 
-    public Task(long id, String title, LocalDate date, String description, long username_id, User user) {
-        this.id = id;
+    }
+
+    public Task(Long task_id, String title, LocalDate date, String description, Long user_id, User user) {
+        this.task_id = task_id;
         this.title = title;
         this.date = date;
         this.description = description;
-        this.username_id = username_id;
+        this.user_id = user_id;
         this.user = user;
     }
 
-    public Task(String title, LocalDate date, String description, long username_id, User user) {
+    public Task(String title, LocalDate date, String description, Long user_id, User user) {
         this.title = title;
         this.date = date;
         this.description = description;
-        this.username_id = username_id;
+        this.user_id = user_id;
         this.user = user;
     }
 
@@ -36,34 +40,34 @@ public class Task
         this.description = description;
     }
 
-    public Task(long id, String title, LocalDate date, String description) {
-        this.id = id;
+    public Task(Long task_id, String title, LocalDate date, String description) {
+        this.task_id = task_id;
         this.title = title;
         this.date = date;
         this.description = description;
     }
 
-    public Task(String title, LocalDate date, String description, boolean taskDone) {
+    public Task(String title, LocalDate date, String description, boolean task_done) {
         this.title = title;
         this.date = date;
         this.description = description;
-        this.taskDone = taskDone;
+        this.task_done = task_done;
     }
 
-    public Task(long id, String title, LocalDate date, String description, boolean taskDone) {
-        this.id = id;
+    public Task(Long task_id, String title, LocalDate date, String description, boolean task_done) {
+        this.task_id = task_id;
         this.title = title;
         this.date = date;
         this.description = description;
-        this.taskDone = taskDone;
+        this.task_done = task_done;
     }
 
-    public long getId() {
-        return id;
+    public Long getTask_id() {
+        return task_id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setTask_id(Long task_id) {
+        this.task_id = task_id;
     }
 
     public String getTitle() {
@@ -90,12 +94,12 @@ public class Task
         this.description = description;
     }
 
-    public long getUsername_id() {
-        return username_id;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setUsername_id(long username_id) {
-        this.username_id = username_id;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
     public User getUser() {
@@ -106,12 +110,12 @@ public class Task
         this.user = user;
     }
 
-    public boolean getTaskDone() {
-        return taskDone;
+    public boolean getTask_done() {
+        return task_done;
     }
 
-    public void setTaskDone(boolean taskDone) {
-        this.taskDone = taskDone;
+    public void setTask_done(boolean task_done) {
+        this.task_done = task_done;
     }
 
     @Override

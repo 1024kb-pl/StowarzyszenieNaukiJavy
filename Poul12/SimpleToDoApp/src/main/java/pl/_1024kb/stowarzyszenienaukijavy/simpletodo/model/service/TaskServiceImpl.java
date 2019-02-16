@@ -2,8 +2,9 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.TaskDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.TaskService;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.TaskDbUtil;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.DaoFactory;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
 
 import java.sql.SQLException;
@@ -15,7 +16,9 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl implements TaskService
 {
     private static TaskServiceImpl instance;
-    private TaskDbUtil jdbcDao = TaskDbUtil.getInstance();
+    private DaoFactory factory = DaoFactory.getDaoFactory(DaoFactory.MYSQL_DAO);
+    private TaskDao dao = factory.getTaskDao();
+    //private MysqlTaskDao jdbcDao = new MysqlTaskDao();
     private UserServiceImpl userService = UserServiceImpl.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
@@ -36,14 +39,16 @@ public class TaskServiceImpl implements TaskService
     public String createTask(Task task, String username)
     {
         String messageInfo = "Pomyślnie zapisano zadanie ;)";
-        long userId = 0L;
+        Long userId = 0L;
 
         if(userService.getUserByUsername(username).isPresent())
-            userId = userService.getUserByUsername(username).get().getId();
+            userId = userService.getUserByUsername(username).get().getUser_id();
+
+        task.setUser_id(userId);
 
         try
         {
-            jdbcDao.saveTask(task, userId);
+            dao.create(task);
             logger.info(messageInfo + " - " + task.getTitle());
         }
         catch(SQLException e)
@@ -60,12 +65,12 @@ public class TaskServiceImpl implements TaskService
     @Override
     public List<Task> getAllTasksByUserId(String username)
     {
-        long userId = 0L;
+        Long userId = 0L;
 
         if(userService.getUserByUsername(username).isPresent())
-            userId = userService.getUserByUsername(username).get().getId();
+            userId = userService.getUserByUsername(username).get().getUser_id();
 
-        return jdbcDao.getAllTasksByUserId(userId);
+        return dao.read(userId);
     }
 
     @Override
@@ -74,7 +79,7 @@ public class TaskServiceImpl implements TaskService
         String messageInfo = "Pomyślnie zaktualizowano zadanie :)";
         try
         {
-            jdbcDao.updateTask(task);
+            dao.update(task);
             logger.info(messageInfo + " - " + task.getTitle());
         } catch (SQLException e)
         {
@@ -88,12 +93,12 @@ public class TaskServiceImpl implements TaskService
     }
 
     @Override
-    public String deleteTaskById(long taskId)
+    public String deleteTaskById(Long taskId)
     {
         String messageInfo = "Pomyślnie usunięto zadanie";
         try
         {
-            jdbcDao.deleteTaskById(taskId);
+            dao.delete(taskId);
             logger.info(messageInfo + " - id: " + taskId);
 
         } catch (SQLException e)
@@ -109,14 +114,14 @@ public class TaskServiceImpl implements TaskService
     @Override
     public void deleteAllTasks(String username)
     {
-        long userId = 0L;
+        Long userId = 0L;
 
         if(userService.getUserByUsername(username).isPresent())
-            userId = userService.getUserByUsername(username).get().getId();
+            userId = userService.getUserByUsername(username).get().getUser_id();
 
         try
         {
-            jdbcDao.deleteAllTasks(userId);
+            dao.deleteAllTasks(userId);
             logger.info("Usunięto wszystkie zadania użytkownika {}", username);
         } catch (SQLException e)
         {
@@ -137,7 +142,7 @@ public class TaskServiceImpl implements TaskService
     public List<Task> getAllTasksByTaskDone(String username, boolean doneFilter)
     {
         return getAllTasksByUserId(username).stream()
-                .filter(task -> task.getTaskDone() == doneFilter)
+                .filter(task -> task.getTask_done() == doneFilter)
                 .collect(Collectors.toList());
     }
 
@@ -161,7 +166,7 @@ public class TaskServiceImpl implements TaskService
     public List<Task> getAllTasksOrderedByStatus(String username)
     {
         return getAllTasksByUserId(username).stream()
-                .sorted(Comparator.comparing(Task::getTaskDone).reversed())
+                .sorted(Comparator.comparing(Task::getTask_done).reversed())
                 .collect(Collectors.toList());
     }
 }

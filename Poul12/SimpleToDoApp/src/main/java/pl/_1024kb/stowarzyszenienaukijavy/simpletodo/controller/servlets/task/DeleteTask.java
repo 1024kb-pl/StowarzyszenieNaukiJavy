@@ -18,7 +18,7 @@ public class DeleteTask extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String idStr = request.getParameter("id");
-        long id = Long.parseLong(idStr);
+        Long id = Long.parseLong(idStr);
 
         taskService.deleteTaskById(id);
 

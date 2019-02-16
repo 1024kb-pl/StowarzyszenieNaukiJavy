@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface UserDao
 {
-    void saveUser(User user) throws SQLException;
-    void updateUser(User user, String username) throws SQLException;
-    void deleteUser(String username) throws SQLException;
-    Optional<User> getUserByUsername(String username) throws SQLException;
+    void create(User user) throws SQLException;
+    Optional<User> read(String username) throws SQLException;
+    void update(User user) throws SQLException;
+    void delete(Long user_id) throws SQLException;
     List<User> getAllUsers();
 }

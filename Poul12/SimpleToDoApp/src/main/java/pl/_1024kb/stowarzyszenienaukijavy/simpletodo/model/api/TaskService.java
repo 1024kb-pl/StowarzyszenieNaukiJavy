@@ -13,7 +13,7 @@ public interface TaskService
 
     String changeTask(Task task);
 
-    String deleteTaskById(long taskId);
+    String deleteTaskById(Long taskId);
 
     void deleteAllTasks(String username);
 
