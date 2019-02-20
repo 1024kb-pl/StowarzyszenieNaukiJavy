@@ -9,9 +9,10 @@ DROP TABLE IF EXISTS `USER`;
 
 CREATE TABLE `USER` (
   `userID` int(11) NOT NULL AUTO_INCREMENT,
-  `login` varchar(45) DEFAULT NULL,
+  `login` varchar(45) DEFAULT NULL, UNIQUE,
   `password` varchar(45) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL, UNIQUE,
+  `permision` boolean NOT NULL,
   PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 

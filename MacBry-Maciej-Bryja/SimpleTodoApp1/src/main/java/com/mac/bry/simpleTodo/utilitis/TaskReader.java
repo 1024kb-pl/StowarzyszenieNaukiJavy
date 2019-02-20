@@ -68,8 +68,7 @@ public class TaskReader implements TaskReaderAPI {
 	 */
 	@Override
 	public String readString() {
-		String tempString = scanner.nextLine();
-		return tempString;
+		return scanner.nextLine();
 	}
 	
 	/* (non-Javadoc)
@@ -78,8 +77,7 @@ public class TaskReader implements TaskReaderAPI {
 	@Override
 	public String readString(String msg) {
 		System.out.println("Enter " + msg);
-		String tempString = scanner.nextLine();
-		return tempString;
+		return scanner.nextLine();
 	}
 	
 	/* (non-Javadoc)

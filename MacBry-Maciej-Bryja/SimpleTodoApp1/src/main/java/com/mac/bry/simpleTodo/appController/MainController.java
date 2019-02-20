@@ -1,14 +1,14 @@
 package com.mac.bry.simpleTodo.appController;
 
-import java.nio.charset.Charset;
 import java.time.LocalDate;
-import java.util.Random;
+import java.time.LocalTime;
 
 import org.apache.log4j.Logger;
 
-import com.mac.bry.simpleTodo.DAO.UserDAO;
 import com.mac.bry.simpleTodo.Enums.LoginOption;
+import com.mac.bry.simpleTodo.Exception.LoginOptionNoExistException;
 import com.mac.bry.simpleTodo.entity.User;
+import com.mac.bry.simpleTodo.services.UserService;
 import com.mac.bry.simpleTodo.utilitis.DataReader;
 import com.mac.bry.simpleTodo.utilitis.EmailSender;
 import com.mac.bry.simpleTodo.utilitis.PasswordUtillity;
@@ -19,50 +19,59 @@ public class MainController {
 	
 	
 	private DataReader dataReader;
-	private UserDAO userDAO;
+	private UserService userService; 
 	private MenuController menuController;
 	private User loggedUser;
 
 	public MainController() {
 		super();
 		this.dataReader = new DataReader();
-		this.userDAO = new UserDAO();
+		this.userService = new UserService();
 		this.menuController = new MenuController();
 	}
 
-	public void programLoop() {
+	public void start() {
 		LoginOption option;
 		printLoginOptions();
 
-		while ((option = LoginOption.createFromInt(dataReader.readNumber())) != LoginOption.EXIT) {
-			switch (option) {
-			case LOGIN:
-				if (login()) {
-					;
-					menuController.menuLoop();
-				} else {
-					System.out.println("Try again");
-					login();
+		try {
+			while ((option = LoginOption.getOptionByOrderNumber(dataReader.readNumber())) != LoginOption.EXIT) {
+				switch (option) {
+				case LOGIN:
+					if (login()) {
+						menuController.menuLoop();
+						
+					} else {
+						System.out.println("Try again");
+						start();
+					}
+					break;
+
+				case REGISTR:
+					registr();
+					break;
+
+				case PASSWORD_RESET:
+					resetPassword();
+					break;
+
+				default:
+					System.err.println("\nNo such option");
+					
+					String name = new Object(){}.getClass().getEnclosingMethod().getName();
+					logger.warn("[" + LocalDate.now().toString() +" "+ LocalTime.now().toString() + "] ---> Run " + name + " No such option");
+					
+					start();
+					break;
 				}
-				break;
-
-			case REGISTR:
-				registr();
-				break;
-
-			case PASSWORD_RESET:
-				resetPassword();
-				break;
-
-			default:
-				System.err.println("\nNo such option");
-				
-				String name = new Object(){}.getClass().getEnclosingMethod().getName();
-				logger.warn("[" + LocalDate.now().toString() + "] ---> Run " + name + " No such option");
-				
-				programLoop();
-				break;
 			}
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LoginOptionNoExistException e) {
+			String name = new Object(){}.getClass().getEnclosingMethod().getName();
+			logger.error("[" + LocalDate.now().toString() +" "+ LocalTime.now().toString() + "] ---> Run " + name + " No such option");
+			e.printStackTrace();
 		}
 	}
 
@@ -70,17 +79,16 @@ public class MainController {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
 		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
 		
-		String newPassword = dataReader.generateRandomString();
+		String newPassword = dataReader.generateRandomUUID();
 		String tempMail = dataReader.readString(" your email");
-		if (userDAO.isEmailExist(tempMail)) {
+		if (userService.isEmailExists(tempMail)) {
 			EmailSender.configureEmail(tempMail, newPassword);
 			newPassword = PasswordUtillity.getHashedPassword(newPassword);
-			userDAO.editUserPassword(userDAO.findUserByLogin(dataReader.readString("Login")), newPassword);
+			userService.editUserPassword(userService.findUserByLogin(dataReader.readString("Login")), newPassword);
 		} else {
 			System.err.println("No such email!");
-			programLoop();
+			start();
 		}
-
 	}
 
 	private void printLoginOptions() {
@@ -92,21 +100,18 @@ public class MainController {
 
 	private boolean login() {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		logger.info("[" + LocalDate.now().toString() +" "+ LocalTime.now().toString() + "] ---> Run " + name);
 		
 		User tempUser = dataReader.readUser();
-		this.loggedUser = userDAO.findUserByLogin(tempUser.getLogin());
+		this.loggedUser = userService.findUserByLogin(tempUser.getLogin());
 		menuController.setLoggedUser(this.loggedUser);
 		menuController.setMainController(this);
-		return userDAO.login(tempUser);
+		return userService.isUserExistsByLoginAndPassword(tempUser.getLogin(), tempUser.getPassword());
 	}
 
 	private void registr() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
-		
-		userDAO.addUser(dataReader.readAndCreateUser());
-		programLoop();
+		userService.addUser(dataReader.readAndCreateUser());
+		start();
 	}
 
 }

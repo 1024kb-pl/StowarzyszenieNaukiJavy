@@ -1,5 +1,7 @@
 package com.mac.bry.simpleTodo.Enums;
 
+import com.mac.bry.simpleTodo.Exception.LoginOptionNoExistException;
+
 public enum LoginOption {
 
 	LOGIN(0, "Login"),
@@ -28,7 +30,7 @@ public enum LoginOption {
 		return value + " - " + description;
 	}
 	
-	public static LoginOption createFromInt(int option) {
+	public static LoginOption getOptionByOrderNumber(int option) throws LoginOptionNoExistException {
 		return LoginOption.values()[option];
 	}
 }

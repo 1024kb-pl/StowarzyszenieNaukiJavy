@@ -3,6 +3,7 @@ package com.mac.bry.simpleTodo.utilitis;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.UUID;
 
 import com.mac.bry.simpleTodo.entity.User;
 import com.mac.bry.simpleTodo.utilitis.API.DataReaderAPI;
@@ -76,8 +77,7 @@ public class DataReader implements DataReaderAPI {
 	 */
 	@Override
 	public String readString() {
-		String tempString = scanner.nextLine();
-		return tempString;
+		return scanner.nextLine();
 	}
 
 	/*
@@ -89,8 +89,8 @@ public class DataReader implements DataReaderAPI {
 	@Override
 	public String readString(String msg) {
 		System.out.println("Enter " + msg);
-		String tempString = scanner.nextLine();
-		return tempString;
+		return scanner.nextLine();
+
 	}
 
 	/*
@@ -121,33 +121,34 @@ public class DataReader implements DataReaderAPI {
 		System.out.println("Enter password: ");
 		String tempPassword = scanner.nextLine();
 		tempPassword = PasswordUtillity.getHashedPassword(tempPassword);
-		//System.out.println(tempPassword);
+		// System.out.println(tempPassword);
 		System.out.println("Confirm password: ");
 		String tempConfirmPassword = scanner.nextLine();
 		tempConfirmPassword = PasswordUtillity.getHashedPassword(tempConfirmPassword);
-		//System.out.println(tempConfirmPassword);
+		// System.out.println(tempConfirmPassword);
 		System.out.println("Enter email adress:");
 		String tempEmailAdress = scanner.nextLine();
-		
+
 		if (!tempPassword.equals(tempConfirmPassword)) {
 			System.out.println("Incorect password!");
 			readAndCreateUser();
 		}
-		return new User(tempLogin, tempPassword,tempEmailAdress);
-	}
-	
-	public String generateRandomString () {
-		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 18) { 
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-        String saltStr = salt.toString();
-        return saltStr;
+		return new User(tempLogin, tempPassword, tempEmailAdress);
 	}
 
-	
-	
+	public String generateRandomUUID() {
+
+		return UUID.randomUUID().toString();
+		
+		// String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		// StringBuilder salt = new StringBuilder();
+		// Random rnd = new Random();
+		// while (salt.length() < 18) {
+		// int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+		// salt.append(SALTCHARS.charAt(index));
+		// }
+		// String saltStr = salt.toString();
+		// return saltStr;
+	}
+
 }

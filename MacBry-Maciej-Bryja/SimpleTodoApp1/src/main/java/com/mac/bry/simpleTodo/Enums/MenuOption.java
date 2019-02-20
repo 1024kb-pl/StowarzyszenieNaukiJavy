@@ -1,5 +1,7 @@
 package com.mac.bry.simpleTodo.Enums;
 
+import com.mac.bry.simpleTodo.Exception.MenuOptionNoExistException;
+
 public enum MenuOption {
 	USER_MENU(0, "User Menu"),
 	TASK_MENU(1, "Task Menu"),
@@ -26,7 +28,7 @@ public enum MenuOption {
 		return value + " - " + description;
 	}
 	
-	public static MenuOption createFromInt(int option) {
+	public static MenuOption getOptionByOrderNumber(int option) throws MenuOptionNoExistException {
 		return MenuOption.values()[option];
 	}
 	

@@ -4,18 +4,18 @@ import com.mac.bry.simpleTodo.entity.User;
 
 public interface DataReaderAPI {
 
-	public void closeScanner();
+	void closeScanner();
 
-	public int readNumber();
+	int readNumber();
 
-	public int readNumber(String msg);
+	int readNumber(String msg);
 
-	public String readString();
+	String readString();
 
-	public String readString(String msg);
+	String readString(String msg);
 
-	public User readUser();
+	User readUser();
 
-	public User readAndCreateUser();
+	User readAndCreateUser();
 
 }

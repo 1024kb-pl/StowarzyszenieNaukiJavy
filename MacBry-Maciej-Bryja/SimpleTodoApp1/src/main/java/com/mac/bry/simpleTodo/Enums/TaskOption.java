@@ -1,5 +1,7 @@
 package com.mac.bry.simpleTodo.Enums;
 
+import com.mac.bry.simpleTodo.Exception.TaskOptionNoExistException;
+
 public enum TaskOption {
 	ADD_TASK(0, "Add task"),
 	SHOW_TASKS(1, "Show all tasks"),
@@ -34,7 +36,7 @@ public enum TaskOption {
 		return value + " - " + description;
 	}
 	
-	public static TaskOption createFromInt(int option) {
+	public static TaskOption getOptionByOrderNumber(int option) throws TaskOptionNoExistException {
 		return TaskOption.values()[option];
 	}
 }

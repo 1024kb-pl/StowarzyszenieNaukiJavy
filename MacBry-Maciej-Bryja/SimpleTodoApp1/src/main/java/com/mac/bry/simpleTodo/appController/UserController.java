@@ -1,52 +1,110 @@
 package com.mac.bry.simpleTodo.appController;
 
-import com.mac.bry.simpleTodo.DAO.UserDAO;
+import com.mac.bry.simpleTodo.Enums.AdminOption;
 import com.mac.bry.simpleTodo.Enums.UserMenuOption;
+import com.mac.bry.simpleTodo.Exception.UserMenuOptionNoExistException;
 import com.mac.bry.simpleTodo.entity.User;
+import com.mac.bry.simpleTodo.printProcessors.UserPrintProcessor;
+import com.mac.bry.simpleTodo.services.UserService;
 import com.mac.bry.simpleTodo.utilitis.DataReader;
+import com.mac.bry.simpleTodo.utilitis.PasswordUtillity;
 
 public class UserController {
 
 	private User loggedUser;
 	private MenuController menuController;
 	private DataReader dataReader;
-	private UserDAO userDAO; 
+	private UserService userService;
 
 	public UserController() {
 		this.dataReader = new DataReader();
+		this.userService = new UserService();
 	}
 
 	public void userLoop() {
 		UserMenuOption option;
 		printUserOptions();
 
-		while ((option = UserMenuOption.createFromInt(dataReader.readNumber())) != UserMenuOption.BACK) {
+		try {
+			while ((option = UserMenuOption.getOptionByOrderNumber(dataReader.readNumber())) != UserMenuOption.BACK) {
+				switch (option) {
+				case SHOW:
+					show();
+					break;
+
+				case EDIT_PASSWORD:
+					editPassword();
+					break;
+
+				case EDIT_MAIL:
+					editMail();
+					break;
+					
+				case DELETE:
+					deleteAccount();
+					break;
+
+				default:
+					System.err.println("\nNo such option");
+					userLoop();
+					break;
+				}
+			}
+		} catch (UserMenuOptionNoExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		menuController.menuLoop();
+	}
+
+	public void adminLoop() {
+		AdminOption option;
+		printAdminOptions();
+
+		while ((option = AdminOption.createFromInt(dataReader.readNumber())) != AdminOption.BACK) {
 			switch (option) {
-			case SHOW:
-				System.out.println("Show self data");
-				show();
+			case SHOW_ALL_USERS:
+				System.out.println("Show all users");
 				break;
 
-			case EDIT_PASSWORD:
-				editPassword();
+			case EDIT_PERMISION:
+				System.out.println("Edit permision");
 				break;
 
-			case EDIT_MAIL:
-				editMail();
+			case EDIT_NUMBER_OF_PROJECTS:
+				System.out.println("Edit number of proj.");
+				break;
+
+			case DELETE:
+				System.out.println("Delete");
 				break;
 
 			default:
 				System.err.println("\nNo such option");
-				userLoop();
+				adminLoop();
 				break;
 			}
 		}
 		menuController.menuLoop();
 	}
 
+	private void printAdminOptions() {
+		System.out.println("Chose Option: ");
+		for (AdminOption option : AdminOption.values()) {
+			System.out.println(option);
+		}
+	}
+
+	private void deleteAccount() {
+		userService.deleteUserByLogin(loggedUser.getLogin());
+		
+	}
+
 	private void editMail() {
 		String newEmail = dataReader.readString("new email");
-		userDAO.editEmail(loggedUser, newEmail);
+		System.out.println(loggedUser);
+		userService.editEmail(this.loggedUser, newEmail);
+		userLoop();
 	}
 
 	private void printUserOptions() {
@@ -55,14 +113,16 @@ public class UserController {
 			System.out.println(option);
 		}
 	}
-	
+
 	private void show() {
-		System.out.println("UserPrintProcesor");
+		UserPrintProcessor.printUser(loggedUser);
+		userLoop();
 	}
-	
+
 	private void editPassword() {
 		String newPassword = dataReader.readString("new password");
-		userDAO.editUserPassword(loggedUser, newPassword);
+		newPassword = PasswordUtillity.getHashedPassword(newPassword);
+		userService.editUserPassword(loggedUser, newPassword);
 	}
 
 	public void setLoggedUser(User loggedUser) {

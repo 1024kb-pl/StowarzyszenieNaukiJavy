@@ -8,12 +8,16 @@ import org.apache.log4j.Logger;
 import com.mac.bry.simpleTodo.DAO.TaskDAO;
 import com.mac.bry.simpleTodo.DAO.UserDAO;
 import com.mac.bry.simpleTodo.Enums.TaskOption;
+import com.mac.bry.simpleTodo.Exception.TaskOptionNoExistException;
 import com.mac.bry.simpleTodo.entity.Task;
 import com.mac.bry.simpleTodo.entity.User;
 import com.mac.bry.simpleTodo.entity.comparators.TaskComparatorByDateOfCompletion;
 import com.mac.bry.simpleTodo.entity.comparators.TaskComparatorByName;
 import com.mac.bry.simpleTodo.entity.comparators.TaskComparatorByStatus;
 import com.mac.bry.simpleTodo.printProcessors.TaskPrintProcessor;
+import com.mac.bry.simpleTodo.services.TaskService;
+import com.mac.bry.simpleTodo.services.UserService;
+import com.mac.bry.simpleTodo.utilitis.DataReader;
 import com.mac.bry.simpleTodo.utilitis.TaskReader;
 import com.mac.bry.simpleTodo.utilitis.API.TaskReaderAPI;
 
@@ -21,17 +25,15 @@ public class TaskController {
 	
 	private Logger logger = Logger.getLogger(TaskController.class.getName());
 
-	private TaskReaderAPI taskReader;
-	private UserDAO userDAO;
-	private TaskDAO taskDAO;
+	private TaskReader taskReader;
+	private TaskService taskService;
 	private User loggedUser;
 	private MainController mainController;
 
 	public TaskController() {
 		super();
 		this.taskReader = new TaskReader();
-		this.userDAO = new UserDAO();
-		this.taskDAO = new TaskDAO();
+		this.taskService = new TaskService();
 	}
 
 	public User getLoggedUser() {
@@ -46,68 +48,73 @@ public class TaskController {
 		TaskOption option;
 		printTaskOptions();
 
-		while ((option = TaskOption.createFromInt(taskReader.readNumber())) != TaskOption.BACK) {
-			switch (option) {
-			case ADD_TASK:
-				System.out.println("add task");
-				addTask();
-				taskLoop();
-				break;
+		try {
+			while ((option = TaskOption.getOptionByOrderNumber(taskReader.readNumber())) != TaskOption.BACK) {
+				switch (option) {
+				case ADD_TASK:
+					System.out.println("add task");
+					addTask();
+					taskLoop();
+					break;
 
-			case SHOW_TASKS:
-				showTasks();
-				taskLoop();
-				break;
+				case SHOW_TASKS:
+					showTasks();
+					taskLoop();
+					break;
 
-			case EDIT_TASK_NAME:
-				editTaskNam();
-				taskLoop();
-				break;
+				case EDIT_TASK_NAME:
+					editTaskName();
+					taskLoop();
+					break;
 
-			case EDIT_TASK_STATUS:
-				editTaskStatus();
-				taskLoop();
-				break;
+				case EDIT_TASK_STATUS:
+					editTaskStatus();
+					taskLoop();
+					break;
 
-			case DELET_TASK_BY_ID:
-				deletTask();
-				taskLoop();
-				break;
+				case DELET_TASK_BY_ID:
+					deleteTask();
+					taskLoop();
+					break;
 
-			case SHOW_TASKS_BY_STATUS:
-				showTasksByStatus();
-				taskLoop();
-				break;
+				case SHOW_TASKS_BY_STATUS:
+					showTasksByStatus();
+					taskLoop();
+					break;
 
-			case SHOW_TASKS_BY_DATA:
-				showTasksByDate();
-				taskLoop();
-				break;
+				case SHOW_TASKS_BY_DATA:
+					showTasksByDate();
+					taskLoop();
+					break;
 
-			case SORT_TASKS_BY_NAME:
-				sortTasksByName();
-				taskLoop();
-				break;
+				case SORT_TASKS_BY_NAME:
+					sortTasksByName();
+					taskLoop();
+					break;
 
-			case SORT_TASKS_BY_STATUS:
-				sortTasksByStatus();
-				taskLoop();
-				break;
+				case SORT_TASKS_BY_STATUS:
+					sortTasksByStatus();
+					taskLoop();
+					break;
 
-			case SORT_TASKS_BY_DATA:
-				sortTasksByDate();
-				taskLoop();
-				break;
+				case SORT_TASKS_BY_DATA:
+					sortTasksByDate();
+					taskLoop();
+					break;
 
-			case BACK:
-				back();
-				break;
+				case BACK:
+					back();
+					break;
 
-			default:
-				System.err.println("\nNo such option");
-				taskLoop();
-				break;
+				default:
+					System.err.println("\nNo such option");
+					taskLoop();
+					break;
+				}
 			}
+		} catch (TaskOptionNoExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -117,83 +124,55 @@ public class TaskController {
 		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
 		
 		this.mainController = new MainController();
-		mainController.programLoop();
+		mainController.start();
 
 	}
 
 	private void sortTasksByDate() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		TaskPrintProcessor.printTasks(taskService.sortTasksByDateOdCompletion(loggedUser));
 		
-		List<Task> tasks = taskDAO.getAllTasks();
-		tasks.sort(new TaskComparatorByDateOfCompletion());
-		TaskPrintProcessor.printTasks(tasks);
 	}
 
 	private void sortTasksByStatus() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		TaskPrintProcessor.printTasks(taskService.sortTasksByStatus(loggedUser));
 		
-		List<Task> tasks = taskDAO.getAllTasks();
-		tasks.sort(new TaskComparatorByStatus());
-		TaskPrintProcessor.printTasks(tasks);
 	}
 
 	private void sortTasksByName() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
-		
-		List<Task> tasks = taskDAO.getAllTasks();
-		tasks.sort(new TaskComparatorByName());
-		TaskPrintProcessor.printTasks(tasks);
+		TaskPrintProcessor.printTasks(taskService.sortTasksByStatus(loggedUser));
 
 	}
 
 	private void showTasksByDate() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
-		
-		List<Task> tasks = taskDAO.selectTasksByDataOfCompletion(taskReader.readAndCreateDate());
-		TaskPrintProcessor.printTasks(tasks);
+		TaskPrintProcessor.printTasks(taskService.selectTasksByDateofCompletion(taskReader.readAndCreateDate(), loggedUser));
+	
 	}
 
 	private void showTasksByStatus() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		TaskPrintProcessor.printTasks(taskService.selectTasksByStatus(taskReader.readBoolean("status"), loggedUser));
 		
-		List<Task> tasks = taskDAO.selectTasksByStatus(taskReader.readBoolean("true or false"));
-		TaskPrintProcessor.printTasks(tasks);
 	}
 
-	private void deletTask() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+	private void deleteTask() {
+		taskService.deleteTaskByID(taskReader.readNumber("Task ID"));
 		
-		taskDAO.deleteTaskByID(taskReader.readNumber("Task ID"));
 	}
 
-	private void editTaskStatus() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+	private void editTaskStatus() {	
+		taskService.changeTaskStatus(taskService.selectTaskByID(taskReader.readNumber("Task ID")));
 		
-		taskDAO.changeTaskStatus(taskDAO.selectTaskByID(taskReader.readNumber("Task ID")));
 	}
 
-	private void editTaskNam() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
-		
-		Task tempTask = taskDAO.selectTaskByID(taskReader.readNumber("ID"));
-		taskDAO.editTaskName(tempTask, taskReader.readString("new Task name"));
+	private void editTaskName() {
+		Task tempTask = taskService.selectTaskByID(taskReader.readNumber("ID"));
+		taskService.editTaskName(tempTask, taskReader.readString("new Task name"));
 		taskLoop();
 
 	}
 
 	private void showTasks() {
-		String name = new Object(){}.getClass().getEnclosingMethod().getName();
-		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
+		TaskPrintProcessor.printTasks(taskService.getAllTasksOfUser(loggedUser));
 		
-		TaskPrintProcessor.printTasks(taskDAO.getAllTasks());
 	}
 
 	private void printTaskOptions() {
@@ -207,6 +186,6 @@ public class TaskController {
 		String name = new Object(){}.getClass().getEnclosingMethod().getName();
 		logger.info("[" + LocalDate.now().toString() + "] ---> Run " + name);
 		
-		userDAO.addTaskToUser(loggedUser, taskReader.readAndCreateTask());
+		taskService.addTask(taskReader.readAndCreateTask());
 	}
 }

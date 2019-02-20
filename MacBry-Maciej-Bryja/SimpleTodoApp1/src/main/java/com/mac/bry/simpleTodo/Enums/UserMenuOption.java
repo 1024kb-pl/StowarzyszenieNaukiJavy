@@ -1,11 +1,14 @@
 package com.mac.bry.simpleTodo.Enums;
 
+import com.mac.bry.simpleTodo.Exception.UserMenuOptionNoExistException;
+
 public enum UserMenuOption {
 	
-	SHOW(0,"Show data"),
+	SHOW(0,"Show User info"),
 	EDIT_PASSWORD(1, "Edit password"),
 	EDIT_MAIL(2, "Edit mail"),
-	BACK(3, "Back");
+	DELETE (3, "Delete account"),
+	BACK(4, "Back");
 	
 	private int value;
 	private String description;
@@ -27,7 +30,7 @@ public enum UserMenuOption {
 		return value + " - " + description;
 	}
 	
-	public static UserMenuOption createFromInt(int option) {
+	public static UserMenuOption getOptionByOrderNumber(int option) throws UserMenuOptionNoExistException {
 		return UserMenuOption.values()[option];
 	}
 	

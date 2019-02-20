@@ -1,13 +1,19 @@
 package com.mac.bry.simpleTodo.DAO;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
+import javax.persistence.NoResultException;
+
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import com.mac.bry.simpleTodo.DAO.API.DAOTaskAPI;
+import com.mac.bry.simpleTodo.appController.TaskController;
 import com.mac.bry.simpleTodo.entity.Task;
 import com.mac.bry.simpleTodo.entity.User;
 import com.mac.bry.simpleTodo.entity.comparators.TaskComparatorByDateOfCompletion;
@@ -17,6 +23,7 @@ import com.mac.bry.simpleTodo.entity.comparators.TaskComparatorByStatus;
 public class TaskDAO implements DAOTaskAPI {
 
 	private SessionFactory factory;
+	private Logger logger = Logger.getLogger(TaskController.class.getName());
 	
 	public TaskDAO() {
 		super();
@@ -38,24 +45,32 @@ public class TaskDAO implements DAOTaskAPI {
 
 	@Override
 	public void editTaskName(Task task, String newTaskName) {
-		String oldTaskName = task.getTaskName();
 		Session session = factory.getCurrentSession();
 		task.setTaskName(newTaskName);
 		session.getTransaction().commit();
-		System.out.println("You have changed task name from " + oldTaskName + " to " + task.getTaskName());
+		session.close();
 	}
 
 	@Override
-	public Task selectTaskByID(int taskID) {
+	public Optional <Task> selectTaskByID(int taskID) {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		Task tempTask = session.get(Task.class, taskID);
-		return tempTask;
+		try {
+			Task tempTask = session.get(Task.class, taskID);
+			session.getTransaction().commit();
+			session.close();
+			return Optional.of(tempTask);
+			
+		} catch (NoResultException e) {
+			session.getTransaction().commit();
+			session.close();
+			return Optional.empty();
+		}
 	}
 
 	@Override
 	public void deleteTaskByID(int taskID) {
-		Task taskToDelete = selectTaskByID(taskID);
+		Task taskToDelete = selectTaskByID(taskID).get();
 		Session session = factory.getCurrentSession();
 		session.delete(taskToDelete);
 		session.getTransaction().commit();
@@ -64,23 +79,17 @@ public class TaskDAO implements DAOTaskAPI {
 
 	@Override
 	public void changeTaskStatus(Task task) {
-		boolean oldTaskStatus = task.isTaskStatus(); 
 		Session session = factory.getCurrentSession();
-		task.setTaskStatus(!oldTaskStatus);
+		task.setTaskStatus(!task.isTaskStatus());
 		session.getTransaction().commit();
-		System.out.println("You have changed task status from " + oldTaskStatus + " to " + task.isTaskStatus());
+		session.close();
 	}
 
 	@Override
 	public List<Task> selectTasksByStatus(boolean status) {
-		int option;
-		if(status==true)
-			option = 1;
-		else option = 0;
-		List<Task> taskList;
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		taskList = session.createQuery("from Task task where task.taskStatus='" + option + "'").getResultList();
+		List<Task> taskList = session.createQuery("from Task task where task.taskStatus='" + status + "'").getResultList();
 		session.getTransaction().commit();
 		session.close();
 		return taskList;
@@ -88,35 +97,43 @@ public class TaskDAO implements DAOTaskAPI {
 
 	@Override
 	public List<Task> selectTasksByDataOfCompletion(LocalDate dateOfCompletion) {
-		List<Task> taskList;
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		taskList = session.createQuery("from Task task where task.dateOfCompletion='" + dateOfCompletion + "'").getResultList();
+		List<Task> taskList = session.createQuery("from Task task where task.dateOfCompletion='" + dateOfCompletion + "'").getResultList();
 		session.getTransaction().commit();
-		System.out.println("Test1");
 		session.close();
 		return taskList;
 	}
 
 	@Override
 	public List<Task> sortTasksByName() {
-		List <Task> tasksListToSort = getAllTasks();
-		tasksListToSort.sort(new TaskComparatorByName());
-		return tasksListToSort;
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		List<Task> sortedTaskList = session.createQuery("from Task task order by task.taskName").getResultList();
+		session.getTransaction().commit();
+		session.close();
+		return sortedTaskList;
 	}
+	
 
 	@Override
 	public List<Task> sortTasksByStatus() {
-		List <Task> tasksListToSort = getAllTasks();
-		tasksListToSort.sort(new TaskComparatorByStatus());;
-		return tasksListToSort;
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		List<Task> sortedTaskList = session.createQuery("from Task task order by task.taskStatus").getResultList();
+		session.getTransaction().commit();
+		session.close();
+		return sortedTaskList;
 	}
 
 	@Override
 	public List<Task> sortTasksByDateOfCompletion() {
-		List <Task> tasksListToSort = getAllTasks();
-		tasksListToSort.sort(new TaskComparatorByDateOfCompletion());
-		return null;
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		List<Task> sortedTaskList = session.createQuery("from Task task order by task.dateOfCompletion").getResultList();
+		session.getTransaction().commit();
+		session.close();
+		return sortedTaskList;
 	}
 
 	@Override

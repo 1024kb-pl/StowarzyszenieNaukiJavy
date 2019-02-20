@@ -2,24 +2,31 @@ package com.mac.bry.simpleTodo.DAO.API;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import com.mac.bry.simpleTodo.entity.Task;
 
 public interface DAOTaskAPI {
-	
-	public void addTask(Task task);
-	public void editTaskName(Task task, String newTaskName);
-	public Task selectTaskByID(int taskID);
-	public List<Task> getAllTasks();
-	
-	public void deleteTaskByID(int taskID);
-	
-	public void changeTaskStatus(Task task);
-	
-	public List<Task> selectTasksByStatus(boolean status);
-	public List<Task> selectTasksByDataOfCompletion(LocalDate dateOfCompletion);
 
-	public List<Task> sortTasksByName();
-	public List<Task> sortTasksByStatus();
-	public List<Task> sortTasksByDateOfCompletion();
+	void addTask(Task task);
+
+	void editTaskName(Task task, String newTaskName);
+
+	Optional<Task> selectTaskByID(int taskID);
+
+	List<Task> getAllTasks();
+
+	void deleteTaskByID(int taskID);
+
+	void changeTaskStatus(Task task);
+
+	List<Task> selectTasksByStatus(boolean status);
+
+	List<Task> selectTasksByDataOfCompletion(LocalDate dateOfCompletion);
+
+	List<Task> sortTasksByName();
+
+	List<Task> sortTasksByStatus();
+
+	List<Task> sortTasksByDateOfCompletion();
 }

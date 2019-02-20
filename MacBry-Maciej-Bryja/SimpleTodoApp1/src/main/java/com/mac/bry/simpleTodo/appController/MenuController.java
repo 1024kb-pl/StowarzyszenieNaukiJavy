@@ -1,6 +1,7 @@
 package com.mac.bry.simpleTodo.appController;
 
 import com.mac.bry.simpleTodo.Enums.MenuOption;
+import com.mac.bry.simpleTodo.Exception.MenuOptionNoExistException;
 import com.mac.bry.simpleTodo.entity.User;
 import com.mac.bry.simpleTodo.utilitis.DataReader;
 
@@ -22,27 +23,39 @@ public class MenuController {
 		MenuOption option;
 		printMenuOptions();
 
-		while ((option = MenuOption.createFromInt(dataReader.readNumber())) != MenuOption.BACK) {
-			switch (option) {
-			case USER_MENU:
-				System.out.println("user menu");
-				break;
+		try {
+			while ((option = MenuOption.getOptionByOrderNumber(dataReader.readNumber())) != MenuOption.BACK) {
+				switch (option) {
+				case USER_MENU:
+					userController.setLoggedUser(loggedUser);
+					if(loggedUser.isPermision()) {
+						System.out.println(".adminLoop()");
+					}
+					else {
+						userController.setLoggedUser(loggedUser);
+						userController.userLoop();
+					}
+					break;
 
-			case TASK_MENU:
-				taskController.taskLoop();
-				break;
+				case TASK_MENU:
+					taskController.taskLoop();
+					break;
 
-			case PROJECT_MENU:
-				System.out.println("project menu");
-				break;
+				case PROJECT_MENU:
+					System.out.println("project menu");
+					break;
 
-			default:
-				System.err.println("\nNo such option");
-				menuLoop();
-				break;
+				default:
+					System.err.println("\nNo such option");
+					menuLoop();
+					break;
+				}
 			}
+		} catch (MenuOptionNoExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		mainController.programLoop();
+		mainController.start();
 	}
 
 	private void printMenuOptions() {
@@ -60,5 +73,4 @@ public class MenuController {
 	public void setMainController(MainController mainController) {
 		this.mainController = mainController;
 	}
-	
 }

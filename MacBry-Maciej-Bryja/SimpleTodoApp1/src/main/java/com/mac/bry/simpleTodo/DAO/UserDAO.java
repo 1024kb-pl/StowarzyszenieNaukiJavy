@@ -1,111 +1,118 @@
 package com.mac.bry.simpleTodo.DAO;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
+import javax.persistence.NoResultException;
+
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import com.mac.bry.simpleTodo.DAO.API.DAOUserAPI;
+import com.mac.bry.simpleTodo.appController.TaskController;
 import com.mac.bry.simpleTodo.entity.Task;
 import com.mac.bry.simpleTodo.entity.User;
 
 public class UserDAO implements DAOUserAPI {
-	
+
 	private SessionFactory factory;
-	
+	private Logger logger = Logger.getLogger(TaskController.class.getName());
+
 	public UserDAO() {
 		super();
-		this.factory = new Configuration()
-				.configure("hibernate.cfg.xml")
-				.addAnnotatedClass(User.class)
-				.addAnnotatedClass(Task.class)
-				.buildSessionFactory();
+		this.factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class)
+				.addAnnotatedClass(Task.class).buildSessionFactory();
 	}
-	
+
 	@Override
 	public void addUser(User user) {
-		List<User> userList;
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		userList = session.createQuery("from User user where user.login='" + user.getLogin() + "'").getResultList();
-		if(userList.isEmpty()) {
-			session.save(user);
-			session.getTransaction().commit();
-			session.close();
-		}
-		else {
-			System.out.println("Incorrect login");	
-			session.getTransaction().commit();
-			session.close();
-		}
-		
-	}
-	
-	@Override
-	public void deleteUserByID(int id) {
-		User userToDelete = findUserByID(id);
-		Session session = factory.getCurrentSession();
-		session.beginTransaction();
-		session.delete(userToDelete);
+		session.save(user);
 		session.getTransaction().commit();
 		session.close();
 	}
-	
+
 	@Override
-	public void deleteUserByLogin(String login) {
-		User userToDelete = findUserByLogin(login);
+	public void deleteUserByID(int id) {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		session.delete(userToDelete);
+		session.createQuery("delete User user where user.userID='" + id + "'").executeUpdate();
 		session.getTransaction().commit();
+		session.close();
+	}
+
+	@Override
+	public void deleteUserByLogin(String login) {
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		session.createQuery("delete User user where user.login='" + login + "'").executeUpdate();
+		session.getTransaction().commit();
+		session.close();
 	}
 
 	@Override
 	public void editUserLogin(User user, String newLogin) {
-		String oldLogin = user.getLogin();
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 		user.setLogin(newLogin);
+		session.update(user);
 		session.getTransaction().commit();
-		System.out.println("You have changed login from " + oldLogin + " to " + user.getLogin());
+		session.close();
 	}
 
 	@Override
 	public void editUserPassword(User user, String newPassword) {
-		String oldPassword = user.getPassword();
 		Session session = factory.getCurrentSession();
-		//session.beginTransaction();
 		user.setPassword(newPassword);
+		session.update(user);
 		session.getTransaction().commit();
-		System.out.println("You have changed password from " + oldPassword + " to " + user.getPassword());
-		
-	}
-	
-	@Override
-	public User findUserByID(int ID) {
-		Session session = factory.getCurrentSession();
-		session.beginTransaction();
-		User tempUser = session.get(User.class, ID);
-		session.getTransaction().commit();
-		return tempUser;
+		session.close();
 	}
 
 	@Override
-	public User findUserByLogin(String login) {
-		User tempUser;
+	public Optional<User> findUserByID(int ID) {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		tempUser = (User)session.createQuery("from User user where user.login='" + login + "'").getSingleResult();
-		return tempUser;
+		try {
+			User tempUser = session.get(User.class, ID);
+			session.getTransaction().commit();
+			session.close();
+			return Optional.of(tempUser);
+			
+		} catch (NoResultException e) {
+			session.getTransaction().commit();
+			session.close();
+			return Optional.empty();
+		}
+	}
+
+	@Override
+	public Optional<User> findUserByLogin(String login) {
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		try {
+			User tempUser = (User) session.createQuery("from User user where user.login='" + login + "'").getSingleResult();
+			session.getTransaction().commit();
+			session.close();
+			return Optional.of(tempUser);
+			
+		} catch (NoResultException e ) {
+			session.getTransaction().commit();
+			session.close();
+			return Optional.empty();
+		}
 	}
 
 	@Override
 	public List<User> getAllUsers() {
-		List <User> usersList;
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		usersList = session.createQuery("from User").getResultList();
+		List<User> usersList = session.createQuery("from User").getResultList();
 		session.getTransaction().commit();
 		session.close();
 		return usersList;
@@ -113,56 +120,16 @@ public class UserDAO implements DAOUserAPI {
 
 	@Override
 	public boolean isLoginExists(String tempLogin) {
-		List <User> userList;
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		userList = session.createQuery("from User user where user.login='" + tempLogin + "'").getResultList();
-		if(userList.isEmpty()) {
+		List<User> usersList = session.createQuery("from User user where user.login='" + tempLogin + "'")
+				.getResultList();
+		if (usersList.isEmpty()) {
 			return false;
 		}
-		else return true;
+		return true;
 	}
 
-	@Override
-	public boolean passwordCheck(User user, String tempPassword) {
-		return user.getPassword().equals(tempPassword); 
-	}
-
-
-	@Override
-	public boolean logingCheck(User user) {
-		List<User> userList;
-		Session session = factory.getCurrentSession();
-		//session.beginTransaction();
-		userList = session.createQuery("from User user where user.login='" + user.getLogin() + "' and user.password='" + user.getPassword() +"'").getResultList();
-		session.getTransaction().commit();
-		//session.close();
-		if(userList.isEmpty()) {
-			return false;
-		}
-		return true ;
-	}
-
-	@Override
-	public boolean login(User user) {
-		
-		if(logingCheck(user)) {
-			System.out.println("Login correct!");
-			if(passwordCheck(findUserByLogin(user.getLogin()), user.getPassword())){
-				System.out.println("Password correct!");
-				return true;
-			}
-			else {
-				System.out.println("Password incorrect!");
-				return false;
-			}
-		}
-		else {
-			System.out.println("Login incorrect");
-			return false;
-		}
-	}
-	
 	@Override
 	public void addTaskToUser(User loggedUser, Task taskToAdd) {
 		Session session = factory.getCurrentSession();
@@ -177,22 +144,19 @@ public class UserDAO implements DAOUserAPI {
 	public boolean isEmailExist(String tempMail) {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		List<User> tempUserList = session.createQuery("from User user where user.password='" + tempMail + "'").getResultList();
-		if(tempUserList.isEmpty()) {
-			return false;
-		}
-		return true;
+		List<User> tempUserList = session.createQuery("from User user where user.password='" + tempMail + "'")
+				.getResultList();
+		return !tempUserList.isEmpty();
 	}
-	
+
 	@Override
 	public void editEmail(User user, String newEmail) {
-		String oldEmail = user.getEmailAdress();
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 		user.setEmailAdress(newEmail);
+		session.update(user);
 		session.getTransaction().commit();
-		System.out.println("You have changed email adress from " + oldEmail + " to " + user.getEmailAdress());
+
 	}
-	
-	
+
 }
