@@ -35,7 +35,7 @@
 
 <p><a href="logout"><button type="button">Wyloguj się</button></a></p>
 <p><a href="addtask.jsp"><button type="button">Stwórz nowe zadanie</button></a></p>
-<p><a href="tasks"><button type="button">Lista zadań</button></a></p>
+<p><a href="taskslist.jsp"><button type="button">Lista zadań</button></a></p>
 
 </body>
 </html>

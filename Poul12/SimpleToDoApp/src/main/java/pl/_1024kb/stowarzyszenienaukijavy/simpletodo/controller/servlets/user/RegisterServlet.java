@@ -1,5 +1,6 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.user;
 
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task.EntityCreator;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.UserServiceImpl;
 
@@ -20,13 +21,9 @@ public class RegisterServlet extends HttpServlet
     {
         request.setCharacterEncoding("UTF-8");
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String repeatedPass = request.getParameter("repeated-pass");
-        String email = request.getParameter("email");
+        User user = new EntityCreator(4).createUser(request);
 
-
-        String message = userServiceImpl.createUser(new User(username, password, repeatedPass, email));
+        String message = userServiceImpl.createUser(user);
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);

@@ -53,6 +53,7 @@
 <form action="editTask" method="post" id="taskform">
     <br>
     <div>Nazwa zadania:</div>
+    <input type="hidden" name="task_id" value="<%=request.getAttribute("id")%>">
     <input type="text" name="title" size="50" placeholder="Nazwa zadania" value="<%=request.getAttribute("title")%>">
     <br><br>
     <div>Data:</div>
@@ -61,11 +62,15 @@
     <div>Opis:</div>
     <textarea rows="5" cols="50" name="description" wrap="hard" maxlength ="150" placeholder="Opis zadania... (max 150 znaków)"><%=request.getAttribute("description")%></textarea>
     <br><br>
-    <input type="checkbox" name="checktask" value="true" <%
+    <input type="radio" name="checktask" value="true" <%
                                             if(request.getAttribute("done").equals("true")){%>
                                                 checked
                                             <%}%>>Wykonane
-    <input type="hidden" name="task_id" value="<%=request.getAttribute("id")%>">
+    <br>
+    <input type="radio" name="checktask" value="false" <%
+                                            if(request.getAttribute("done").equals("false")){%>
+                                                 checked
+                                            <%}%>>Niewykonane
     <br><br>
     <input type="submit" value="Zaktualizuj zadanie">
     <br><br>

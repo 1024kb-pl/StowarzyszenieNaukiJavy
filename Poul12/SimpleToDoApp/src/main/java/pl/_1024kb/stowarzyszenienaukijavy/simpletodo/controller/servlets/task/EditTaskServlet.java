@@ -9,30 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 
 @WebServlet("/editTask")
 public class EditTaskServlet extends HttpServlet
 {
-    TaskServiceImpl taskService = TaskServiceImpl.getInstance();
+    private TaskServiceImpl taskService = TaskServiceImpl.getInstance();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         request.setCharacterEncoding("UTF-8");
 
-        String idStr = request.getParameter("task_id");
-        Long taskId = Long.parseLong(idStr);
-        String title = request.getParameter("title");
-        String dateStr = request.getParameter("taskdate");
-        LocalDate date = LocalDate.parse(dateStr);
-        String description = request.getParameter("description");
-        String taskDoneStr = request.getParameter("checktask");
-        boolean taskDone = true;
-        if(taskDoneStr == null)
-            taskDone = false;
+        int parametersSize = request.getParameterMap().size();
+        Task task = new EntityCreator(parametersSize).createTask(request);
 
-        Task task = new Task(taskId, title, date, description, taskDone);
         String message = taskService.changeTask(task);
 
         request.setAttribute("message", message);

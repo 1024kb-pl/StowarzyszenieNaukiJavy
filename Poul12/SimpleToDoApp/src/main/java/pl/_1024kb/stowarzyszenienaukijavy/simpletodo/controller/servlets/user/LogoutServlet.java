@@ -28,8 +28,9 @@ public class LogoutServlet extends HttpServlet
             logger.info("Pomyślnie wylogowano użytkownika {}", username);
             MDC.remove("user");
         }
-        else
+        else {
             logger.error("Błąd podczas wylogowywania się uzytkownika {}", username);
+        }
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);

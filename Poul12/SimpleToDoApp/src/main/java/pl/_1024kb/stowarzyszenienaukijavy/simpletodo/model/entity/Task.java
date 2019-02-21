@@ -8,30 +8,12 @@ public class Task
     private String title;
     private LocalDate date;
     private String description;
-    private boolean task_done;
+    private Boolean task_done;
     private Long user_id;
     private User user;
 
     public Task()
     {
-
-    }
-
-    public Task(Long task_id, String title, LocalDate date, String description, Long user_id, User user) {
-        this.task_id = task_id;
-        this.title = title;
-        this.date = date;
-        this.description = description;
-        this.user_id = user_id;
-        this.user = user;
-    }
-
-    public Task(String title, LocalDate date, String description, Long user_id, User user) {
-        this.title = title;
-        this.date = date;
-        this.description = description;
-        this.user_id = user_id;
-        this.user = user;
     }
 
     public Task(String title, LocalDate date, String description) {
@@ -40,21 +22,7 @@ public class Task
         this.description = description;
     }
 
-    public Task(Long task_id, String title, LocalDate date, String description) {
-        this.task_id = task_id;
-        this.title = title;
-        this.date = date;
-        this.description = description;
-    }
-
-    public Task(String title, LocalDate date, String description, boolean task_done) {
-        this.title = title;
-        this.date = date;
-        this.description = description;
-        this.task_done = task_done;
-    }
-
-    public Task(Long task_id, String title, LocalDate date, String description, boolean task_done) {
+    public Task(Long task_id, String title, LocalDate date, String description, Boolean task_done) {
         this.task_id = task_id;
         this.title = title;
         this.date = date;
@@ -110,11 +78,11 @@ public class Task
         this.user = user;
     }
 
-    public boolean getTask_done() {
+    public Boolean getTask_done() {
         return task_done;
     }
 
-    public void setTask_done(boolean task_done) {
+    public void setTask_done(Boolean task_done) {
         this.task_done = task_done;
     }
 

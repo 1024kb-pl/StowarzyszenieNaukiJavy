@@ -1,8 +1,8 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service;
 
-public enum OrderOption
+public enum FilterOption
 {
-    TITLE,
-    DATE,
-    STATUS
+    TRUE,
+    FALSE,
+    DATE
 }
