@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 @WebServlet("/addTask")
@@ -32,7 +33,16 @@ public class AddTaskServlet extends HttpServlet
                         .description(description)
                         .build();
 
-        String message = taskService.createTask(task, username);
+        String message = "Pomyślnie zapisano zadanie ;)";
+        try
+        {
+            taskService.createTask(task, username);
+
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            message = e.getMessage();
+        }
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);

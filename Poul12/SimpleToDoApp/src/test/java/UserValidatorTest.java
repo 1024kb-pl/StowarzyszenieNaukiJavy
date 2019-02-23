@@ -2,15 +2,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.NotValidUserEmailException;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.TooShortPasswordLengthException;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.TooShortUsernameLengthException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.*;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.UserValidator;
 
 public class UserValidatorTest
 {
     private UserValidator userValidator = UserValidator.getInstance();
-    private static final User DEFAULT_USER = User.builder().username("Poul12").password("myPassword").build();
+    //private static final User DEFAULT_USER = User.builder().username("Poul12").password("myPassword").build();
 
     @BeforeEach
     public void setUp()
@@ -18,15 +16,25 @@ public class UserValidatorTest
 
     }
 
-    /*@Test
+    @Test
     public void testIncorrectLogin()
     {
         final User incorrectUserTest = User.builder()
-                                            .username("Pablo")
+                                            .username("Poul")
+                                            .password("myPassword")
+                                            .build();
+        Assertions.assertThrows(IncorrectLoginException.class, () -> userValidator.isLoginCorrect("Poul12", "myPassowrd", incorrectUserTest));
+    }
+
+    @Test
+    public void testIncorrectPassword()
+    {
+        final User incorrectUserTest = User.builder()
+                                            .username("Poul12")
                                             .password("wrongPass")
                                             .build();
-        Assertions.assertThrows(IncorrectLoginException.class, () -> userValidator.isLoginCorrect(DEFAULT_USER, incorrectUserTest));
-    }*/
+        Assertions.assertThrows(IncorrectPasswordException.class, () -> userValidator.isLoginCorrect("Poul12", "myPassowrd", incorrectUserTest));
+    }
 
     @Test
     public void testTooShortUsername()

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/deleteTask")
 public class DeleteTask extends HttpServlet
@@ -20,7 +21,13 @@ public class DeleteTask extends HttpServlet
         String idStr = request.getParameter("id");
         Long id = Long.parseLong(idStr);
 
-        taskService.deleteTaskById(id);
+        try
+        {
+            taskService.deleteTaskById(id);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
 
         request.getRequestDispatcher("tasks").forward(request, response);
     }

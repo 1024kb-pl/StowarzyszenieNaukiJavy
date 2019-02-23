@@ -38,7 +38,7 @@ public class TaskServiceImpl implements TaskService
     }
 
     @Override
-    public String createTask(Task task, String username)
+    public void createTask(Task task, String username) throws SQLException
     {
         String messageInfo = "Pomyślnie zapisano zadanie ;)";
         Long userId = 0L;
@@ -56,15 +56,13 @@ public class TaskServiceImpl implements TaskService
             dao.create(task);
             logger.info(messageInfo + " - " + task.getTitle());
         }
-        catch(SQLException e)
+        catch(Exception e)
         {
             e.printStackTrace();
             String messageError = "Nie udało się zapisać zadania!";
             logger.error(messageError + " - " + task.getTitle());
-            return messageError;
+            throw new SQLException(messageError);
         }
-
-        return messageInfo;
     }
 
     @Override
@@ -82,27 +80,24 @@ public class TaskServiceImpl implements TaskService
     }
 
     @Override
-    public String changeTask(Task task)
+    public void changeTask(Task task) throws SQLException
     {
         String messageInfo = "Pomyślnie zaktualizowano zadanie :)";
         try
         {
             dao.update(task);
             logger.info(messageInfo + " - " + task.getTitle());
-        } catch (SQLException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
             String messageError = "Nie udało się zaktualizować zadania";
             logger.error(messageError + " - " + task.getTitle());
-            return messageError;
+            throw new SQLException(messageError);
         }
-
-        return messageInfo;
     }
 
     @Override
-    public String deleteTaskById(Long taskId)
-    {
+    public void deleteTaskById(Long taskId) throws SQLException {
         String messageInfo = "Pomyślnie usunięto zadanie";
         try
         {
@@ -114,9 +109,8 @@ public class TaskServiceImpl implements TaskService
             e.printStackTrace();
             String messageError = "Nie udało się usunąć zadania";
             logger.error(messageError + " - id: " + taskId);
-            return messageError;
+            throw new SQLException(messageError);
         }
-        return messageInfo;
     }
 
     @Override

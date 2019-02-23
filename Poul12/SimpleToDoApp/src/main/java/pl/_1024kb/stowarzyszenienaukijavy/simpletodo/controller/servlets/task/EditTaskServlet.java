@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/editTask")
 public class EditTaskServlet extends HttpServlet
@@ -24,7 +25,15 @@ public class EditTaskServlet extends HttpServlet
         int parametersSize = request.getParameterMap().size();
         Task task = new EntityCreator(parametersSize).createTask(request);
 
-        String message = taskService.changeTask(task);
+        String message = "Pomyślnie zaktualizowano zadanie :)";
+        try
+        {
+            taskService.changeTask(task);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            message = e.getMessage();
+        }
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);

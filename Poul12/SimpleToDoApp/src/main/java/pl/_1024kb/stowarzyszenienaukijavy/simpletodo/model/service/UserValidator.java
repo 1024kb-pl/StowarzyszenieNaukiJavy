@@ -28,9 +28,7 @@ public class UserValidator
     }
     
     public boolean isLoginCorrect(String username, String password, User loggingIn) throws IncorrectLoginException, IncorrectPasswordException {
-        //String expectedHashPassword = loggingIn.getPassword();
         String loginHashPassword = MD5Hash.encode(password);
-        System.out.println(password);
 
         if(!username.equals(loggingIn.getUsername()))
             throw new IncorrectLoginException("Login is incorrect!");
