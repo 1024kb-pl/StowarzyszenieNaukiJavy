@@ -22,15 +22,15 @@ public class AddTaskServlet extends HttpServlet
         request.setCharacterEncoding("UTF-8");
 
         String title = request.getParameter("title");
-        String dateStr = request.getParameter("taskdate");
+        LocalDate date = LocalDate.parse(request.getParameter("taskdate"));
         String description = request.getParameter("description");
 
-        LocalDate date = LocalDate.now();
-        if(!dateStr.isEmpty())
-            date = LocalDate.parse(dateStr);
-
         String username = request.getSession(false).getAttribute("username").toString();
-        Task task = new Task(title, date, description);
+        Task task = Task.builder()
+                        .title(title)
+                        .date(date)
+                        .description(description)
+                        .build();
 
         String message = taskService.createTask(task, username);
 

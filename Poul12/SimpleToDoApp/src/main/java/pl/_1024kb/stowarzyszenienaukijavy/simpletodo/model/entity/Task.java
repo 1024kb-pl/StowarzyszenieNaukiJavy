@@ -1,89 +1,32 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
+@Data
+@NoArgsConstructor
 public class Task
 {
-    private Long task_id;
+    private Long taskId;
     private String title;
     private LocalDate date;
     private String description;
-    private Boolean task_done;
-    private Long user_id;
+    private Boolean taskDone;
+    private Long userId;
     private User user;
 
-    public Task()
-    {
-    }
-
-    public Task(String title, LocalDate date, String description) {
+    @Builder
+    public Task(Long taskId, String title, LocalDate date, String description, Boolean taskDone, Long userId, User user) {
+        this.taskId = taskId;
         this.title = title;
         this.date = date;
         this.description = description;
-    }
-
-    public Task(Long task_id, String title, LocalDate date, String description, Boolean task_done) {
-        this.task_id = task_id;
-        this.title = title;
-        this.date = date;
-        this.description = description;
-        this.task_done = task_done;
-    }
-
-    public Long getTask_id() {
-        return task_id;
-    }
-
-    public void setTask_id(Long task_id) {
-        this.task_id = task_id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
+        this.taskDone = taskDone;
+        this.userId = userId;
         this.user = user;
-    }
-
-    public Boolean getTask_done() {
-        return task_done;
-    }
-
-    public void setTask_done(Boolean task_done) {
-        this.task_done = task_done;
     }
 
     @Override

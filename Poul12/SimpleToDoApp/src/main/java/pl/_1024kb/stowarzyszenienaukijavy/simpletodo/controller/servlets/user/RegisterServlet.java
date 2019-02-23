@@ -1,6 +1,6 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.user;
 
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task.EntityCreator;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.EntityCreator;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.UserServiceImpl;
 
@@ -23,7 +23,14 @@ public class RegisterServlet extends HttpServlet
 
         User user = new EntityCreator(4).createUser(request);
 
-        String message = userServiceImpl.createUser(user);
+        String message = "Pomyślnie zarejestrowano nowego użytkownika";
+        try
+        {
+            userServiceImpl.createUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = e.getMessage();
+        }
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);

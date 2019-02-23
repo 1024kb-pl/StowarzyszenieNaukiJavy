@@ -1,5 +1,6 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task;
 
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.EntityCreator;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.TaskServiceImpl;
 

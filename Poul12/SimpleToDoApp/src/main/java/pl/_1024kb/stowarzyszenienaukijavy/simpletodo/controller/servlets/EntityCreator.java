@@ -1,4 +1,4 @@
-package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task;
+package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
@@ -19,13 +19,25 @@ public class EntityCreator
     public Task createTask(HttpServletRequest request)
     {
         setKeys(request);
-        return new Task(Long.parseLong(keys[0]), keys[1], LocalDate.parse(keys[2]), keys[3], Boolean.valueOf(keys[4]));
+        return Task.builder()
+                .taskId(Long.parseLong(keys[0]))
+                .title(keys[1])
+                .date(LocalDate.parse(keys[2]))
+                .description(keys[3])
+                .taskDone(Boolean.valueOf(keys[4]))
+                .build();
     }
 
     public User createUser(HttpServletRequest request)
     {
         setKeys(request);
-        return new User(keys[0], keys[1], keys[2], keys[3]);
+
+        return User.builder()
+                   .username(keys[0])
+                   .password(keys[1])
+                   .repeatedPassword(keys[2])
+                   .email(keys[3])
+                   .build();
     }
 
     private void setKeys(HttpServletRequest request)

@@ -126,10 +126,10 @@
         <td><%=task.getTitle()%></td>
         <td><%=task.getDate()%></td>
         <td><%=task.getDescription()%></td>
-        <td><%=task.getTask_done()%></td>
+        <td><%=task.getTaskDone()%></td>
         <td>
-            <p><a href="getTaskInfo?id=<%=task.getTask_id()%>&title=<%=task.getTitle()%>&date=<%=task.getDate()%>&description=<%=task.getDescription()%>&done=<%=task.getTask_done()%>"><button type="button">Edytuj</button></a></p>
-            <p><a href="deleteTask?id=<%=task.getTask_id()%>"><button type="button">Usuń</button></a></p>
+            <p><a href="getTaskInfo?id=<%=task.getTaskId()%>&title=<%=task.getTitle()%>&date=<%=task.getDate()%>&description=<%=task.getDescription()%>&done=<%=task.getTaskDone()%>"><button type="button">Edytuj</button></a></p>
+            <p><a href="deleteTask?id=<%=task.getTaskId()%>"><button type="button">Usuń</button></a></p>
         </td>
     </tr>
     <%

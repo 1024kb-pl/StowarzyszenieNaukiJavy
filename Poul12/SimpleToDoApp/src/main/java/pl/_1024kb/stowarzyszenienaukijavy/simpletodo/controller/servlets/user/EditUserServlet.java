@@ -1,6 +1,6 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.user;
 
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task.EntityCreator;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.EntityCreator;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.UserServiceImpl;
 
@@ -30,7 +30,14 @@ public class EditUserServlet extends HttpServlet
         }
 
         User user = new EntityCreator(4).createUser(request);
-        String message = userServiceImpl.editUser(user, sessionUsername);
+        String message = "Pomyślnie zmieniono dane użytownika";
+        try
+        {
+            userServiceImpl.editUser(user, sessionUsername);
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = e.getMessage();
+        }
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);

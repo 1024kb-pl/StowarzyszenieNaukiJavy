@@ -8,16 +8,15 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.TaskDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
 
-import java.util.Collections;
 import java.util.List;
 
 public class MysqlTaskDao implements TaskDao
 {
-    private final static String CREATE = "INSERT INTO tasks(date, title, description, user_id) VALUES(:date, :title, :description, :user_id);";
-    private final static String READ = "SELECT * FROM tasks WHERE user_id = :user_id;";
-    private final static String UPDATE = "UPDATE tasks SET date=:date, title=:title, description=:description, task_done=:task_done WHERE task_id = :task_id;";
-    private final static String DELETE = "DELETE FROM tasks WHERE task_id=:task_id;";
-    private final static String DELETE_ALL = "DELETE FROM tasks WHERE user_id=:user_id;";
+    private final static String CREATE = "INSERT INTO tasks(date, title, description, userId) VALUES(:date, :title, :description, :userId);";
+    private final static String READ = "SELECT * FROM tasks WHERE userId = :userId;";
+    private final static String UPDATE = "UPDATE tasks SET date=:date, title=:title, description=:description, taskDone=:taskDone WHERE taskId = :taskId;";
+    private final static String DELETE = "DELETE FROM tasks WHERE taskId=:taskId;";
+    private final static String DELETE_ALL = "DELETE FROM tasks WHERE userId=:userId;";
 
     private NamedParameterJdbcTemplate template;
 
@@ -34,15 +33,10 @@ public class MysqlTaskDao implements TaskDao
     }
 
     @Override
-    public List<Task> read(Long user_id)
+    public List<Task> read(Long userId)
     {
-        SqlParameterSource namedParameters = new MapSqlParameterSource("user_id", user_id);
-        List<Task> tasksList = template.query(READ, namedParameters, BeanPropertyRowMapper.newInstance(Task.class));
-
-        if(!tasksList.isEmpty())
-            return tasksList;
-
-        return Collections.emptyList();
+        SqlParameterSource namedParameters = new MapSqlParameterSource("userId", userId);
+        return template.query(READ, namedParameters, BeanPropertyRowMapper.newInstance(Task.class));
     }
 
     @Override
@@ -53,16 +47,16 @@ public class MysqlTaskDao implements TaskDao
     }
 
     @Override
-    public void delete(Long task_id)
+    public void delete(Long taskId)
     {
-        SqlParameterSource namedParameter = new MapSqlParameterSource("task_id", task_id);
+        SqlParameterSource namedParameter = new MapSqlParameterSource("taskId", taskId);
         template.update(DELETE, namedParameter);
     }
 
     @Override
-    public void deleteAllTasks(Long user_id)
+    public void deleteAllTasks(Long userId)
     {
-        SqlParameterSource namedParameter = new MapSqlParameterSource("user_id", user_id);
+        SqlParameterSource namedParameter = new MapSqlParameterSource("userId", userId);
         template.update(DELETE_ALL, namedParameter);
     }
 }

@@ -8,7 +8,10 @@ import java.util.regex.Pattern;
 
 public class UserValidator
 {
-    final static String EMAIL_PATTERN = Pattern.compile("\\S+@\\w+[\\.][\\w]{2,4}").pattern();
+    private final static String EMAIL_PATTERN = Pattern.compile("\\S+@\\w+[\\.][\\w]{2,4}").pattern();
+    private final static int USERNAME_LENGTH = 3;
+    private final static int PASSWORD_LENGTH = 6;
+
     private static UserValidator instance;
 
     private UserValidator()
@@ -24,15 +27,18 @@ public class UserValidator
         return instance;
     }
     
-    public boolean isLoginCorrect(User expected, User loggingIn) throws IncorrectLoginException
-    {
-        String expectedHashPassword = expected.getPassword();
-        String loginHashPassword = MD5Hash.encode(loggingIn.getPassword());
+    public boolean isLoginCorrect(String username, String password, User loggingIn) throws IncorrectLoginException, IncorrectPasswordException {
+        //String expectedHashPassword = loggingIn.getPassword();
+        String loginHashPassword = MD5Hash.encode(password);
+        System.out.println(password);
 
-        if(expected.getUsername().equals(loggingIn.getUsername()) && expectedHashPassword.equals(loginHashPassword))
-            return true;
+        if(!username.equals(loggingIn.getUsername()))
+            throw new IncorrectLoginException("Login is incorrect!");
 
-        throw new IncorrectLoginException("Login is incorrect!");
+        if(!loginHashPassword.equals(loggingIn.getPassword()))
+            throw new IncorrectPasswordException("Password is incorrect!");
+
+        return true;
     }
     
     public boolean isUserValid(User user) throws TooShortUsernameLengthException, TooShortPasswordLengthException, NotValidUserEmailException, NotTheSamePasswordException
@@ -54,12 +60,12 @@ public class UserValidator
 
     private boolean isUsernameValid(String username)
     {
-        return username.length() > 3;
+        return username.length() > USERNAME_LENGTH;
     }
 
     private boolean isPasswordValid(String password)
     {
-        return password.length() > 6;
+        return password.length() > PASSWORD_LENGTH;
     }
 
     private boolean isEmailValid(String email)

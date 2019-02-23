@@ -74,10 +74,10 @@
     <input type="text" name="username" placeholder="Nazwa użytkownika" value="<%=user.get().getUsername()%>">
     <br><br>
     <div>Nowe hasło:</div>
-    <input type="password" name="password" value="<%=user.get().getPassword()%>">
+    <input type="password" name="password">
     <br><br>
     <div>Powtórz hasło:</div>
-    <input type="password" name="repeated-pass" value="<%=user.get().getPassword()%>" >
+    <input type="password" name="repeated-pass">
     <br><br>
     <div>Adres e-mail</div>
     <input type="email" name="email" value="<%=user.get().getEmail()%>">

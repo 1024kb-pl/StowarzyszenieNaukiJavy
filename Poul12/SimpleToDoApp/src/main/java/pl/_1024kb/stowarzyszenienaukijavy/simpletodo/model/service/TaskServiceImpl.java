@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.TaskDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.TaskService;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.DaoFactory;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.FactoryType;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.UserNotFoundException;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -16,9 +18,8 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl implements TaskService
 {
     private static TaskServiceImpl instance;
-    private DaoFactory factory = DaoFactory.getDaoFactory(DaoFactory.MYSQL_DAO);
+    private DaoFactory factory = DaoFactory.getDaoFactory(FactoryType.MYSQL_DAO);
     private TaskDao dao = factory.getTaskDao();
-    //private MysqlTaskDao jdbcDao = new MysqlTaskDao();
     private UserServiceImpl userService = UserServiceImpl.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
@@ -29,8 +30,9 @@ public class TaskServiceImpl implements TaskService
 
     public static TaskServiceImpl getInstance()
     {
-        if(instance == null)
-                instance = new TaskServiceImpl();
+        if(instance == null) {
+            instance = new TaskServiceImpl();
+        }
 
         return instance;
     }
@@ -41,10 +43,13 @@ public class TaskServiceImpl implements TaskService
         String messageInfo = "Pomyślnie zapisano zadanie ;)";
         Long userId = 0L;
 
-        if(userService.getUserByUsername(username).isPresent())
-            userId = userService.getUserByUsername(username).get().getUser_id();
+        if(userService.getUserByUsername(username).isPresent()) {
+            userId = userService.getUserByUsername(username)
+                                .orElseThrow(this::newRunTimeException)
+                                .getUserId();
+        }
 
-        task.setUser_id(userId);
+        task.setUserId(userId);
 
         try
         {
@@ -67,8 +72,11 @@ public class TaskServiceImpl implements TaskService
     {
         Long userId = 0L;
 
-        if(userService.getUserByUsername(username).isPresent())
-            userId = userService.getUserByUsername(username).get().getUser_id();
+        if(userService.getUserByUsername(username).isPresent()) {
+            userId = userService.getUserByUsername(username)
+                                .orElseThrow(this::newRunTimeException)
+                                .getUserId();
+        }
 
         return dao.read(userId);
     }
@@ -117,7 +125,11 @@ public class TaskServiceImpl implements TaskService
         Long userId = 0L;
 
         if(userService.getUserByUsername(username).isPresent())
-            userId = userService.getUserByUsername(username).get().getUser_id();
+        {
+            userId = userService.getUserByUsername(username)
+                                .orElseThrow(this::newRunTimeException)
+                                .getUserId();
+        }
 
         try
         {
@@ -142,7 +154,7 @@ public class TaskServiceImpl implements TaskService
     public List<Task> getAllTasksByTaskDone(String username, boolean doneFilter)
     {
         return getAllTasksByUserId(username).stream()
-                .filter(task -> task.getTask_done() == doneFilter)
+                .filter(task -> task.getTaskDone() == doneFilter)
                 .collect(Collectors.toList());
     }
 
@@ -166,7 +178,12 @@ public class TaskServiceImpl implements TaskService
     public List<Task> getAllTasksOrderedByStatus(String username)
     {
         return getAllTasksByUserId(username).stream()
-                .sorted(Comparator.comparing(Task::getTask_done).reversed())
+                .sorted(Comparator.comparing(Task::getTaskDone).reversed())
                 .collect(Collectors.toList());
+    }
+
+    private UserNotFoundException newRunTimeException()
+    {
+        return new UserNotFoundException("Not found any desired user");
     }
 }

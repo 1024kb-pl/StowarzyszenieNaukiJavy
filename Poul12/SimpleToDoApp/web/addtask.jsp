@@ -52,6 +52,7 @@
     <div>Opis:</div>
     <textarea rows="5" cols="50" name="description" wrap="hard" maxlength ="150" placeholder="Opis zadania... (max 150 znaków)"></textarea>
     <br><br>
+    <input type="hidden" name="checktask" value="false">
     <input type="submit" value="Stwórz nowe zadanie">
     <br><br>
 </form>

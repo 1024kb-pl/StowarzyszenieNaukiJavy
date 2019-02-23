@@ -22,12 +22,19 @@ public class LoginServlet extends HttpServlet
         
         String message = "Nie udało się zalogować :(";
 
-        if(userServiceImpl.loginVerification(username, password))
+        try
         {
-            message = "Witaj " + username + " :)";
-            request.getSession(true).setAttribute("username", username);
+            if(userServiceImpl.loginVerification(username, password))
+            {
+                message = "Witaj " + username + " :)";
+                request.getSession(true).setAttribute("username", username);
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            message = e.getMessage();
         }
-        
+
         request.setAttribute("message", message);
         request.getRequestDispatcher("message.jsp").forward(request, response);
         
