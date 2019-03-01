@@ -2,49 +2,14 @@
 <html>
 <head>
     <title>Register</title>
-    <style>
-
-        body
-        {
-            background-color: #b3daff;
-        }
-
-        h1
-        {
-            color: #007599;
-            text-align: center;
-        }
-
-        p
-        {
-            font-family: verdana;
-            font-size: 16px;
-
-        }
-
-        div
-        {
-            font-family: verdana;
-            font-size: 16px;
-            text-align: center;
-        }
-
-        form
-        {
-            background-color: #e6f9ff;
-            border-style: outset;
-            text-align: center;
-            margin: 25px 200px 205px 200px;
-        }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
 
-<h1>Rejestracja</h1>
+<jsp:include page="/WEB-INF/fragments/menu.jspf"/>
 
-<form action="register" method="post">
-    <br>
+<form class="register" action="register" method="post">
+    <h1>Rejestracja</h1>
     <div>Nazwa użytkownika:</div>
     <input type="text" placeholder="Nazwa użytkownika" name="username">
     <br><br>
@@ -59,7 +24,6 @@
     <br><br>
     <input type="submit" value="Zarejestruj">
     <br><br>
-
 </form>
 
 

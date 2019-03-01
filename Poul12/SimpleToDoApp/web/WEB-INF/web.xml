@@ -19,6 +19,20 @@
 
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
-        <url-pattern>/tasks.jsp</url-pattern>
+        <url-pattern>/addtask.jsp</url-pattern>
+        <url-pattern>/taskslist.jsp</url-pattern>
     </filter-mapping>
+
+    <display-name>fragments</display-name>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <url-pattern>*.jspf</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+        </jsp-property-group>
+    </jsp-config>
 </web-app>

@@ -1,58 +1,13 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
   <title>Main Page</title>
-  <style>
-
-    body
-    {
-      background-color: #b3daff;
-    }
-
-    h1
-    {
-      color: #007599;
-      text-align: center;
-    }
-
-    p
-    {
-      font-family: verdana;
-      font-size: 16px;
-      text-align: center;
-    }
-
-    div
-    {
-      font-family: verdana;
-      font-size: 16px;
-      text-align: center;
-    }
-
-  </style>
+  <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
 
-<h1>Menu</h1>
-
-<br>
-<%
-  if(request.getSession(false).getAttribute("username") == null)
-  {
-%>
-<p><a href="register.jsp"><button type="button">Zarejestruj się</button></a></p>
-<p><a href="login.jsp"><button type="button">Zaloguj się</button></a></p>
-<%
-  }else
-  {
-%>
-<p><a href="userpanel.jsp"><button type="button">Panel użytkownika</button></a></p>
-<p><a href="logout"><button type="button">Wyloguj się</button></a></p>
-<%
-  }
-%>
-<p><a href="tasks.jsp"><button type="button">Zadania</button></a></p>
+<jsp:include page="/WEB-INF/fragments/menu.jspf"/>
 
 </body>
 </html>
