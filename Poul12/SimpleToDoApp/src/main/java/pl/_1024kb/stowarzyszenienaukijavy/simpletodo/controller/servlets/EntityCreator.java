@@ -34,9 +34,9 @@ public class EntityCreator
 
         return User.builder()
                    .username(keys[0])
-                   .password(keys[1])
-                   .repeatedPassword(keys[2])
-                   .email(keys[3])
+                   .email(keys[1])
+                   .password(keys[2])
+                   .repeatedPassword(keys[3])
                    .build();
     }
 

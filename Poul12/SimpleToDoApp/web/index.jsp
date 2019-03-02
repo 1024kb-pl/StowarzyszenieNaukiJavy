@@ -3,11 +3,21 @@
 <html>
 <head>
   <title>Main Page</title>
-  <link rel="stylesheet" type="text/css" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script src="js/bootstrap.js"></script>
 </head>
 <body>
 
 <jsp:include page="/WEB-INF/fragments/menu.jspf"/>
+
+<div class="container">
+  <h3>Simple ToDo App</h3>
+  <p>You can store tasks on this website.
+  <p>Create new task, display it, and manage. Check for done, delete old task. </p>
+</div>
 
 </body>
 </html>
