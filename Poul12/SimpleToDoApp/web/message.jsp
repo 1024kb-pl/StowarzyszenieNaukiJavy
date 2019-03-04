@@ -13,7 +13,17 @@
 
 <jsp:include page="/WEB-INF/fragments/menu.jspf"/>
 
-<h3>${requestScope.message}</h3>
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <h3>${requestScope.message}</h3>
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>

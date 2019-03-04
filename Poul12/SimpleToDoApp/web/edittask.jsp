@@ -1,80 +1,66 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Edit task</title>
-    <style>
-        body
-        {
-            background-color: #b3daff;
-        }
-
-        h1
-        {
-            color: white;
-            text-align: center;
-        }
-
-        div
-        {
-            font-family: verdana;
-            font-size: 14px;
-            text-align: center;
-            margin-left: 25px;
-        }
-
-        p
-        {
-            font-family: verdana;
-            font-size: 16px;
-            text-align: right;
-        }
-
-        form
-        {
-            text-align: center;
-            border-style: solid;
-            border-width: 3px;
-            border-color: #80c1ff;
-            background-color: white;
-            margin: 10px 500px 50px 500px;
-
-        }
-
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
 </head>
 <body>
 
-<h1>Edytuj zadanie</h1>
+<jsp:include page="/WEB-INF/fragments/menu.jspf"/>
 
-<p><a href="index.jsp"><button type="button">Menu</button></a></p>
+<div class="container">
 
-<br>
-<form action="editTask" method="post" id="taskform">
-    <br>
-    <div>Nazwa zadania:</div>
-    <input type="hidden" name="task_id" value="<%=request.getAttribute("id")%>">
-    <input type="text" name="title" size="50" placeholder="Nazwa zadania" value="<%=request.getAttribute("title")%>">
-    <br><br>
-    <div>Data:</div>
-    <input type="date" name="taskdate" value="<%=request.getAttribute("date")%>">
-    <br><br>
-    <div>Opis:</div>
-    <textarea rows="5" cols="50" name="description" wrap="hard" maxlength ="150" placeholder="Opis zadania... (max 150 znaków)"><%=request.getAttribute("description")%></textarea>
-    <br><br>
-    <input type="radio" name="checktask" value="true" <%
-                                            if(request.getAttribute("done").equals("true")){%>
-                                                checked
-                                            <%}%>>Wykonane
-    <br>
-    <input type="radio" name="checktask" value="false" <%
-                                            if(request.getAttribute("done").equals("false")){%>
-                                                 checked
-                                            <%}%>>Niewykonane
-    <br><br>
-    <input type="submit" value="Zaktualizuj zadanie">
-    <br><br>
-</form>
+    <div class="row">
+
+        <div class="col-sm-4">
+        </div>
+
+        <div class="col-sm-4" style="background-color:lavenderblush;">
+
+            <form action="editTask" method="post">
+                <h2>Edit task</h2>
+                <input type="hidden" name="task_id" value="<c:out value="${requestScope.id}"/>">
+                <div class="form-group">
+                    <label for="InputTitle">Title</label>
+                    <input type="text" class="form-control" id="InputTitle" placeholder="Enter title" name="title" value="<c:out value="${requestScope.title}"/>">
+                </div>
+                <div class="form-group">
+                    <label for="InputDate">Date</label>
+                    <input type="date" class="form-control" id="InputDate" name="taskdate" value="<c:out value="${requestScope.date}"/>">
+                </div>
+                <div class="form-group">
+                    <label for="InputDescription">Description</label>
+                    <textarea class="form-control" rows="5" id="InputDescription" name="description" wrap="hard" maxlength ="150" placeholder="Description task... (max 150 signs)"><c:out value="${requestScope.description}"/></textarea>
+                </div>
+                <input type="radio" name="checktask" value="true"
+                    <c:if test="${requestScope.done eq 'true'}">
+                           checked
+                    </c:if>
+                >Done
+                <br>
+                <input type="radio" name="checktask" value="false"
+                    <c:if test="${requestScope.done eq 'false'}">
+                           checked
+                    </c:if>
+                >Undone
+                <br><br>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+
+        </div>
+
+        <div class="col-sm-4">
+        </div>
+
+    </div>
+</div>
+
 
 </body>
 </html>

@@ -16,8 +16,7 @@
 
     <div class="row">
 
-        <div class="col-sm-4" style="background-color:lavender;">
-
+        <div class="col-sm-4">
         </div>
 
         <div class="col-sm-4" style="background-color:lavenderblush;">
@@ -37,12 +36,13 @@
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Login</button>
             </form>
 
         </div>
 
-        <div class="col-sm-4" style="background-color:lavenderblush;"></div>
+        <div class="col-sm-4">
+        </div>
 
     </div>
 </div>

@@ -4,6 +4,7 @@
 <%@ page import="pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.TaskServiceImpl" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.util.List" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <head>
     <title>Task list</title>
@@ -18,44 +19,44 @@
 
 <jsp:include page="/WEB-INF/fragments/menu.jspf"/>
 
-<div class="container">
-    <div class="row">
+<div class="row">
 
-        <div class="col-sm-4" style="background-color:lavender;">
+    <div class="col-sm-6" style="background-color:lavender;">
 
-            <div class="form-group">
-                <form class="form-inline" action="taskslist.jsp" method="get">
-                    <label for="filters">Filters</label>
-                    <select class="form-control" id="filters">
-                        <option></option>
-                        <option value="true">Checked</option>
-                        <option value="false">Unchecked</option>
-                        <option value="date">Date</option>
-                    </select>
-                    <input type="date" name="dateFilter" value="<%=LocalDate.now()%>">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                <br>
-
-            </div>
-
-        </div>
-
-        <div class="col-sm-4" style="background-color:lavender;">
+        <div class="form-group">
             <form class="form-inline" action="taskslist.jsp" method="get">
-                <label for="sort">Sort</label>
-                <select class="form-control" id="sort">
+                <label for="filters">Filters </label>
+                <select class="form-control" id="filters" name="filter">
                     <option></option>
-                    <option value="title">Title</option>
-                    <option value="date">Checked</option>
-                    <option value="status">Date</option>
+                    <option value="true">Checked</option>
+                    <option value="false">Unchecked</option>
+                    <option value="date">Date</option>
                 </select>
+                <br>
+                <input type="date" name="dateFilter" value="<c:out value="${LocalDate.now()}"/>">
                 <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+            <br>
+
         </div>
 
     </div>
+
+    <div class="col-sm-6" style="background-color:lavender;">
+        <form class="form-inline" action="taskslist.jsp" method="get">
+            <label for="sort">Sort </label>
+            <select class="form-control" id="sort" name="sort">
+                <option></option>
+                <option value="title">Title</option>
+                <option value="date">Checked</option>
+                <option value="status">Date</option>
+            </select>
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
 </div>
 
 <div class="container">

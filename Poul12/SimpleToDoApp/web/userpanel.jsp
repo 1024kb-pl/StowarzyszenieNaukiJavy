@@ -1,38 +1,37 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>User Panel</title>
-    <style>
-
-        body
-        {
-            background-color: #b3daff;
-        }
-
-        h1
-        {
-            color: #007599;
-            text-align: center;
-        }
-
-        p
-        {
-            font-family: verdana;
-            font-size: 16px;
-            text-align: center;
-        }
-
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
 </head>
 <body>
 
-<h1>Panel użytkownika</h1>
+<jsp:include page="/WEB-INF/fragments/menu.jspf"/>
 
-<br>
+<div class="container">
 
-<p><a href="edituser.jsp"><button type="button">Edycja konta</button></a></p>
-<p><a href="deleteUser"><button type="button">Usuń konto</button></a></p>
+    <div class="row">
+
+        <div class="col-sm-4">
+    </div>
+
+        <div class="col-sm-6">
+            <h1>Manage account</h1>
+            <br>
+            <p><a href="edituser.jsp"><button type="button">Edycja konta</button></a></p>
+            <p><a href="deleteUser"><button type="button">Usuń konto</button></a></p>
+        </div>
+
+        <div class="col-sm-4">
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>

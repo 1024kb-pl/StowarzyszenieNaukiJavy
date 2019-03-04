@@ -16,8 +16,7 @@
 
     <div class="row">
 
-        <div class="col-sm-4" style="background-color:lavender;">
-
+        <div class="col-sm-4">
         </div>
 
         <div class="col-sm-4" style="background-color:lavenderblush;">
@@ -40,12 +39,14 @@
                     <label for="InputRepeatedPassword">Repeat password</label>
                     <input type="password" class="form-control" id="InputRepeatedPassword" placeholder="Repeat password" name="repeated-pass">
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Register</button>
             </form>
 
         </div>
 
-        <div class="col-sm-4" style="background-color:lavenderblush;"></div>
+        <div class="col-sm-4">
+        </div>
+
 
     </div>
 </div>

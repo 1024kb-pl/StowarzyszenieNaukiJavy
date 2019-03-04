@@ -1,61 +1,54 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Create new task</title>
-    <style>
-        body
-        {
-            background-color: #b3daff;
-        }
-
-        h1
-        {
-            color: white;
-            text-align: center;
-        }
-
-        div
-        {
-            font-family: verdana;
-            font-size: 14px;
-            text-align: center;
-            margin-left: 25px;
-        }
-
-        form
-        {
-            text-align: center;
-            border-style: solid;
-            border-width: 3px;
-            border-color: #80c1ff;
-            background-color: white;
-            margin: 10px 500px 50px 500px;
-
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
 </head>
 <body>
 
-<h1>Stwórz nowe zadanie</h1>
+<jsp:include page="/WEB-INF/fragments/menu.jspf"/>
 
-<br>
-<form action="addTask" method="post" id="taskform">
-    <br>
-    <div>Nazwa zadania:</div>
-    <input type="text" name="title" size="50" placeholder="Nazwa zadania">
-    <br><br>
-    <div>Data:</div>
-    <input type="date" name="taskdate" value="<%=LocalDate.now()%>">
-    <br><br>
-    <div>Opis:</div>
-    <textarea rows="5" cols="50" name="description" wrap="hard" maxlength ="150" placeholder="Opis zadania... (max 150 znaków)"></textarea>
-    <br><br>
-    <input type="hidden" name="checktask" value="false">
-    <input type="submit" value="Stwórz nowe zadanie">
-    <br><br>
-</form>
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-sm-4">
+        </div>
+
+        <div class="col-sm-4" style="background-color:lavenderblush;">
+
+            <form action="addTask" method="post">
+                <h2>Add new task</h2>
+                <div class="form-group">
+                    <label for="InputTitle">Title</label>
+                    <input type="text" class="form-control" id="InputTitle" placeholder="Enter title" name="title">
+                </div>
+                <div class="form-group">
+                    <label for="InputDate">Date</label>
+                    <input type="date" class="form-control" id="InputDate" name="taskdate" value="<c:out value="${LocalDate.now()}"/>">
+                </div>
+                <div class="form-group">
+                    <label for="InputDescription">Description</label>
+                    <textarea class="form-control" rows="5" id="InputDescription" name="description" wrap="hard" maxlength ="150" placeholder="Description task... (max 150 signs)"></textarea>
+                </div>
+                <input type="hidden" name="checktask" value="false">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+
+        </div>
+
+        <div class="col-sm-4">
+        </div>
+
+    </div>
+</div>
 
 </body>
 </html>
