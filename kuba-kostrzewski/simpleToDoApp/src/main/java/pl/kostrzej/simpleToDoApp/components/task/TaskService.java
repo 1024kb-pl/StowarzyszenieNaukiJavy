@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class TaskService {
 
-    TaskRepository taskRepository;
+    private TaskRepository taskRepository;
 
     public void addTask(Task task){
         log.info("Adding new task to database process initialized.");

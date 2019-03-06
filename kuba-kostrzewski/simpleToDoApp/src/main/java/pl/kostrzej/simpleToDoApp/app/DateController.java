@@ -1,5 +1,6 @@
 package pl.kostrzej.simpleToDoApp.app;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,9 +12,9 @@ import java.util.Scanner;
 
 @Controller
 @Slf4j
+@AllArgsConstructor
 public class DateController {
 
-    @Autowired
     private Scanner scanner;
 
     public Date readDate(){
@@ -37,8 +38,8 @@ public class DateController {
                 log.info("Date format is valid.");
             } catch (ParseException e){
                 System.out.println("Podane dane są niewłaściwe!");
-                log.info("Date format is invalid. {}", e.getClass());
-                log.info("Invalid date: {}", builder.toString());
+                log.error("Date format is invalid. {}", e.getClass());
+                log.error("Invalid date: {}", builder.toString());
             }
         }
         log.info("Date: {}", date);

@@ -1,5 +1,6 @@
 package pl.kostrzej.simpleToDoApp.components.login;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,9 @@ import pl.kostrzej.simpleToDoApp.components.user.UserRepository;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class LoginService {
 
-    @Autowired
     private UserRepository userRepository;
 
     public User logIn(String login, String password){
@@ -24,9 +25,7 @@ public class LoginService {
             log.info("Authorization finished successfully.");
             return user;
         }
-        else {
-            log.info("Password incorrect. Authorization failed.");
-            throw new InvalidLoginDataException();
-        }
+        log.info("Password incorrect. Authorization failed.");
+        throw new InvalidLoginDataException();
     }
 }

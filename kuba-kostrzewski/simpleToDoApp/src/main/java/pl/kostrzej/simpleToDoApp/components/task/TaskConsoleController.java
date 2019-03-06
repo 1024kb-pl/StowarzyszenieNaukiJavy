@@ -53,7 +53,7 @@ public class TaskConsoleController implements TaskController {
     public Task getTaskFromList(List<Task> tasks){
         Integer taskIndex = null;
         showAllTasks(tasks);
-        if (tasks.size()>0){
+        if (!tasks.isEmpty()){
             System.out.println("Podaj nr zadania:");
             try {
                 taskIndex = readTaskIndex(tasks);
@@ -63,7 +63,7 @@ public class TaskConsoleController implements TaskController {
                 System.out.println("Wpisano niewłaściwe dane! Podaj liczbę!");
             } catch (IndexOutOfBoundsException e){
                 System.err.println(e.getMessage());
-                log.info("Invalid task number! Task list size= {} Value typed to console = {} {}",
+                log.error("Invalid task number! Task list size= {} Value typed to console = {} {}",
                         tasks.size(), taskIndex, e.getClass().toString());
             }
         }
@@ -103,7 +103,7 @@ public class TaskConsoleController implements TaskController {
     public void showAllTasks(List<Task> tasks){
         log.info("Show all tasks process initialized.");
         System.out.println("Lista zadań:");
-        if (tasks.isEmpty() || tasks == null){
+        if (tasks.isEmpty()){
             log.info("Empty task list");
             System.out.println("Brak zadań");
         } else {
@@ -112,10 +112,7 @@ public class TaskConsoleController implements TaskController {
                     .range(0, tasks.size())
                     .forEach(i -> {
                                 Task task = tasks.get(i);
-                                System.out.println(i + 1 + ".\ttytuł: " + task.getTitle() + "\n" +
-                                        "\topis: " + task.getDescription() + "\n" +
-                                        "\tdata: " + task.getDate() + "\n" +
-                                        "\tzakończone: " + task.getStatus());
+                                System.out.println(i + 1 + task.toString());
                             }
                     );
         }
@@ -125,7 +122,7 @@ public class TaskConsoleController implements TaskController {
         int taskIndex = scanner.nextInt() - 1;
         scanner.nextLine();
         log.info("Correct data type.");
-        if (taskIndex<tasks.size() || taskIndex < 0) {
+        if (taskIndex>tasks.size() || taskIndex < 0) {
             log.info("Correct index value");
             return taskIndex;
         }

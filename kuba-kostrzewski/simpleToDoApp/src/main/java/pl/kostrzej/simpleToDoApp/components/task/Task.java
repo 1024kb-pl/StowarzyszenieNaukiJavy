@@ -35,4 +35,12 @@ public class Task implements Serializable {
         this.date = date;
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return  "\ttytuł: " + title + "\n" +
+                "\topis: " + description + "\n" +
+                "\tdata: " + date + "\n" +
+                "\tzakończone: " + status;
+    }
 }

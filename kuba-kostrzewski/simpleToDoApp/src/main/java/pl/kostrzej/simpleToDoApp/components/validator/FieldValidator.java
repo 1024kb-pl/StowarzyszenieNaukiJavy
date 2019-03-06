@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class FieldValidator {
 
     public boolean isFieldEmpty(String value, String name){
-        if (value.isEmpty()){
+        if (value.isBlank()){
             log.info("Field {} is empty.", name);
             System.out.println("Pole \"" + name + "\" nie może być puste!");
             return true;
