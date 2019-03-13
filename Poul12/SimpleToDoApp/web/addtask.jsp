@@ -19,10 +19,7 @@
 
     <div class="row">
 
-        <div class="col-sm-4">
-        </div>
-
-        <div class="col-sm-4" style="background-color:lavenderblush;">
+        <div class="col-md-4 col-md-offset-4" style="background-color:lavenderblush;">
 
             <form action="addTask" method="post">
                 <h2>Add new task</h2>
@@ -44,11 +41,10 @@
 
         </div>
 
-        <div class="col-sm-4">
-        </div>
-
     </div>
 </div>
+
+<jsp:include page="/WEB-INF/fragments/footer.jspf"/>
 
 </body>
 </html>

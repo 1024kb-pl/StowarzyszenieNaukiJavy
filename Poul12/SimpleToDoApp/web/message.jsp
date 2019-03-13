@@ -17,13 +17,15 @@
 
     <div class="row">
 
-        <div class="col-sm-6">
+        <div class="col-md-4 col-md-offset-4">
             <h3>${requestScope.message}</h3>
         </div>
 
     </div>
 
 </div>
+
+<jsp:include page="/WEB-INF/fragments/footer.jspf"/>
 
 </body>
 </html>

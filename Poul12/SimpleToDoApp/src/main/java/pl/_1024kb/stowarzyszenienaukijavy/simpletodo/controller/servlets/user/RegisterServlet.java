@@ -21,7 +21,7 @@ public class RegisterServlet extends HttpServlet
     {
         request.setCharacterEncoding("UTF-8");
 
-        User user = new EntityCreator(4).createUser(request);
+        User user = new EntityCreator().createUser(request);
 
         String message = "Pomyślnie zarejestrowano nowego użytkownika";
         try

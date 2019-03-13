@@ -16,13 +16,10 @@
 
     <div class="row">
 
-        <div class="col-sm-4">
-        </div>
-
-        <div class="col-sm-4" style="background-color:lavenderblush;">
+        <div class="col-md-4 col-md-offset-4" style="background-color:lavenderblush;">
 
             <form action="register" method="post">
-                <h2>Register</h2>
+                <h2>Sign up</h2>
                 <div class="form-group">
                     <label for="InputUsername">Username</label>
                     <input type="text" class="form-control" id="InputUsername" placeholder="Enter username" name="username">
@@ -39,18 +36,15 @@
                     <label for="InputRepeatedPassword">Repeat password</label>
                     <input type="password" class="form-control" id="InputRepeatedPassword" placeholder="Repeat password" name="repeated-pass">
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-primary">Sign up</button>
             </form>
 
         </div>
 
-        <div class="col-sm-4">
-        </div>
-
-
     </div>
 </div>
 
+<jsp:include page="/WEB-INF/fragments/footer.jspf"/>
 
 </body>
 </html>

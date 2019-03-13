@@ -11,13 +11,25 @@ public class EntityCreator
 {
     private String[] keys;
 
-    public EntityCreator(int length)
+    public EntityCreator()
     {
-        keys = new String[length];
     }
 
     public Task createTask(HttpServletRequest request)
     {
+        keys = new String[4];
+        setKeys(request);
+        return Task.builder()
+                .title(keys[0])
+                .date(LocalDate.parse(keys[1]))
+                .description(keys[2])
+                .taskDone(Boolean.valueOf(keys[3]))
+                .build();
+    }
+
+    public Task updateTask(HttpServletRequest request)
+    {
+        keys = new String[5];
         setKeys(request);
         return Task.builder()
                 .taskId(Long.parseLong(keys[0]))
@@ -30,8 +42,8 @@ public class EntityCreator
 
     public User createUser(HttpServletRequest request)
     {
+        keys = new String[4];
         setKeys(request);
-
         return User.builder()
                    .username(keys[0])
                    .email(keys[1])

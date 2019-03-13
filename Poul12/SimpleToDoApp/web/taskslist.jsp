@@ -21,7 +21,11 @@
 
 <div class="row">
 
-    <div class="col-sm-6" style="background-color:lavender;">
+    <div class="col-sm-3">
+
+    </div>
+
+    <div class="col-sm-4">
 
         <div class="form-group">
             <form class="form-inline" action="taskslist.jsp" method="get">
@@ -32,29 +36,31 @@
                     <option value="false">Unchecked</option>
                     <option value="date">Date</option>
                 </select>
-                <br>
                 <input type="date" name="dateFilter" value="<c:out value="${LocalDate.now()}"/>">
-                <br>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Filter</button>
             </form>
-            <br>
 
         </div>
 
     </div>
 
-    <div class="col-sm-6" style="background-color:lavender;">
+    <div class="col-sm-4">
+
         <form class="form-inline" action="taskslist.jsp" method="get">
             <label for="sort">Sort </label>
             <select class="form-control" id="sort" name="sort">
                 <option></option>
                 <option value="title">Title</option>
-                <option value="date">Checked</option>
-                <option value="status">Date</option>
+                <option value="date">Date</option>
+                <option value="status">Checked</option>
             </select>
-            <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Sort</button>
         </form>
+
+    </div>
+
+    <div class="col-sm-3">
+
     </div>
 
 </div>
@@ -129,8 +135,8 @@
             <td>@<%=task.getDescription()%></td>
             <td><%=task.getTaskDone()%></td>
             <td>
-                <p><a href="getTaskInfo?id=<%=task.getTaskId()%>&title=<%=task.getTitle()%>&date=<%=task.getDate()%>&description=<%=task.getDescription()%>&done=<%=task.getTaskDone()%>"><button type="button">Edytuj</button></a></p>
-                <p><a href="deleteTask?id=<%=task.getTaskId()%>"><button type="button">Usuń</button></a></p>
+                <a href="getTaskInfo?id=<%=task.getTaskId()%>&title=<%=task.getTitle()%>&date=<%=task.getDate()%>&description=<%=task.getDescription()%>&done=<%=task.getTaskDone()%>"><button type="button" class="btn btn-primary">Edit</button></a>
+                <a href="deleteTask?id=<%=task.getTaskId()%>"><button type="button" class="btn btn-primary">Delete</button></a>
             </td>
         </tr>
         </tbody>
@@ -143,6 +149,7 @@
 
 </div>
 
+<jsp:include page="/WEB-INF/fragments/footer.jspf"/>
 
 </body>
 </html>

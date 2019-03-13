@@ -22,8 +22,7 @@ public class EditTaskServlet extends HttpServlet
     {
         request.setCharacterEncoding("UTF-8");
 
-        int parametersSize = request.getParameterMap().size();
-        Task task = new EntityCreator(parametersSize).createTask(request);
+        Task task = new EntityCreator().updateTask(request);
 
         String message = "Pomyślnie zaktualizowano zadanie :)";
         try

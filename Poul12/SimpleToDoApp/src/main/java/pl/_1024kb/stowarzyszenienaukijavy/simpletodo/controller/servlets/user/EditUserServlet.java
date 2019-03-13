@@ -29,7 +29,7 @@ public class EditUserServlet extends HttpServlet
             request.getSession(false).setAttribute("username", username);
         }
 
-        User user = new EntityCreator(4).createUser(request);
+        User user = new EntityCreator().createUser(request);
         String message = "Pomyślnie zmieniono dane użytownika";
         try
         {

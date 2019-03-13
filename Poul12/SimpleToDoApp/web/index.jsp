@@ -19,5 +19,7 @@
   <p>Create new task, display it, and manage. Check for done, delete old task. </p>
 </div>
 
+<jsp:include page="/WEB-INF/fragments/footer.jspf"/>
+
 </body>
 </html>

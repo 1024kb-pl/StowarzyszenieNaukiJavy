@@ -16,13 +16,10 @@
 
     <div class="row">
 
-        <div class="col-sm-4">
-        </div>
-
-        <div class="col-sm-4" style="background-color:lavenderblush;">
+        <div class="col-md-4 col-md-offset-4" style="background-color:lavenderblush;">
 
             <form action="login" method="post">
-                <h2>Login</h2>
+                <h2>Sign in</h2>
                 <div class="form-group">
                     <label for="InputUsername">Username</label>
                     <input type="text" class="form-control" id="InputUsername" placeholder="Enter username" name="username">
@@ -36,16 +33,15 @@
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Sign in</button>
             </form>
 
         </div>
 
-        <div class="col-sm-4">
-        </div>
-
     </div>
 </div>
+
+<jsp:include page="/WEB-INF/fragments/footer.jspf"/>
 
 </body>
 </html>

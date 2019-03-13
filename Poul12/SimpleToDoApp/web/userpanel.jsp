@@ -16,22 +16,18 @@
 
     <div class="row">
 
-        <div class="col-sm-4">
-    </div>
-
-        <div class="col-sm-6">
+        <div class="col-md-4 col-md-offset-4">
             <h1>Manage account</h1>
             <br>
             <p><a href="edituser.jsp"><button type="button">Edycja konta</button></a></p>
             <p><a href="deleteUser"><button type="button">Usuń konto</button></a></p>
         </div>
 
-        <div class="col-sm-4">
-        </div>
-
     </div>
 
 </div>
+
+<jsp:include page="/WEB-INF/fragments/footer.jspf"/>
 
 </body>
 </html>

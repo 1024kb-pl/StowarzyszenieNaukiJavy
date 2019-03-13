@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 </head>
 
 <nav class="navbar navbar-inverse">
@@ -30,19 +30,19 @@
         <div class="collapse navbar-collapse" id="myNavbar">
 
             <ul class="nav navbar-nav">
-                <li class="active"><a href="index.jsp">Home</a></li>
-                <li><a href="addtask.jsp">Create task</a></li>
-                <li><a href="taskslist.jsp">Display task</a></li>
+                <li class="active"><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
+                <li><a href="${pageContext.request.contextPath}/addtask.jsp">Create task</a></li>
+                <li><a href="${pageContext.request.contextPath}/taskslist.jsp">Display task</a></li>
                 <li><a href="#">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <c:choose>
                 <c:when test="${empty sessionScope.username}">
-                    <li><a href="register.jsp"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                    <li><a href="login.jsp"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a href="${pageContext.request.contextPath}/register.jsp"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="${pageContext.request.contextPath}/login.jsp"><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
                 </c:when>
                 <c:otherwise>
-                    <li><a href="userpanel.jsp"><span class="glyphicon glyphicon-user"></span> User Panel</a></li>
+                    <li><a href="${pageContext.request.contextPath}/userpanel.jsp"><span class="glyphicon glyphicon-user"></span><c:out value="${sessionScope.username}"/></a></li>
                     <li><a href="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                 </c:otherwise>
                 </c:choose>
