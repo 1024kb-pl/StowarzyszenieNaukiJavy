@@ -3,10 +3,9 @@
 <head>
     <title>User Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../js/bootstrap.js"></script>
 </head>
 <body>
 
@@ -19,8 +18,8 @@
         <div class="col-md-4 col-md-offset-4">
             <h1>Manage account</h1>
             <br>
-            <p><a href="edituser.jsp"><button type="button">Edycja konta</button></a></p>
-            <p><a href="deleteUser"><button type="button">Usuń konto</button></a></p>
+            <p><a href="editUser"><button type="button" class="btn btn-primary">Edycja konta</button></a></p>
+            <p><a href="deleteUser"><button type="button" class="btn btn-primary">Usuń konto</button></a></p>
         </div>
 
     </div>

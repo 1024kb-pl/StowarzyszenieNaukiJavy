@@ -33,7 +33,7 @@ public class TasksListServlet extends HttpServlet
         sortTaskList(username, request);
 
         request.setAttribute("tasksList", taskList);
-        request.getRequestDispatcher("taskslist.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/taskslist.jsp").forward(request, response);
     }
 
     private void sortTaskList(String username, HttpServletRequest request)
@@ -87,24 +87,3 @@ public class TasksListServlet extends HttpServlet
     }
 
 }
- /*
-            if (!filterOption.equals("date"))
-            {
-                try
-                {
-                    boolean doneFilter = Boolean.parseBoolean(filterOption);
-                    taskList = taskService.getAllTasksByTaskDone(username, doneFilter);
-
-                }catch (IllegalArgumentException e)
-                {
-                    e.printStackTrace();
-                }
-
-                request.setAttribute("done_filter", filterOption);
-            } else
-            {
-                String dateStr = request.getParameter("dateFilter");
-                LocalDate dateFilter = LocalDate.parse(dateStr);
-                taskList = taskService.getAllTasksByDate(username, dateFilter);
-                request.setAttribute("date_filter", dateFilter);
-            }*/

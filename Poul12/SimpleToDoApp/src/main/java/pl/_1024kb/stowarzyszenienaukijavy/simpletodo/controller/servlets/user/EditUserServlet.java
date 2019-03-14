@@ -17,6 +17,18 @@ public class EditUserServlet extends HttpServlet
     private UserServiceImpl userServiceImpl = UserServiceImpl.getInstance();
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        if(request.getSession(false).getAttribute("username") != null)
+        {
+            request.getRequestDispatcher("WEB-INF/pages/edituser.jsp").forward(request, response);
+        }else
+        {
+            response.sendError(403);
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         request.setCharacterEncoding("UTF-8");
@@ -40,6 +52,6 @@ public class EditUserServlet extends HttpServlet
         }
 
         request.setAttribute("message", message);
-        request.getRequestDispatcher("message.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/message.jsp").forward(request, response);
     }
 }

@@ -8,7 +8,7 @@
 
     <!-- Main page -->
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/WEB-INF/pages/index.jsp</welcome-file>
     </welcome-file-list>
 
     <!-- Filters config -->
@@ -19,13 +19,13 @@
 
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
-        <url-pattern>/addtask.jsp</url-pattern>
-        <url-pattern>/taskslist.jsp</url-pattern>
+        <url-pattern>/addTask</url-pattern>
+        <url-pattern>/tasks</url-pattern>
     </filter-mapping>
 
     <display-name>fragments</display-name>
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/WEB-INF/pages/index.jsp</welcome-file>
     </welcome-file-list>
 
     <jsp-config>

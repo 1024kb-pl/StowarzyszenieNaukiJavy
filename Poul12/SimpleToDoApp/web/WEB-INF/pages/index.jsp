@@ -4,14 +4,13 @@
 <head>
   <title>Main Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-  <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-  <script src="js/bootstrap.js"></script>
+  <link href="../../css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="../../js/bootstrap.js"></script>
 </head>
 <body>
 
-<jsp:include page="/WEB-INF/fragments/menu.jspf"/>
+<jsp:include page="../fragments/menu.jspf"/>
 
 <div class="container">
   <h3>Simple ToDo App</h3>
@@ -19,7 +18,7 @@
   <p>Create new task, display it, and manage. Check for done, delete old task. </p>
 </div>
 
-<jsp:include page="/WEB-INF/fragments/footer.jspf"/>
+<jsp:include page="../fragments/footer.jspf"/>
 
 </body>
 </html>

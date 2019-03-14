@@ -35,6 +35,6 @@ public class DeleteUserServlet extends HttpServlet
         }
 
         request.setAttribute("message", message);
-        request.getRequestDispatcher("message.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/message.jsp").forward(request, response);
     }
 }

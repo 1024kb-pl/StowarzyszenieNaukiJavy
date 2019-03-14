@@ -26,6 +26,6 @@ public class GetTaskInfoServlet extends HttpServlet
         request.setAttribute("date", date);
         request.setAttribute("description", description);
         request.setAttribute("done", doneTask);
-        request.getRequestDispatcher("edittask.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/edittask.jsp").forward(request, response);
     }
 }

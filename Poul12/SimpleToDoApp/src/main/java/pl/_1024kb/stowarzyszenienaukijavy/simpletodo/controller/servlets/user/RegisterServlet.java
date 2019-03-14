@@ -17,6 +17,12 @@ public class RegisterServlet extends HttpServlet
     private UserServiceImpl userServiceImpl = UserServiceImpl.getInstance();
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        request.getRequestDispatcher("WEB-INF/pages/register.jsp").forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         request.setCharacterEncoding("UTF-8");
@@ -33,7 +39,7 @@ public class RegisterServlet extends HttpServlet
         }
 
         request.setAttribute("message", message);
-        request.getRequestDispatcher("message.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/pages/message.jsp").forward(request, response);
     }
 }
 
