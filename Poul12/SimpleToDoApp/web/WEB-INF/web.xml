@@ -28,6 +28,7 @@
         <welcome-file>/WEB-INF/pages/index.jsp</welcome-file>
     </welcome-file-list>
 
+    <!-- JSP config -->
     <jsp-config>
         <jsp-property-group>
             <url-pattern>*.jsp</url-pattern>

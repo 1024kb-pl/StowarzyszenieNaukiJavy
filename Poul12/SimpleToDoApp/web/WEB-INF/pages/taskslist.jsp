@@ -3,11 +3,11 @@
 <!DOCTYPE html>
 <head>
     <title>Task list</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/styles.css" type="text/css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../../js/bootstrap.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
 </head>
 <body>
 
@@ -15,11 +15,7 @@
 
 <div class="row">
 
-    <div class="col-sm-3">
-
-    </div>
-
-    <div class="col-sm-4">
+    <div class="col-md-4 col-md-offset-3">
 
         <div class="form-group">
             <form class="form-inline" action="tasks" method="get">
@@ -33,27 +29,24 @@
                 <input type="date" name="dateFilter" value="<c:out value="${LocalDate.now()}"/>">
                 <button type="submit" class="btn btn-primary">Filter</button>
             </form>
-
         </div>
 
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-md-4">
 
-        <form class="form-inline" action="tasks" method="get">
-            <label for="sort">Sort </label>
-            <select class="form-control" id="sort" name="sort">
-                <option></option>
-                <option value="title">Title</option>
-                <option value="date">Date</option>
-                <option value="status">Checked</option>
-            </select>
-            <button type="submit" class="btn btn-primary">Sort</button>
-        </form>
-
-    </div>
-
-    <div class="col-sm-3">
+        <div class="form-group">
+            <form class="form-inline" action="tasks" method="get">
+                <label for="sort">Sort </label>
+                <select class="form-control" id="sort" name="sort">
+                    <option></option>
+                    <option value="title">Title</option>
+                    <option value="date">Date</option>
+                    <option value="status">Checked</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Sort</button>
+            </form>
+        </div>
 
     </div>
 
@@ -94,7 +87,7 @@
                         </c:choose>
                     </td>
                     <td>
-                        <a href="getTaskInfo?id=${task.taskId}&title=${task.title}&date=${task.date}&description=${task.description}&done=${task.taskDone}"><button type="button" class="btn btn-primary">Edit</button></a>
+                        <a href="editTask?id=${task.taskId}&title=${task.title}&date=${task.date}&description=${task.description}&done=${task.taskDone}"><button type="button" class="btn btn-primary">Edit</button></a>
                         <a href="deleteTask?id=${task.taskId}"><button type="button" class="btn btn-primary">Delete</button></a>
                     </td>
                 </tr>

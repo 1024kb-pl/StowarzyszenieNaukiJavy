@@ -2,6 +2,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.user;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.EntityCreator;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.UserNotFoundException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.UserServiceImpl;
 
 import javax.servlet.ServletException;
@@ -14,12 +15,18 @@ import java.io.IOException;
 @WebServlet("/editUser")
 public class EditUserServlet extends HttpServlet
 {
-    private UserServiceImpl userServiceImpl = UserServiceImpl.getInstance();
+    private UserServiceImpl userService = UserServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        if(request.getSession(false).getAttribute("username") != null)
+        String username = (String) request.getSession(false).getAttribute("username");
+        User user = userService.getUserByUsername(username).orElseThrow(this::newRunTimeException);
+
+        request.setAttribute("username", user.getUsername());
+        request.setAttribute("email", user.getEmail());
+
+        if(username != null)
         {
             request.getRequestDispatcher("WEB-INF/pages/edituser.jsp").forward(request, response);
         }else
@@ -45,7 +52,7 @@ public class EditUserServlet extends HttpServlet
         String message = "Pomyślnie zmieniono dane użytownika";
         try
         {
-            userServiceImpl.editUser(user, sessionUsername);
+            userService.editUser(user, sessionUsername);
         } catch (Exception e) {
             e.printStackTrace();
             message = e.getMessage();
@@ -53,5 +60,10 @@ public class EditUserServlet extends HttpServlet
 
         request.setAttribute("message", message);
         request.getRequestDispatcher("WEB-INF/pages/message.jsp").forward(request, response);
+    }
+
+    private UserNotFoundException newRunTimeException()
+    {
+        return new UserNotFoundException("Not found any desired user");
     }
 }

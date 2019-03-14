@@ -4,10 +4,11 @@
 <html>
 <head>
     <title>Edit user</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/styles.css" type="text/css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../../js/bootstrap.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
 </head>
 <body>
 
@@ -19,17 +20,17 @@
 
         <div class="row">
 
-            <div class="col-md-4 col-md-offset-4" style="background-color:lavenderblush;">
+            <div class="col-sm-6 col-md-4 col-md-offset-4">
 
                 <form action="editUser" method="post">
                     <h2>Change user data</h2>
                     <div class="form-group">
                         <label for="InputUsername">Username</label>
-                        <input type="text" class="form-control" id="InputUsername" placeholder="Enter username" name="username" value="${sessionScope.username}">
+                        <input type="text" class="form-control" id="InputUsername" placeholder="Enter username" name="username" value="${requestScope.username}">
                     </div>
                     <div class="form-group">
                         <label for="InputEmail">Email address</label>
-                        <input type="email" class="form-control" id="InputEmail" placeholder="Enter email" name="email" value="${sessionScope.username}">
+                        <input type="email" class="form-control" id="InputEmail" placeholder="Enter email" name="email" value="${requestScope.email}">
                     </div>
                     <div class="form-group">
                         <label for="InputPassword">Password</label>
