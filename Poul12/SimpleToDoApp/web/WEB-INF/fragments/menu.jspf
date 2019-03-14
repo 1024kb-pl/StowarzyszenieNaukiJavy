@@ -32,7 +32,7 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
                 <li><a href="${pageContext.request.contextPath}/addtask.jsp">Create task</a></li>
-                <li><a href="${pageContext.request.contextPath}/taskslist.jsp">Display task</a></li>
+                <li><a href="tasks">Display task</a></li>
                 <li><a href="#">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

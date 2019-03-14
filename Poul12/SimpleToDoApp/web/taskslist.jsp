@@ -28,7 +28,7 @@
     <div class="col-sm-4">
 
         <div class="form-group">
-            <form class="form-inline" action="taskslist.jsp" method="get">
+            <form class="form-inline" action="tasks" method="get">
                 <label for="filters">Filters </label>
                 <select class="form-control" id="filters" name="filter">
                     <option></option>
@@ -46,7 +46,7 @@
 
     <div class="col-sm-4">
 
-        <form class="form-inline" action="taskslist.jsp" method="get">
+        <form class="form-inline" action="tasks" method="get">
             <label for="sort">Sort </label>
             <select class="form-control" id="sort" name="sort">
                 <option></option>
@@ -79,71 +79,35 @@
         </tr>
         </thead>
 
-        <%
-            TaskServiceImpl service = TaskServiceImpl.getInstance();
-            String username = (String) request.getSession(false).getAttribute("username");
-            List<Task> tasksList = service.getAllTasksByUserId(username);
-            if(tasksList != null)
-            {
-                String filter = request.getParameter("filter");
-                if(filter != null && !filter.isEmpty())
-                {
-                    FilterOption filterOption = FilterOption.valueOf(filter.toUpperCase());
-                    switch (filterOption) {
-                        case DATE:
-                            LocalDate date = LocalDate.parse(request.getParameter("dateFilter"));
-                            tasksList = service.getAllTasksByDate(username, date);
-                            break;
-                        case TRUE:
-                            tasksList = service.getAllTasksByTaskDone(username, true);
-                            break;
-                        case FALSE:
-                            tasksList = service.getAllTasksByTaskDone(username, false);
-                            break;
-                        default:
-                            tasksList = service.getAllTasksByUserId(username);
-                            break;
-                    }
-                }
-                String sort = request.getParameter("sort");
-                if(sort != null && !sort.isEmpty())
-                {
-                    OrderOption orderOption = OrderOption.valueOf(sort.toUpperCase());
-                    switch (orderOption) {
-                        case TITLE:
-                            tasksList = service.getAllTasksOrderedByTitle(username);
-                            break;
-                        case DATE:
-                            tasksList = service.getAllTasksOrderedByDate(username);
-                            break;
-                        case STATUS:
-                            tasksList = service.getAllTasksOrderedByStatus(username);
-                            break;
-                    }
-                }
-                int row = 1;
-                for(Task task : tasksList)
-                {
-        %>
+        <c:if test="${not empty requestScope.tasksList}">
+            <c:set var="row" value="1"/>
+            <c:forEach var="task" items="${requestScope.tasksList}">
 
+                <tbody>
+                <tr>
+                    <th scope="row">${row + 1}</th>
+                    <td>${task.title}</td>
+                    <td>${task.date}</td>
+                    <td>${task.description}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${task.taskDone == true}">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <a href="getTaskInfo?id=${task.taskId}&title=${task.title}&date=${task.date}&description=${task.description}&done=${task.taskDone}"><button type="button" class="btn btn-primary">Edit</button></a>
+                        <a href="deleteTask?id=${task.taskId}"><button type="button" class="btn btn-primary">Delete</button></a>
+                    </td>
+                </tr>
+                </tbody>
 
-        <tbody>
-        <tr>
-            <th scope="row"><%=row%></th>
-            <td><%=task.getTitle()%></td>
-            <td><%=task.getDate()%></td>
-            <td>@<%=task.getDescription()%></td>
-            <td><%=task.getTaskDone()%></td>
-            <td>
-                <a href="getTaskInfo?id=<%=task.getTaskId()%>&title=<%=task.getTitle()%>&date=<%=task.getDate()%>&description=<%=task.getDescription()%>&done=<%=task.getTaskDone()%>"><button type="button" class="btn btn-primary">Edit</button></a>
-                <a href="deleteTask?id=<%=task.getTaskId()%>"><button type="button" class="btn btn-primary">Delete</button></a>
-            </td>
-        </tr>
-        </tbody>
-
-        <%
-                    row++; } }
-        %>
+            </c:forEach>
+        </c:if>
 
     </table>
 

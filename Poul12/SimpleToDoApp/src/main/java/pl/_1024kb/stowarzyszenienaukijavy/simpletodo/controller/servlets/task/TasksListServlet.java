@@ -1,6 +1,7 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.servlets.task;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.Task;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.FilterOption;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.OrderOption;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.TaskServiceImpl;
 
@@ -29,36 +30,64 @@ public class TasksListServlet extends HttpServlet
 
         filterTask(username, request);
 
-        String sortList = request.getParameter("sort");
-        if(sortList != null && !sortList.isEmpty())
-            sortTaskList(username, sortList);
+        sortTaskList(username, request);
 
         request.setAttribute("tasksList", taskList);
         request.getRequestDispatcher("taskslist.jsp").forward(request, response);
     }
 
-    private void sortTaskList(String username, String sortList)
+    private void sortTaskList(String username, HttpServletRequest request)
     {
-        OrderOption orderOption = OrderOption.valueOf(sortList.toUpperCase());
-        switch (orderOption)
+        String sortList = request.getParameter("sort");
+        if(sortList != null && !sortList.isEmpty())
         {
-            case TITLE:
-                taskList = taskService.getAllTasksOrderedByTitle(username);
-                break;
-            case DATE:
-                taskList = taskService.getAllTasksOrderedByDate(username);
-                break;
-            case STATUS:
-                taskList = taskService.getAllTasksOrderedByStatus(username);
-                break;
+            OrderOption orderOption = OrderOption.valueOf(sortList.toUpperCase());
+            switch (orderOption)
+            {
+                case TITLE:
+                    taskList = taskService.getAllTasksOrderedByTitle(username);
+                    break;
+                case DATE:
+                    taskList = taskService.getAllTasksOrderedByDate(username);
+                    break;
+                case STATUS:
+                    taskList = taskService.getAllTasksOrderedByStatus(username);
+                    break;
+                default:
+                    taskList = taskService.getAllTasksByUserId(username);
+                    break;
+            }
         }
     }
 
     private void filterTask(String username, HttpServletRequest request)
     {
-        String filterOption = request.getParameter("filter");
-        if(filterOption != null && !filterOption.isEmpty())
+        String filterList = request.getParameter("filter");
+        if(filterList != null && !filterList.isEmpty())
         {
+            FilterOption filterOption = FilterOption.valueOf(filterList.toUpperCase());
+            switch (filterOption)
+            {
+                case DATE:
+                    LocalDate date = LocalDate.parse(request.getParameter("dateFilter"));
+                    taskList = taskService.getAllTasksByDate(username, date);
+                    break;
+                case TRUE:
+                    taskList = taskService.getAllTasksByTaskDone(username, true);
+                    break;
+                case FALSE:
+                    taskList = taskService.getAllTasksByTaskDone(username, false);
+                    break;
+                default:
+                    taskList = taskService.getAllTasksByUserId(username);
+                    break;
+            }
+
+        }
+    }
+
+}
+ /*
             if (!filterOption.equals("date"))
             {
                 try
@@ -78,8 +107,4 @@ public class TasksListServlet extends HttpServlet
                 LocalDate dateFilter = LocalDate.parse(dateStr);
                 taskList = taskService.getAllTasksByDate(username, dateFilter);
                 request.setAttribute("date_filter", dateFilter);
-            }
-        }
-    }
-
-}
+            }*/
