@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserService
 {
     void createUser(User user) throws Exception;
-    void editUser(User user, String username) throws Exception;
+    void editUser(User user) throws Exception;
     void removeUser(String username) throws SQLException;
     Optional<User> getUserByUsername(String username);
     List<User> getAllUsers();

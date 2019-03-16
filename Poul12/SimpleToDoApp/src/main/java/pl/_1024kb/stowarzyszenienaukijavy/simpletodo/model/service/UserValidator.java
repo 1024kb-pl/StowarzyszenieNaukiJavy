@@ -2,7 +2,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.*;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.utility.MD5Hash;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.utility.PBKDF2Hash;
 
 import java.util.regex.Pattern;
 
@@ -28,7 +28,7 @@ public class UserValidator
     }
     
     public boolean isLoginCorrect(String username, String password, User loggingIn) throws IncorrectLoginException, IncorrectPasswordException {
-        String loginHashPassword = MD5Hash.encode(password);
+        String loginHashPassword = PBKDF2Hash.encode(password);
 
         if(!username.equals(loggingIn.getUsername()))
             throw new IncorrectLoginException("Login is incorrect!");

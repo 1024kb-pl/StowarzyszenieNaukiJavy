@@ -7,8 +7,11 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.api.UserService;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.DaoFactory;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.daojdbc.FactoryType;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.*;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.utility.MD5Hash;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.IncorrectLoginException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.IncorrectPasswordException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.UserNotFoundException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.UsernameIsAlreadyExistException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.utility.PBKDF2Hash;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -69,9 +72,9 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public void editUser(User user, String username) throws Exception {
+    public void editUser(User user) throws Exception {
         String message = "Pomyślnie zmieniono dane użytownika";
-        Long userId = getUserId(username);
+        Long userId = getUserId(user.getUsername());
 
         try
         {
@@ -145,6 +148,14 @@ public class UserServiceImpl implements UserService
     {
         return dao.getAllUsers();
     }
+
+    public User getUserByEmail(String email)
+    {
+        return getAllUsers().stream()
+                            .filter(user -> user.getEmail().equals(email))
+                            .findFirst()
+                            .orElseThrow(this::newRunTimeException);
+    }
     
     @Override
     public boolean isUsernameAlreadyExist(String username)
@@ -184,7 +195,7 @@ public class UserServiceImpl implements UserService
 
     private String encodePassword(User user)
     {
-        return MD5Hash.encode(user.getPassword());
+        return PBKDF2Hash.encode(user.getPassword());
     }
 
     private UserNotFoundException newRunTimeException()

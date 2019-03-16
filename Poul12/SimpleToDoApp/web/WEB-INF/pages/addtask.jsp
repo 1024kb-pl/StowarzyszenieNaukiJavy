@@ -25,7 +25,7 @@
                 <h2>Add new task</h2>
                 <div class="form-group">
                     <label for="InputTitle">Title</label>
-                    <input type="text" class="form-control" id="InputTitle" placeholder="Enter title" name="title">
+                    <input type="text" class="form-control" id="InputTitle" placeholder="Enter title" name="title" required>
                 </div>
                 <div class="form-group">
                     <label for="InputDate">Date</label>

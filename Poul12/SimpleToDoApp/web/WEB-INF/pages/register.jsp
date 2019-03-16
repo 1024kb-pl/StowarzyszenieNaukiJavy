@@ -22,19 +22,19 @@
                 <h2>Sign up</h2>
                 <div class="form-group">
                     <label for="InputUsername">Username</label>
-                    <input type="text" class="form-control" id="InputUsername" placeholder="Enter username" name="username">
+                    <input type="text" class="form-control" id="InputUsername" placeholder="Enter username" name="username" required>
                 </div>
                 <div class="form-group">
                     <label for="InputEmail">Email address</label>
-                    <input type="email" class="form-control" id="InputEmail" placeholder="Enter email" name="email">
+                    <input type="email" class="form-control" id="InputEmail" placeholder="Enter email" name="email" required>
                 </div>
                 <div class="form-group">
                     <label for="InputPassword">Password</label>
-                    <input type="password" class="form-control" id="InputPassword" placeholder="Password" name="password">
+                    <input type="password" class="form-control" id="InputPassword" placeholder="Password" name="password" required>
                 </div>
                 <div class="form-group">
                     <label for="InputRepeatedPassword">Repeat password</label>
-                    <input type="password" class="form-control" id="InputRepeatedPassword" placeholder="Repeat password" name="repeated-pass">
+                    <input type="password" class="form-control" id="InputRepeatedPassword" placeholder="Repeat password" name="repeated-pass" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Sign up</button>
             </form>

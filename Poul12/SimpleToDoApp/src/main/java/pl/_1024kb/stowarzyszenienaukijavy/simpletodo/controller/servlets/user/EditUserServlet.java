@@ -41,7 +41,6 @@ public class EditUserServlet extends HttpServlet
         request.setCharacterEncoding("UTF-8");
 
         String username = request.getParameter("username");
-
         String sessionUsername = (String) request.getSession(false).getAttribute("username");
         if(!sessionUsername.equals(username))
         {
@@ -52,7 +51,7 @@ public class EditUserServlet extends HttpServlet
         String message = "Pomyślnie zmieniono dane użytownika";
         try
         {
-            userService.editUser(user, sessionUsername);
+            userService.editUser(user);
         } catch (Exception e) {
             e.printStackTrace();
             message = e.getMessage();

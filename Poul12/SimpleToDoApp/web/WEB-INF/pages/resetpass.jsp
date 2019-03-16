@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Login</title>
+    <title>Reset Password</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/styles.css" type="text/css" rel="stylesheet">
@@ -18,20 +18,13 @@
 
         <div class="col-sm-6 col-md-4 col-md-offset-4">
 
-            <form action="login" method="post">
-                <h2>Sign in</h2>
+            <form action="reset" method="post">
+                <h2>Reset password</h2>
                 <div class="form-group">
-                    <label for="InputUsername">Username</label>
-                    <input type="text" class="form-control" id="InputUsername" placeholder="Enter username" name="username" required>
+                    <label for="InputEmail">Email</label>
+                    <input type="email" class="form-control" id="InputEmail" placeholder="Enter email" name="email" required>
                 </div>
-                <div class="form-group">
-                    <label for="InputPassword">Password</label>
-                    <input type="password" class="form-control" id="InputPassword" placeholder="Password" name="password" required>
-                </div>
-                <div class="col-md-8">
-                    <button type="submit" class="btn btn-primary">Sign in</button>
-                </div>
-                <small><a href=reset>Forget password</a></small>
+                <button type="submit" class="btn btn-primary">Reset</button>
             </form>
 
         </div>

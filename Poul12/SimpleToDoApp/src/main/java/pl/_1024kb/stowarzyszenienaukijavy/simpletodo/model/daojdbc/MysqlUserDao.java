@@ -17,7 +17,7 @@ public class MysqlUserDao implements UserDao
     private final static String UPDATE = "UPDATE users SET username=:username, password=:password, email=:email WHERE userId = :userId;";
     private final static String DELETE = "DELETE FROM users WHERE userId=:userId;";
     private final static String READ_ALL = "SELECT * FROM users";
-
+    private final static String READ_CRED = "SELECT pass FROM mail";
 
     private NamedParameterJdbcTemplate template;
 
@@ -67,5 +67,6 @@ public class MysqlUserDao implements UserDao
     {
         return template.query(READ_ALL, BeanPropertyRowMapper.newInstance(User.class));
     }
+
 
 }
