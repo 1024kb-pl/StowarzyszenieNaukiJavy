@@ -1,9 +1,9 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.entity.User;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.exception.*;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.service.UserValidator;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.*;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.UserValidator;
 
 public class UserValidatorTest
 {
