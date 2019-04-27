@@ -36,7 +36,7 @@ public class User implements Serializable
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
 
-    User() {
+    public User() {
 
     }
 

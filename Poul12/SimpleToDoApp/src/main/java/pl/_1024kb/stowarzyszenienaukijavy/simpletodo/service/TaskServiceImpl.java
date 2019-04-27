@@ -56,6 +56,7 @@ public class TaskServiceImpl implements TaskService
         {
             User user = userService.getUserByUsername(username).orElseThrow(this::newRunTimeException);
             task.setUser(user);
+            task.setTaskDone(false);
         }
 
         try {
@@ -129,14 +130,10 @@ public class TaskServiceImpl implements TaskService
 
     @Override
     public void deleteAllTasks(String username) {
-        Optional<User> user = Optional.empty();
-
-        if (userService.getUserByUsername(username).isPresent()) {
-            user = userService.getUserByUsername(username);
-        }
+        User user = userService.getUserByUsername(username).orElseThrow(this::newRunTimeException);
 
         try {
-            taskDao.deleteAllTasks(user.orElseThrow(this::newRunTimeException));
+            taskDao.deleteAllTasks(user);
             logger.info("Usunięto wszystkie zadania użytkownika {}", username);
         } catch (SQLException e) {
             e.printStackTrace();

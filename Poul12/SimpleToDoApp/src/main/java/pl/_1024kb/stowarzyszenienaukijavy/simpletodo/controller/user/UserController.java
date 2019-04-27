@@ -5,28 +5,28 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.UserNotFoundException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.TaskServiceImpl;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.UserServiceImpl;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.EntityCreator;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.MailSender;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.PBKDF2Hash;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @Controller
 public class UserController
 {
-    private UserServiceImpl userService; //= new UserServiceImpl();//UserServiceImpl.getInstance();
-    private TaskServiceImpl taskService;// = TaskServiceImpl.getInstance();
+    private UserServiceImpl userService;
+    private TaskServiceImpl taskService;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
@@ -37,20 +37,23 @@ public class UserController
     }
 
     @GetMapping("/register")
-    public String redirectToRegister()
+    public String redirectToRegister(Model model)
     {
+        model.addAttribute("user", new User());
         return "register";
     }
 
     @PostMapping("/register")
-    public String register(HttpServletRequest request) throws IOException
+    public String register(@ModelAttribute User user,  Model model)
     {
-        request.setCharacterEncoding("UTF-8");
+        //request.setCharacterEncoding("UTF-8");
 
-        User user = new EntityCreator().createUser(request);
+        //User user = new EntityCreator().createUser(model);
+
+        System.out.println(user);
 
         String message = "Pomyślnie zarejestrowano nowego użytkownika";
-        System.out.println(user);
+
         try
         {
             userService.createUser(user);
@@ -59,7 +62,7 @@ public class UserController
             message = e.getMessage();
         }
 
-        request.setAttribute("message", message);
+        model.addAttribute("message", message);
 
         return "message";
     }
@@ -71,32 +74,33 @@ public class UserController
     }
 
     @PostMapping("/login")
-    public String login(HttpServletRequest request, @RequestParam String username, @RequestParam String password) {
+    public String login(HttpSession session, Model model, @RequestParam String username, @RequestParam String password)
+    {
         String message = "Nie udało się zalogować :(";
 
         try {
             if (userService.loginVerification(username, password)) {
                 message = "Witaj " + username + " :)";
-                request.getSession(true).setAttribute("username", username);
+                session.setAttribute("username", username);
             }
         } catch (Exception e) {
             e.printStackTrace();
             message = e.getMessage();
         }
 
-        request.setAttribute("message", message);
+        model.addAttribute("message", message);
 
         return "message";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request, @SessionAttribute String username)
+    public String logout(HttpSession session, Model model, @SessionAttribute String username)
     {
         String message = "Nie udało się wylogować :/";
 
-        if (request.getSession(false) != null)
+        if (session != null)
         {
-            request.getSession().invalidate();
+            session.invalidate();
             message = "Wylogowano ;)";
             logger.info("Pomyślnie wylogowano użytkownika {}", username);
             MDC.remove("user");
@@ -105,19 +109,17 @@ public class UserController
             logger.error("Błąd podczas wylogowywania się uzytkownika {}", username);
         }
 
-        request.setAttribute("message", message);
+        model.addAttribute("message", message);
 
         return "message";
     }
 
     @GetMapping("/editUser")
-    public String redirectToEdit(HttpServletRequest request, HttpServletResponse response, @SessionAttribute String username) throws IOException
+    public String redirectToEdit(Model model, HttpServletResponse response, @SessionAttribute String username) throws IOException
     {
         User user = userService.getUserByUsername(username).orElseThrow(this::newRunTimeException);
 
-        request.setAttribute("userId", user.getUserId());
-        request.setAttribute("username", user.getUsername());
-        request.setAttribute("email", user.getEmail());
+        model.addAttribute("user", user);
 
         if(username != null)
         {
@@ -131,17 +133,18 @@ public class UserController
     }
 
     @PostMapping("/editUser")
-    public String editUser(HttpServletRequest request, @SessionAttribute(name = "username") String sessionUsername, @RequestParam String username) throws UnsupportedEncodingException
+    public String editUser(HttpServletRequest request, HttpSession session,  Model model, @SessionAttribute(name = "username") String sessionUsername, @RequestParam String username) throws UnsupportedEncodingException
     {
         request.setCharacterEncoding("UTF-8");
 
         if(!sessionUsername.equals(username))
         {
-            request.getSession(false).setAttribute("username", username);
+            //request.getSession(false).setAttribute("username", username);
+            session.setAttribute("username", username);
         }
 
-        User user = new EntityCreator().updateUser(request);
-        System.out.println("username user: " + user);
+        User user = new EntityCreator().updateUser(model);
+
         String message = "Pomyślnie zmieniono dane użytownika";
         try
         {
@@ -151,20 +154,35 @@ public class UserController
             message = e.getMessage();
         }
 
-        request.setAttribute("message", message);
+        model.addAttribute("message", message);
 
         return "message";
     }
 
     @GetMapping("/deleteUser")
-    public String deleteUser(HttpServletRequest request, @SessionAttribute String username)
+    public String redirectToDeleteUser()
     {
+        return "deleteuser";
+    }
+
+    @PostMapping("/deleteUser")
+    public String deleteUser(HttpSession session, Model model, @SessionAttribute String username, @RequestParam String confirmedPassword)
+    {
+        String userPassword = userService.getUserByUsername(username)
+                                .orElseThrow(this::newRunTimeException)
+                                .getPassword();
+
+        confirmedPassword = PBKDF2Hash.encode(confirmedPassword);
+
         String message = "Pomyślnie usunięto użytkownika";
         try
         {
-            taskService.deleteAllTasks(username);
-            userService.removeUser(username);
-            request.getSession(false).invalidate();
+            if(userPassword.equals(confirmedPassword))
+            {
+                taskService.deleteAllTasks(username);
+                userService.removeUser(username);
+                session.invalidate();
+            }
 
         }catch (Exception e)
         {
@@ -172,7 +190,7 @@ public class UserController
             message = e.getMessage();
         }
 
-        request.setAttribute("message", message);
+        model.addAttribute("message", message);
 
         return "message";
     }
@@ -184,7 +202,7 @@ public class UserController
     }
 
     @PostMapping
-    public String resetPassword(HttpServletRequest request, @RequestParam String email)
+    public String resetPassword(Model model, @RequestParam String email)
     {
         User user = userService.getUserByEmail(email);
 
@@ -209,7 +227,7 @@ public class UserController
             e.printStackTrace();
         }
 
-        request.setAttribute("message", message);
+        model.addAttribute("message", message);
 
         return "message";
     }

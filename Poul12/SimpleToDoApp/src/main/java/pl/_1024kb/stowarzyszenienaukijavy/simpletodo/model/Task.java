@@ -2,6 +2,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @NamedQueries(
         {
                 @NamedQuery(name = "Task.getAllByUserId", query = "SELECT t FROM Task t WHERE t.user = :user"),
-                @NamedQuery(name = "Task.deleteAllTask", query = "DELETE FROM Task t WHERE t.user = :user"),
+                @NamedQuery(name = "Task.deleteAllTask", query = "DELETE FROM Task t WHERE t.user = :user")
         }
 )
 public class Task implements Serializable {
@@ -26,16 +27,17 @@ public class Task implements Serializable {
     private Long taskId;
     @Column(nullable = false, length = 55)
     private String title;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
     @Column(nullable = false, length = 150)
     private String description;
-    @Column(name = "task_done", nullable = false, length = 1)
+    @Column(name = "task_done", length = 1, columnDefinition = "tinyint(1) default 0")
     private Boolean taskDone;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    Task() {
+    public Task() {
 
     }
 

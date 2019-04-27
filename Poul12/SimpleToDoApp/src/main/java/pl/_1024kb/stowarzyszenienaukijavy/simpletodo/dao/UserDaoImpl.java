@@ -36,6 +36,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public boolean isUserExist(String username)
+    {
+        return false;
+    }
+
+    /*@Override
+    public boolean isUserExist(String username)
+    {
+        TypedQuery<User> query = entityManager.createQuery("SELECT CASE WHEN count(u)> 0 THEN true ELSE false END FROM User u WHERE lower(u.username) LIKE lower(:username)", User.class);
+        query.setParameter("username", username);
+        return query.getSingleResult() != null;
+    }*/
+
+    @Override
     public void update(User user) throws SQLException {
         User foundUser = entityManager.find(User.class, user.getUserId());
         if(foundUser != null)

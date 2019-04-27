@@ -59,5 +59,6 @@ public class TaskDaoImpl implements TaskDao
     {
         Query deleteAllQuery = entityManager.createNamedQuery("Task.deleteAllTask");
         deleteAllQuery.setParameter("user", user);
+        deleteAllQuery.executeUpdate();
     }
 }

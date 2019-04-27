@@ -1,11 +1,11 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.util;
 
-
+import org.springframework.ui.Model;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Map;
 
 public class EntityCreator {
@@ -14,9 +14,10 @@ public class EntityCreator {
     public EntityCreator() {
     }
 
-    public Task createTask(HttpServletRequest request) {
+    public Task createTask(Model model) {
         keys = new String[4];
-        setKeys(request);
+        setKeys(model);
+        System.out.println("keys " + Arrays.toString(keys));
         return Task.builder()
                 .title(keys[0])
                 .date(LocalDate.parse(keys[1]))
@@ -25,9 +26,9 @@ public class EntityCreator {
                 .build();
     }
 
-    public Task updateTask(HttpServletRequest request) {
+    public Task updateTask(Model model) {
         keys = new String[5];
-        setKeys(request);
+        setKeys(model);
         return Task.builder()
                 .taskId(Long.parseLong(keys[0]))
                 .title(keys[1])
@@ -37,9 +38,9 @@ public class EntityCreator {
                 .build();
     }
 
-    public User createUser(HttpServletRequest request) {
+    public User createUser(Model model) {
         keys = new String[4];
-        setKeys(request);
+        setKeys(model);
         return User.builder()
                 .username(keys[0])
                 .email(keys[1])
@@ -48,10 +49,10 @@ public class EntityCreator {
                 .build();
     }
 
-    public User updateUser(HttpServletRequest request)
+    public User updateUser(Model model)
     {
         keys = new String[5];
-        setKeys(request);
+        setKeys(model);
         return User.builder()
                 .userId(Long.parseLong(keys[0]))
                 .username(keys[1])
@@ -61,12 +62,13 @@ public class EntityCreator {
                 .build();
     }
 
-    private void setKeys(HttpServletRequest request) {
-        String[] values;
+    private void setKeys(Model model) {
+        Object value;
         int i = 0;
-        for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
-            values = entry.getValue();
-            keys[i] = values[0];
+        for (Map.Entry<String, Object> entry : model.asMap().entrySet()) {
+            value = entry.getValue();
+            keys[i] = (String) value;
+            System.out.println(i + keys[i]);
             i++;
         }
     }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.TaskDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.UserDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.UserService;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.*;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService
     //private static UserServiceImpl instance;
     //private DaoFactory factory = DaoFactory.getDaoFactory(FactoryType.MYSQL_DAO);
     private UserDao userDao;
+    private TaskDao taskDao;
     private UserValidator validator = UserValidator.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
@@ -36,9 +38,10 @@ public class UserServiceImpl implements UserService
     }*/
 
     @Autowired
-    public UserServiceImpl(UserDao userDao)
+    public UserServiceImpl(UserDao userDao, TaskDao taskDao)
     {
         this.userDao = userDao;
+        this.taskDao = taskDao;
     }
 
     @Override
@@ -104,9 +107,10 @@ public class UserServiceImpl implements UserService
     public void removeUser(String username) throws SQLException {
         String message = "Pomyślnie usunięto użytkownika";
         Long userId = getUserId(username);
-
+        User user = getUserByUsername(username).orElseThrow(this::newRunTimeException);
         try {
             userDao.delete(userId);
+            taskDao.deleteAllTasks(user);
             logger.info(message);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -145,11 +149,13 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers()
+    {
         return userDao.getAllUsers();
     }
 
-    public User getUserByEmail(String email) {
+    public User getUserByEmail(String email)
+    {
         return getAllUsers().stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst()
@@ -159,6 +165,7 @@ public class UserServiceImpl implements UserService
     @Override
     public boolean isUsernameAlreadyExist(String username)
     {
+        //return userDao.isUserExist(username);
         try
         {
             getUserByUsername(username);
