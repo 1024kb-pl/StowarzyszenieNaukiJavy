@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="PL">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL">
 <head>
     <title>Task list</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,10 +82,10 @@
 
                 </td>
                 <td>
-                    <a th:href="@{editTask(id=*{taskId},title=*{title},date=*{date},description=*{description},done=*{taskDone})}">
+                    <a th:href="@{/editTask(taskId=*{taskId},title=*{title},date=*{date},description=*{description},taskDone=*{taskDone})}">
                         <button type="button" class="btn btn-primary">Edit</button>
                     </a>
-                    <a href="deleteTask?id=*{taskId}">
+                    <a th:href="@{/deleteTask(taskId=*{taskId})}">
                         <button type="button" class="btn btn-primary">Delete</button>
                     </a>
                 </td>

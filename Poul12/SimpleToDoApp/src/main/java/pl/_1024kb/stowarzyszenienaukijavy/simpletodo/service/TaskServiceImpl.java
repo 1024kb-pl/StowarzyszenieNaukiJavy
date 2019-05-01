@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.TaskDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.TaskService;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.UserNotFoundException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.NotFoundDesiredDataRuntimeException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.TaskRepository;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -21,31 +22,17 @@ import java.util.stream.Collectors;
 @Component
 public class TaskServiceImpl implements TaskService
 {
-    //private static TaskServiceImpl instance;
-    //private DaoFactory factory = DaoFactory.getDaoFactory(FactoryType.MYSQL_DAO);
-    //private TaskDao dao = factory.getTaskDao();
-    private TaskDao taskDao;
-    private UserServiceImpl userService;// = UserServiceImpl.getInstance();
+    //private TaskDao taskDao;
+    private TaskRepository taskRepo;
+    private UserServiceImpl userService;
     private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    /*private TaskServiceImpl() {
-        if (instance != null)
-            throw new IllegalStateException("Cannot create new instance, use getInstance");
-    }*/
-
-    /*public static TaskServiceImpl getInstance() {
-        if (instance == null) {
-            instance = new TaskServiceImpl();
-        }
-
-        return instance;
-    }*/
-
     @Autowired
-    public TaskServiceImpl(UserServiceImpl userService, TaskDao taskDao)
+    public TaskServiceImpl(UserServiceImpl userService, TaskDao taskDao, TaskRepository taskRepo)
     {
         this.userService = userService;
-        this.taskDao = taskDao;
+        //this.taskDao = taskDao;
+        this.taskRepo = taskRepo;
     }
 
     @Override
@@ -54,13 +41,14 @@ public class TaskServiceImpl implements TaskService
 
         if (userService.getUserByUsername(username).isPresent())
         {
-            User user = userService.getUserByUsername(username).orElseThrow(this::newRunTimeException);
+            User user = userService.getUserByUsername(username).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException);
             task.setUser(user);
             task.setTaskDone(false);
         }
 
         try {
-            taskDao.create(task);
+            //taskDao.create(task);
+            taskRepo.save(task);
             logger.info(messageInfo + " - " + task.getTitle());
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,9 +68,10 @@ public class TaskServiceImpl implements TaskService
         }
 
         try {
-            return taskDao.getAllByUserId(user.orElseThrow(this::newRunTimeException));
+            //return taskDao.getAllByUserId(user.orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException));
+            return taskRepo.findAllByUser(user.orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException));
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             String messageError = "Nie udało się pobrać wszystich zadań!";
             logger.error(messageError);
@@ -97,13 +86,20 @@ public class TaskServiceImpl implements TaskService
 
         if (userService.getUserByUsername(username).isPresent())
         {
-            User user = userService.getUserByUsername(username).orElseThrow(this::newRunTimeException);
+            User user = userService.getUserByUsername(username).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException);
             task.setUser(user);
         }
 
         try
         {
-            taskDao.update(task);
+            Task taskToUpdate = new Task();
+            taskToUpdate.setTaskId(task.getTaskId());
+            taskToUpdate.setTitle(task.getTitle());
+            taskToUpdate.setDate(task.getDate());
+            taskToUpdate.setDescription(task.getDescription());
+            taskToUpdate.setTaskDone(task.getTaskDone());
+            //taskDao.update(task);
+            taskRepo.save(task);
             logger.info(messageInfo + " - " + task.getTitle());
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,7 +113,8 @@ public class TaskServiceImpl implements TaskService
     public void deleteTaskById(Long taskId) throws SQLException {
         String messageInfo = "Pomyślnie usunięto zadanie";
         try {
-            taskDao.delete(taskId);
+            //taskDao.delete(taskId);
+            taskRepo.deleteById(taskId);
             logger.info(messageInfo + " - id: " + taskId);
 
         } catch (Exception e) {
@@ -130,15 +127,24 @@ public class TaskServiceImpl implements TaskService
 
     @Override
     public void deleteAllTasks(String username) {
-        User user = userService.getUserByUsername(username).orElseThrow(this::newRunTimeException);
+        User user = userService.getUserByUsername(username).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException);
 
         try {
-            taskDao.deleteAllTasks(user);
+            //taskDao.deleteAllTasks(user);
+            taskRepo.deleteAllByUser(user);
             logger.info("Usunięto wszystkie zadania użytkownika {}", username);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("Nie udało się usunąć wszystkich zadań użytkownika {}", username);
         }
+    }
+
+    public Task getTaskById(String username, Long taskId)
+    {
+        return getAllTasksByUsername(username).stream()
+                    .filter(task -> task.getTaskId().equals(taskId))
+                    .findFirst()
+                    .orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException);
     }
 
     @Override
@@ -174,9 +180,5 @@ public class TaskServiceImpl implements TaskService
         return getAllTasksByUsername(username).stream()
                 .sorted(Comparator.comparing(Task::getTaskDone).reversed())
                 .collect(Collectors.toList());
-    }
-
-    private UserNotFoundException newRunTimeException() {
-        return new UserNotFoundException("Not found any desired user");
     }
 }

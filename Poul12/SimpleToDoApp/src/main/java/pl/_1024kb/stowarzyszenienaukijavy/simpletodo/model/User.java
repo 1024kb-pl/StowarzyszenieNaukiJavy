@@ -2,13 +2,14 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Data
-//@NoArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 @NamedQueries(
@@ -36,9 +37,9 @@ public class User implements Serializable
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
 
-    public User() {
+    /*public User() {
 
-    }
+    }*/
 
     @Builder
     public User(Long userId, String username, String password, String repeatedPassword, String email)
@@ -48,15 +49,5 @@ public class User implements Serializable
         this.password = password;
         this.repeatedPassword = repeatedPassword;
         this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", repeatedPassword='" + repeatedPassword + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 }

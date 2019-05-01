@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="PL">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL">
 <head>
     <title>Edit task</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,30 +16,30 @@
 
         <div class="col-sm-6 col-md-4 col-md-offset-4">
 
-            <form action="editTask" method="post">
+            <form th:action="@{/editTask}" method="post" th:object="${task}">
                 <h2>Edit task</h2>
-                <input type="hidden" name="task_id" value="${requestScope.id}"/>">
+                <input type="hidden" name="taskId" th:field="*{taskId}"/>
                 <div class="form-group">
                     <label for="InputTitle">Title</label>
-                    <input type="text" class="form-control" id="InputTitle" placeholder="Enter title" name="title"
-                           value=${requestScope.title}"/>">
+                    <input type="text" class="form-control" id="InputTitle" placeholder="Enter title" name="title" th:field="*{title}" required>
                 </div>
                 <div class="form-group">
                     <label for="InputDate">Date</label>
-                    <input type="date" class="form-control" id="InputDate" name="taskdate"
-                           value="${requestScope.date}"/>">
+                    <input type="date" class="form-control" id="InputDate" name="date" th:field="*{date}" required>
                 </div>
                 <div class="form-group">
                     <label for="InputDescription">Description</label>
                     <textarea class="form-control" rows="5" id="InputDescription" name="description" wrap="hard"
-                              maxlength="150" placeholder="Description task... (max 150 signs)" th:text="${description}"></textarea>
+                              maxlength="150" placeholder="Description task... (max 150 signs)" th:field="*{description}"></textarea>
                 </div>
-                <input type="radio" name="checktask" value="true" th:if="${done == true}" checked
-                >Done
+                <div class="form-group">
+                    <input type="radio" id="CheckTaskDone" name="taskDone" value="true">
+                    <label for="CheckTaskDone">Done</label>
+                    <br>
+                    <input type="radio" id="CheckTaskUnDone" name="taskDone" value="false">
+                    <label for="CheckTaskUnDone">Undone</label>
+                </div>
                 <br>
-                <input type="radio" name="checktask" value="false" th:if="${done == false}" checked
-                >Undone
-                <br><br>
                 <button type="submit" class="btn btn-primary">Save</button>
             </form>
 

@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.UserNotFoundException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.NotFoundDesiredDataRuntimeException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.TaskServiceImpl;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.UserServiceImpl;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.EntityCreator;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.MailSender;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.PBKDF2Hash;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -46,10 +44,6 @@ public class UserController
     @PostMapping("/register")
     public String register(@ModelAttribute User user,  Model model)
     {
-        //request.setCharacterEncoding("UTF-8");
-
-        //User user = new EntityCreator().createUser(model);
-
         System.out.println(user);
 
         String message = "Pomyślnie zarejestrowano nowego użytkownika";
@@ -117,9 +111,10 @@ public class UserController
     @GetMapping("/editUser")
     public String redirectToEdit(Model model, HttpServletResponse response, @SessionAttribute String username) throws IOException
     {
-        User user = userService.getUserByUsername(username).orElseThrow(this::newRunTimeException);
+        User user = userService.getUserByUsername(username).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException);
 
         model.addAttribute("user", user);
+
 
         if(username != null)
         {
@@ -133,17 +128,12 @@ public class UserController
     }
 
     @PostMapping("/editUser")
-    public String editUser(HttpServletRequest request, HttpSession session,  Model model, @SessionAttribute(name = "username") String sessionUsername, @RequestParam String username) throws UnsupportedEncodingException
+    public String editUser(Model model, HttpSession session, @ModelAttribute User user, @SessionAttribute(name = "username") String sessionUsername, @RequestParam String username) throws UnsupportedEncodingException
     {
-        request.setCharacterEncoding("UTF-8");
-
         if(!sessionUsername.equals(username))
         {
-            //request.getSession(false).setAttribute("username", username);
             session.setAttribute("username", username);
         }
-
-        User user = new EntityCreator().updateUser(model);
 
         String message = "Pomyślnie zmieniono dane użytownika";
         try
@@ -169,7 +159,7 @@ public class UserController
     public String deleteUser(HttpSession session, Model model, @SessionAttribute String username, @RequestParam String confirmedPassword)
     {
         String userPassword = userService.getUserByUsername(username)
-                                .orElseThrow(this::newRunTimeException)
+                                .orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException)
                                 .getPassword();
 
         confirmedPassword = PBKDF2Hash.encode(confirmedPassword);
@@ -238,8 +228,8 @@ public class UserController
         return "message";
     }*/
 
-    private UserNotFoundException newRunTimeException()
+   /* private UserNotFoundException newRunTimeException()
     {
-        return new UserNotFoundException("Not found any desired user");
-    }
+        return new UserNotFoundException("Not found any desired data");
+    }*/
 }

@@ -2,6 +2,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
-//@NoArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tasks")
 @NamedQueries(
@@ -37,9 +38,9 @@ public class Task implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Task() {
+    /*public Task() {
 
-    }
+    }*/
 
     @Builder
     public Task(Long taskId, String title, LocalDate date, String description, Boolean taskDone, User user) {

@@ -3,6 +3,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.dao;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.UserDao;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.NotFoundDesiredDataRuntimeException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.UserNotFoundException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
 
@@ -32,22 +33,8 @@ public class UserDaoImpl implements UserDao {
         return query.getResultList()
                     .stream()
                     .findFirst()
-                    .orElseThrow(this::newRunTimeException);
+                    .orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException);
     }
-
-    @Override
-    public boolean isUserExist(String username)
-    {
-        return false;
-    }
-
-    /*@Override
-    public boolean isUserExist(String username)
-    {
-        TypedQuery<User> query = entityManager.createQuery("SELECT CASE WHEN count(u)> 0 THEN true ELSE false END FROM User u WHERE lower(u.username) LIKE lower(:username)", User.class);
-        query.setParameter("username", username);
-        return query.getSingleResult() != null;
-    }*/
 
     @Override
     public void update(User user) throws SQLException {
@@ -74,10 +61,5 @@ public class UserDaoImpl implements UserDao {
     {
         TypedQuery<User> getAllQuery = entityManager.createNamedQuery("User.getAll", User.class);
         return getAllQuery.getResultList();
-    }
-
-    private UserNotFoundException newRunTimeException()
-    {
-        return new UserNotFoundException("Not found any desired user");
     }
 }

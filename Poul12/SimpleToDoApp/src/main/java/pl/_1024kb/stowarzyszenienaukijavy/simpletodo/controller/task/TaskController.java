@@ -8,10 +8,11 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.FilterOption;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.OrderOption;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.TaskServiceImpl;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.EntityCreator;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,12 +20,13 @@ import java.util.List;
 public class TaskController
 {
     private TaskServiceImpl taskService;
-    private List<Task> taskList = new LinkedList<>();
+    private List<Task> taskList;
 
     @Autowired
     public TaskController(TaskServiceImpl taskService)
     {
         this.taskService = taskService;
+        this.taskList = Collections.synchronizedList(new LinkedList<>());
     }
 
     @GetMapping("/addTask")
@@ -37,11 +39,6 @@ public class TaskController
     @PostMapping("/addTask")
     public String addTask(@ModelAttribute Task task, Model model, @SessionAttribute String username)
     {
-        //request.setCharacterEncoding("UTF-8");
-
-        //Task task = new EntityCreator().createTask(model);
-        System.out.println("task: " + task);
-
         String message = "Pomyślnie zapisano zadanie ;)";
         try
         {
@@ -59,39 +56,45 @@ public class TaskController
     }
 
     @GetMapping("/deleteTask")
-    public String deleteTask(@RequestParam Long id)
+    public String deleteTask(@RequestParam Long taskId)
     {
         try
         {
-            taskService.deleteTaskById(id);
+            taskService.deleteTaskById(taskId);
         } catch (SQLException e)
         {
             e.printStackTrace();
         }
 
-        return "tasks";
+        return "redirect:/tasks";
     }
 
     @GetMapping("/editTask")
-    public String redirectToEditTask(Model model, @RequestParam String id, @RequestParam String title,
-                           @RequestParam String date, @RequestParam String description, @RequestParam String done)
+    public String redirectToEditTask(Model model, @RequestParam String taskId, @RequestParam String title,
+                           @RequestParam String date, @RequestParam String description, @RequestParam String taskDone, @SessionAttribute String username)
     {
-        model.addAttribute("id", id);
+        /*model.addAttribute("taskId", taskId);
         model.addAttribute("title", title);
         model.addAttribute("date", date);
         model.addAttribute("description", description);
-        model.addAttribute("done", done);
+        model.addAttribute("taskDone", taskDone);
+
+        Task task = new EntityCreator().updateTask(model);*/
+
+        Task task = taskService.getTaskById(username, Long.valueOf(taskId));
+        task.setTitle(title);
+        task.setDate(LocalDate.parse(date));
+        task.setDescription(description);
+        task.setTaskDone(Boolean.valueOf(taskDone));
+
+        model.addAttribute("task", task);
 
         return "edittask";
     }
 
     @PostMapping("/editTask")
-    public String editTask(Model model, @SessionAttribute String username)
+    public String editTask(Model model, @ModelAttribute Task task, @SessionAttribute String username)
     {
-        //request.setCharacterEncoding("UTF-8");
-
-        Task task = new EntityCreator().updateTask(model);
-
         String message = "Pomyślnie zaktualizowano zadanie :)";
         try
         {
@@ -118,50 +121,27 @@ public class TaskController
     }
 
     @PostMapping("/tasks")
-    public String orderTask(Model model, @SessionAttribute String username)
+    public String orderTask(HttpServletRequest request, Model model, @SessionAttribute String username)
     {
-        filterTask(username, model);
-        sortTaskList(username, model);
+        filterTask(username, request);
+        sortTaskList(username, request);
+
+        model.addAttribute("tasksList", taskList);
 
         return "taskslist";
     }
 
-    private void sortTaskList(String username, Model model)
+    private void filterTask(String username, HttpServletRequest request)
     {
-        String sortList = model.asMap().get("sort").toString();
-        System.out.println("sortList from model " + sortList);
-        if(sortList != null && !sortList.isEmpty())
-        {
-            OrderOption orderOption = OrderOption.valueOf(sortList.toUpperCase());
-            switch (orderOption)
-            {
-                case TITLE:
-                    taskList = taskService.getAllTasksOrderedByTitle(username);
-                    break;
-                case DATE:
-                    taskList = taskService.getAllTasksOrderedByDate(username);
-                    break;
-                case STATUS:
-                    taskList = taskService.getAllTasksOrderedByStatus(username);
-                    break;
-                default:
-                    taskList = taskService.getAllTasksByUsername(username);
-                    break;
-            }
-        }
-    }
-
-    private void filterTask(String username, Model model)
-    {
-        String filterList = model.asMap().get("filter").toString();
-        System.out.println("filterList from model " + filterList);
+        String filterList = request.getParameter("filter");
+        //System.out.println("filterList from model " + filterList);
         if(filterList != null && !filterList.isEmpty())
         {
             FilterOption filterOption = FilterOption.valueOf(filterList.toUpperCase());
             switch (filterOption)
             {
                 case DATE:
-                    LocalDate date = LocalDate.parse(model.asMap().get("dateFilter").toString());
+                    LocalDate date = LocalDate.parse(request.getParameter("dateFilter"));
                     taskList = taskService.getAllTasksByDate(username, date);
                     break;
                 case TRUE:
@@ -175,6 +155,28 @@ public class TaskController
                     break;
             }
 
+        }
+    }
+
+    private void sortTaskList(String username, HttpServletRequest request) {
+        String sortList = request.getParameter("sort");
+        //System.out.println("sortList from model " + sortList);
+        if (sortList != null && !sortList.isEmpty()) {
+            OrderOption orderOption = OrderOption.valueOf(sortList.toUpperCase());
+            switch (orderOption) {
+                case TITLE:
+                    taskList = taskService.getAllTasksOrderedByTitle(username);
+                    break;
+                case DATE:
+                    taskList = taskService.getAllTasksOrderedByDate(username);
+                    break;
+                case STATUS:
+                    taskList = taskService.getAllTasksOrderedByStatus(username);
+                    break;
+                default:
+                    taskList = taskService.getAllTasksByUsername(username);
+                    break;
+            }
         }
     }
 }
