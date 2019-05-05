@@ -3,7 +3,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.TaskDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.UserDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.UserService;
@@ -13,35 +13,44 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.TaskRepository;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.UserRepository;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.PBKDF2Hash;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-@Component
+//@Component
+@Service
 public class UserServiceImpl implements UserService
 {
-    //private UserDao userDao;
+    private UserDao userDao;
     //private TaskDao taskDao;
+    private Validator validatorB;
     private UserRepository userRepo;
     private TaskRepository taskRepo;
     private UserValidator validator = UserValidator.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, TaskDao taskDao, UserRepository userRepo, TaskRepository taskRepo)
+    public UserServiceImpl(UserDao userDao, TaskDao taskDao, UserRepository userRepo, TaskRepository taskRepo, Validator validatorB)
     {
-        //this.userDao = userDao;
+        this.userDao = userDao;
         //this.taskDao = taskDao;
         this.userRepo = userRepo;
         this.taskRepo = taskRepo;
+        this.validatorB = validatorB;
     }
 
     @Override
     public void createUser(User user) throws Exception {
         String messageInfo = "Pomyślnie udało się zapisać użytkownika do bazy :)";
+        StringBuilder messageError = new StringBuilder();
         try {
-            if (validator.isUserValid(user))
-            {
+            //if (validator.isUserValid(user))
+            //if(isValid(user))
+            //{
                 if(isUsernameAlreadyExist(user.getUsername()))
                 {
                     String message = "This username is already exist!";
@@ -63,13 +72,18 @@ public class UserServiceImpl implements UserService
                     userRepo.save(user);
                     logger.info(messageInfo + " - " + user.getUsername());
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (ConstraintViolationException e)
+                {
+                    /*e.printStackTrace();
                     String messageError = "Nie udało się zapisać użytkownika do bazy";
                     logger.error(messageError + " - " + user.getUsername());
-                    throw new SQLException(messageError);
+                    throw new Exception(messageError);*/
+                    Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+                    violations.forEach(violation -> messageError.append(violation.getMessage()).append("\n"));
+                    logger.error(messageError.toString());
+                    throw new Exception(messageError.toString());
                 }
-            }
+            //}
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,9 +152,9 @@ public class UserServiceImpl implements UserService
 
         try {
             logger.debug("Pomyślnie udało się pobrać użytkownika {} z bazy", username);
-            user = Optional.ofNullable(userRepo.findUserByUsername(username));//userDao.read(username));
+            user = Optional.ofNullable(userDao.read(username));
 
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundDesiredDataRuntimeException e) {
             e.printStackTrace();
             logger.error("Nie udało się pobrać użytkownika {} z bazy", username);
             throw new UserNotFoundException(e.getMessage());

@@ -38,10 +38,6 @@ public class Task implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    /*public Task() {
-
-    }*/
-
     @Builder
     public Task(Long taskId, String title, LocalDate date, String description, Boolean taskDone, User user) {
         this.taskId = taskId;
