@@ -4,7 +4,6 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.IncorrectLoginExc
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.IncorrectPasswordException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +14,7 @@ public interface UserService
 
     void editUser(User user) throws Exception;
 
-    void removeUser(String username) throws SQLException;
+    void removeUser(String username) throws Exception;
 
     Optional<User> getUserByUsername(String username);
 

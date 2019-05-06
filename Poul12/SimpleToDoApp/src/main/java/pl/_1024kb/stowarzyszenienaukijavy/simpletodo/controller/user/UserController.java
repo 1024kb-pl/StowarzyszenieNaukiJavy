@@ -6,6 +6,8 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.NotFoundDesiredDataRuntimeException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
@@ -14,11 +16,11 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.UserServiceImpl;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.MailSender;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.PBKDF2Hash;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @Controller
 public class UserController
@@ -37,23 +39,33 @@ public class UserController
     @GetMapping("/register")
     public String redirectToRegister(Model model)
     {
-        model.addAttribute("user", new User());
+        model.addAttribute(new User());
         return "register";
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user,  Model model)
+    public String register(@Valid @ModelAttribute User user, BindingResult result, Model model)
     {
         System.out.println(user);
 
-        String message = "Pomyślnie zarejestrowano nowego użytkownika";
+        StringBuilder message = new StringBuilder("The new user was created");
 
-        try
+        if(result.hasErrors())
         {
-            userService.createUser(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            message = e.getMessage();
+            setErrors(result, message);
+            return "register";
+        }else
+        {
+            try
+            {
+                userService.createUser(user);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                message.delete(0, message.length());
+                message.append(e.getMessage());
+            }
         }
 
         model.addAttribute("message", message);
@@ -70,11 +82,12 @@ public class UserController
     @PostMapping("/login")
     public String login(HttpSession session, Model model, @RequestParam String username, @RequestParam String password)
     {
-        String message = "Nie udało się zalogować :(";
+        String message = "Wrong username/password";
 
-        try {
+        try
+        {
             if (userService.loginVerification(username, password)) {
-                message = "Witaj " + username + " :)";
+                message = "Welcome " + username + " :)";
                 session.setAttribute("username", username);
             }
         } catch (Exception e) {
@@ -95,7 +108,7 @@ public class UserController
         if (session != null)
         {
             session.invalidate();
-            message = "Wylogowano ;)";
+            message = "Logout successfully ;)";
             logger.info("Pomyślnie wylogowano użytkownika {}", username);
             MDC.remove("user");
         }
@@ -115,7 +128,6 @@ public class UserController
 
         model.addAttribute("user", user);
 
-
         if(username != null)
         {
             return "edituser";
@@ -128,20 +140,28 @@ public class UserController
     }
 
     @PostMapping("/editUser")
-    public String editUser(Model model, HttpSession session, @ModelAttribute User user, @SessionAttribute(name = "username") String sessionUsername, @RequestParam String username) throws UnsupportedEncodingException
+    public String editUser(Model model, HttpSession session, @Valid @ModelAttribute User user, BindingResult result, @SessionAttribute(name = "username") String sessionUsername)
     {
-        if(!sessionUsername.equals(username))
-        {
-            session.setAttribute("username", username);
-        }
+        StringBuilder message = new StringBuilder("User data was successfully changed");
 
-        String message = "Pomyślnie zmieniono dane użytownika";
-        try
+        if(result.hasErrors())
         {
-            userService.editUser(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            message = e.getMessage();
+            setErrors(result, message);
+            return "editUser";
+        }else
+        {
+            if(!sessionUsername.equals(user.getUsername()))
+            {
+                session.setAttribute("username", user.getUsername());
+            }
+            try
+            {
+                userService.editUser(user);
+            } catch (Exception e) {
+                e.printStackTrace();
+                message.delete(0, message.length());
+                message.append(e.getMessage());
+            }
         }
 
         model.addAttribute("message", message);
@@ -164,7 +184,7 @@ public class UserController
 
         confirmedPassword = PBKDF2Hash.encode(confirmedPassword);
 
-        String message = "Pomyślnie usunięto użytkownika";
+        String message = "User was removed";
         try
         {
             if(userPassword.equals(confirmedPassword))
@@ -198,28 +218,37 @@ public class UserController
 
         String message = "Password reset, please check Your email :)";
         String newPass = user.getPassword().substring(0, 10);
-        try
+        /*try
         {
             MailSender.sendEmail(email, newPass);
         } catch (MessagingException e)
         {
             e.printStackTrace();
             message = e.getMessage();
-        }
+        }*/
 
         try
         {
+            MailSender.sendEmail(email, newPass);
             user.setPassword(newPass);
             user.setRepeatedPassword(newPass);
             userService.editUser(user);
         } catch (Exception e)
         {
             e.printStackTrace();
+            message = e.getMessage();
         }
 
         model.addAttribute("message", message);
 
         return "message";
+    }
+
+    private void setErrors(BindingResult result, StringBuilder message)
+    {
+        List<ObjectError> errors = result.getAllErrors();
+        message.delete(0, message.length());
+        errors.forEach(error -> message.append(error.getDefaultMessage()).append("\n"));
     }
 
     /*@GetMapping("/message")

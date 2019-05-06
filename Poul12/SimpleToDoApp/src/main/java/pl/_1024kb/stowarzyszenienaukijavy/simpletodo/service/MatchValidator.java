@@ -2,7 +2,6 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.service;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.constraint.Match;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.PBKDF2Hash;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -30,10 +29,10 @@ public class MatchValidator implements ConstraintValidator<Match, User>
             field1.setAccessible(true);
             field2.setAccessible(true);
 
-            if(field1.getName().equals("password"))
-            {
-                field2.set(value, PBKDF2Hash.encode(field2.get(value).toString()));
-            }
+            //if(field1.getName().equals("password"))
+            //{
+               // field2.set(value, PBKDF2Hash.encode(field2.get(value).toString()));
+            //}
 
             String value1 = field1.get(value).toString();
             String value2 = field2.get(value).toString();

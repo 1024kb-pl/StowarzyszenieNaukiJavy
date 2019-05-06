@@ -30,16 +30,16 @@ public class User implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
-    @Size(min = 3, message = "Username must be longer than {min}")
+    @Size(min = 3, message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User.username.Size}")
     @Column(nullable = false, length = 35, unique = true)
     private String username;
-    @Size(min = 6, message = "Password must be longer than {min}")
+    @Size(min = 6, message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User.password.Size}")
     @Column(nullable = false, length = 128)
     private String password;
-    @Size(min = 6, message = "Password must be longer than {min}")
+    @Size(min = 6, message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User.repeatedPassword.Size}")
     @Transient
     private String repeatedPassword;
-    @Email(message = "Email is not valid")
+    @Email(message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User.email.Email}")
     @Column(nullable = false, length = 45, unique = true)
     private String email;
     @OneToMany(mappedBy = "user")

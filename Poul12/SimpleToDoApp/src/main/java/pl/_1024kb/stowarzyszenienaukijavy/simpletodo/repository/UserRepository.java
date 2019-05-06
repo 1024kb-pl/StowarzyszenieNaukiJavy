@@ -9,4 +9,6 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
 public interface UserRepository extends JpaRepository<User, Long>
 {
     User findUserByUsername(String username) throws NotFoundDesiredDataRuntimeException;
+    boolean existsUserByUsername(String username);
+    boolean existsUserByEmail(String email);
 }
