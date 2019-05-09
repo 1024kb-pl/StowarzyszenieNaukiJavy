@@ -147,7 +147,7 @@ public class UserController
         if(result.hasErrors())
         {
             setErrors(result, message);
-            return "editUser";
+            return "edituser";
         }else
         {
             if(!sessionUsername.equals(user.getUsername()))
@@ -218,14 +218,6 @@ public class UserController
 
         String message = "Password reset, please check Your email :)";
         String newPass = user.getPassword().substring(0, 10);
-        /*try
-        {
-            MailSender.sendEmail(email, newPass);
-        } catch (MessagingException e)
-        {
-            e.printStackTrace();
-            message = e.getMessage();
-        }*/
 
         try
         {
@@ -250,15 +242,4 @@ public class UserController
         message.delete(0, message.length());
         errors.forEach(error -> message.append(error.getDefaultMessage()).append("\n"));
     }
-
-    /*@GetMapping("/message")
-    public String message()
-    {
-        return "message";
-    }*/
-
-   /* private UserNotFoundException newRunTimeException()
-    {
-        return new UserNotFoundException("Not found any desired data");
-    }*/
 }

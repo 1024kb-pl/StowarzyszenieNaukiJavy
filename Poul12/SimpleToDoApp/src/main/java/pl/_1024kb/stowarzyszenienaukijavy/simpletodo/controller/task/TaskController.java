@@ -3,6 +3,8 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.FilterOption;
@@ -10,6 +12,7 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.OrderOption;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.TaskServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -37,17 +40,25 @@ public class TaskController
     }
 
     @PostMapping("/addTask")
-    public String addTask(@ModelAttribute Task task, Model model, @SessionAttribute String username)
+    public String addTask(@Valid @ModelAttribute Task task, BindingResult result, Model model, @SessionAttribute String username)
     {
-        String message = "Pomyślnie zapisano zadanie ;)";
-        try
-        {
-            taskService.createTask(task, username);
+        StringBuilder message = new StringBuilder("Task was successfully created ;)");
 
-        } catch (SQLException e)
+        if(result.hasErrors())
         {
-            e.printStackTrace();
-            message = e.getMessage();
+            setErrors(result, message);
+        }else
+        {
+            try
+            {
+                taskService.createTask(task, username);
+
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+                message.delete(0, message.length());
+                message.append(e.getMessage());
+            }
         }
 
         model.addAttribute("message", message);
@@ -73,14 +84,6 @@ public class TaskController
     public String redirectToEditTask(Model model, @RequestParam String taskId, @RequestParam String title,
                            @RequestParam String date, @RequestParam String description, @RequestParam String taskDone, @SessionAttribute String username)
     {
-        /*model.addAttribute("taskId", taskId);
-        model.addAttribute("title", title);
-        model.addAttribute("date", date);
-        model.addAttribute("description", description);
-        model.addAttribute("taskDone", taskDone);
-
-        Task task = new EntityCreator().updateTask(model);*/
-
         Task task = taskService.getTaskById(username, Long.valueOf(taskId));
         task.setTitle(title);
         task.setDate(LocalDate.parse(date));
@@ -93,16 +96,24 @@ public class TaskController
     }
 
     @PostMapping("/editTask")
-    public String editTask(Model model, @ModelAttribute Task task, @SessionAttribute String username)
+    public String editTask(Model model, @Valid @ModelAttribute Task task, BindingResult result, @SessionAttribute String username)
     {
-        String message = "Pomyślnie zaktualizowano zadanie :)";
-        try
-        {
-            taskService.changeTask(task, username);
+        StringBuilder message = new StringBuilder("Task was successfully updated ;)");
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            message = e.getMessage();
+        if(result.hasErrors())
+        {
+            setErrors(result, message);
+        }else
+        {
+            try
+            {
+                taskService.changeTask(task, username);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                message.delete(0, message.length());
+                message.append(e.getMessage());
+            }
         }
 
         model.addAttribute("message", message);
@@ -134,7 +145,6 @@ public class TaskController
     private void filterTask(String username, HttpServletRequest request)
     {
         String filterList = request.getParameter("filter");
-        //System.out.println("filterList from model " + filterList);
         if(filterList != null && !filterList.isEmpty())
         {
             FilterOption filterOption = FilterOption.valueOf(filterList.toUpperCase());
@@ -160,7 +170,6 @@ public class TaskController
 
     private void sortTaskList(String username, HttpServletRequest request) {
         String sortList = request.getParameter("sort");
-        //System.out.println("sortList from model " + sortList);
         if (sortList != null && !sortList.isEmpty()) {
             OrderOption orderOption = OrderOption.valueOf(sortList.toUpperCase());
             switch (orderOption) {
@@ -178,5 +187,12 @@ public class TaskController
                     break;
             }
         }
+    }
+
+    private void setErrors(BindingResult result, StringBuilder message)
+    {
+        List<ObjectError> errors = result.getAllErrors();
+        message.delete(0, message.length());
+        errors.forEach(error -> message.append(error.getDefaultMessage()).append("\n"));
     }
 }

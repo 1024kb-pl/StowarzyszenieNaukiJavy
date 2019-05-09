@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -26,10 +28,13 @@ public class Task implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id", nullable = false)
     private Long taskId;
+    @Size(min = 3, message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task.title.Size}")
     @Column(nullable = false, length = 55)
     private String title;
+    @Future(message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task.date.Future}")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
+    @Size(max = 150, message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task.description.Size}")
     @Column(nullable = false, length = 150)
     private String description;
     @Column(name = "task_done", length = 1, columnDefinition = "tinyint(1) default 0")
