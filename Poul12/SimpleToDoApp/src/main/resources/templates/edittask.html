@@ -22,15 +22,18 @@
                 <div class="form-group">
                     <label for="InputTitle">Title</label>
                     <input type="text" class="form-control" id="InputTitle" placeholder="Enter title" name="title" th:field="*{title}" required>
+                    <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
                 </div>
                 <div class="form-group">
                     <label for="InputDate">Date</label>
                     <input type="date" class="form-control" id="InputDate" name="date" th:field="*{date}" required>
+                    <p th:if="${#fields.hasErrors('date')}" th:errors="*{date}">
                 </div>
                 <div class="form-group">
                     <label for="InputDescription">Description</label>
                     <textarea class="form-control" rows="5" id="InputDescription" name="description" wrap="hard"
                               maxlength="150" placeholder="Description task... (max 150 signs)" th:field="*{description}"></textarea>
+                    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
                 </div>
                 <div class="form-group">
                     <input type="radio" id="CheckTaskDone" name="taskDone" value="true">

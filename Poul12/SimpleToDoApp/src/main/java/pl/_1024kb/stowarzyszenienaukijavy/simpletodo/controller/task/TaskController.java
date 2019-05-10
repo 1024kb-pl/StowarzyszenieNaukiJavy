@@ -47,6 +47,7 @@ public class TaskController
         if(result.hasErrors())
         {
             setErrors(result, message);
+            return "addtask";
         }else
         {
             try
@@ -103,6 +104,7 @@ public class TaskController
         if(result.hasErrors())
         {
             setErrors(result, message);
+            return "edittask";
         }else
         {
             try
