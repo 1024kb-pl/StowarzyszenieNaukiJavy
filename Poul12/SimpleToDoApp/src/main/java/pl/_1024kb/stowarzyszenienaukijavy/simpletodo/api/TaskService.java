@@ -2,18 +2,17 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.api;
 
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface TaskService {
-    void createTask(Task task, String username) throws SQLException;
+    void createTask(Task task, String username) throws Exception;
 
     List<Task> getAllTasksByUsername(String username);
 
-    void changeTask(Task task, String username) throws SQLException;
+    void changeTask(Task task, String username) throws Exception;
 
-    void deleteTaskById(Long taskId) throws SQLException;
+    void deleteTaskById(Long taskId) throws Exception;
 
     void deleteAllTasks(String username);
 

@@ -9,18 +9,14 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@NamedQueries(
-        {
-            @NamedQuery(name = "User.getUserByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
-            @NamedQuery(name = "User.getAll", query = "SELECT u FROM User u")
-        }
-)
 @Match(firstField = "password", secondField = "repeatedPassword")
 public class User implements Serializable
 {
@@ -29,7 +25,7 @@ public class User implements Serializable
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false, unique = true)
-    private Long userId;
+    private Long id;
     @Size(min = 3, message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User.username.Size}")
     @Column(nullable = false, length = 35, unique = true)
     private String username;
@@ -44,11 +40,13 @@ public class User implements Serializable
     private String email;
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<UserRole> roles = new HashSet<>();
 
     @Builder
-    public User(Long userId, String username, String password, String repeatedPassword, String email)
+    public User(Long id, String username, String password, String repeatedPassword, String email)
     {
-        this.userId = userId;
+        this.id = id;
         this.username = username;
         this.password = password;
         this.repeatedPassword = repeatedPassword;

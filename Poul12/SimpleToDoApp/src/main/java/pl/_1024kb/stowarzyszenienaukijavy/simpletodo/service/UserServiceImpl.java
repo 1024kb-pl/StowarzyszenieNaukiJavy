@@ -3,14 +3,15 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.UserDao;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.UserService;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.*;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.UserRole;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.TaskRepository;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.UserRepository;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.PBKDF2Hash;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.UserRoleRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,18 +19,20 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService
 {
-    private UserDao userDao;
+    private static final String DEFAULT_ROLE = "ROLE_USER";
     private UserRepository userRepo;
     private TaskRepository taskRepo;
-    //private UserValidator validator = UserValidator.getInstance();
+    private UserRoleRepository userRoleRepository;
+    private PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, UserRepository userRepo, TaskRepository taskRepo)
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepo, TaskRepository taskRepo, UserRoleRepository userRoleRepository)
     {
-        this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.taskRepo = taskRepo;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
@@ -52,7 +55,9 @@ public class UserServiceImpl implements UserService
                 throw new EmailIsAlreadyExistException(message);
             }
 
-            user.setPassword(encodePassword(user));
+            UserRole userRole = userRoleRepository.findByRole(DEFAULT_ROLE);
+            user.getRoles().add(userRole);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepo.save(user);
             logger.info(messageInfo + " - " + user.getUsername());
 
@@ -70,9 +75,9 @@ public class UserServiceImpl implements UserService
 
         try
         {
-                user.setPassword(encodePassword(user));
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
                 User userToUpdate = new User();
-                userToUpdate.setUserId(user.getUserId());
+                userToUpdate.setId(user.getId());
                 userToUpdate.setUsername(user.getUsername());
                 userToUpdate.setPassword(user.getPassword());
                 userToUpdate.setEmail(user.getEmail());
@@ -108,7 +113,7 @@ public class UserServiceImpl implements UserService
 
         Optional<User> user = getUserByUsername(username);
         if (user.isPresent())
-            userId = user.orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getUserId();
+            userId = user.orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getId();
 
         return userId;
     }
@@ -155,30 +160,6 @@ public class UserServiceImpl implements UserService
     public boolean isEmailAlreadyExist(String email)
     {
         return userRepo.existsUserByEmail(email);
-    }
-
-    @Override
-    public boolean loginVerification(String username, String password) throws IncorrectLoginException
-    {
-        boolean isLoginCorrect;
-
-        if(isUsernameAlreadyExist(username))
-        {
-            Optional<User> loggingUser = getUserByUsername(username);
-            password = PBKDF2Hash.encode(password);
-            isLoginCorrect = password.equals(loggingUser.orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getPassword());
-            logger.info("Weryfikacja użytkownika {} przeszła pomyślnie", username);
-        }else
-        {
-            logger.error("Logowanie na użytkownika {} nie przeszło weryfikacji - złe dane", username);
-            throw new IncorrectLoginException("Wrong username/password");
-        }
-
-        return isLoginCorrect;
-    }
-
-    private String encodePassword(User user) {
-        return PBKDF2Hash.encode(user.getPassword());
     }
 }
 

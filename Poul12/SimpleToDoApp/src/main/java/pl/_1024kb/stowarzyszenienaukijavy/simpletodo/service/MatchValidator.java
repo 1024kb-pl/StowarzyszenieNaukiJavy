@@ -29,14 +29,9 @@ public class MatchValidator implements ConstraintValidator<Match, User>
             field1.setAccessible(true);
             field2.setAccessible(true);
 
-            //if(field1.getName().equals("password"))
-            //{
-               // field2.set(value, PBKDF2Hash.encode(field2.get(value).toString()));
-            //}
-
             String value1 = field1.get(value).toString();
             String value2 = field2.get(value).toString();
-            System.out.println(field1.get(value) + " " + field2.get(value));
+
             return value1 != null && value2 != null && value1.equals(value2);
         } catch (NoSuchFieldException | IllegalAccessException e)
         {

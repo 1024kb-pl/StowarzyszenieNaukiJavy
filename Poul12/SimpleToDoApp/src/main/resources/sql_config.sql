@@ -21,7 +21,19 @@ CREATE TABLE `tasks`
   `title`       VARCHAR(55)  NOT NULL,
   `description` VARCHAR(150) NOT NULL,
   `taskDone`    TINYINT(1)   NOT NULL DEFAULT '0',
-  `username_id` INT(11)      NOT NULL,
+  `user_id` INT(11)      NOT NULL,
   PRIMARY KEY (`task_id`),
-  CONSTRAINT `username_id` FOREIGN KEY (`username_id`) REFERENCES `users` (`user_id`)
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+);
+
+DROP TABLE IF EXISTS `user_role`;
+
+CREATE TABLE `user_role`
+(
+  `role_id`     INT(11)      NOT NULL AUTO_INCREMENT,
+  `role`       VARCHAR(15)  NOT NULL,
+  `description` VARCHAR(150) NOT NULL,
+  `user_id` INT(11)      NOT NULL,
+  PRIMARY KEY (`role_id`),
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 );

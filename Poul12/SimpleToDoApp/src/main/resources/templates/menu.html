@@ -29,7 +29,7 @@
                 <div class="nav navbar-nav navbar-right" th:if="${session.username != null}">
                     <li>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-user" > </span><th:block th:text="${session.username}"/>
+                            <span class="glyphicon glyphicon-user" ></span> <th:block th:text="${session.username}"/>
                             </a>
                         <ul class="dropdown-menu">
                             <li><a th:href="@{/editUser}">Edit Account</a></li>

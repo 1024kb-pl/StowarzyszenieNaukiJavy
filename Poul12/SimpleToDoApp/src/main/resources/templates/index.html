@@ -6,6 +6,16 @@
     <link rel="stylesheet" href="/../WEB-INF/css/styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 60px;
+            background-color: #f5f5f5;
+        }
+    </style>
 </head>
 <body>
 
@@ -17,7 +27,7 @@
     <p>Create new task, display it, and manage. Check for done, delete old task. </p>
 </div>
 
-<footer th:include="footer :: _footer" class="footer"></footer>
+<footer th:include="footer :: _footer" class="footer" ></footer>
 
 </body>
 </html>

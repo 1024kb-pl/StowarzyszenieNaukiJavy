@@ -2,38 +2,46 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.NotFoundDesiredDataRuntimeException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.UserRepository;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.security.CustomUserDetailsService;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.TaskServiceImpl;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.UserServiceImpl;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.MailSender;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.util.PBKDF2Hash;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 public class UserController
 {
     private UserServiceImpl userService;
     private TaskServiceImpl taskService;
+    private PasswordEncoder passwordEncoder;
+    private UserRepository userRepo;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    public UserController(UserServiceImpl userService, TaskServiceImpl taskService)
+    public UserController(UserServiceImpl userService, TaskServiceImpl taskService, PasswordEncoder passwordEncoder)
     {
         this.userService = userService;
         this.taskService = taskService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepo) {
+        this.userRepo = userRepo;
     }
 
     @GetMapping("/register")
@@ -48,11 +56,10 @@ public class UserController
     {
         System.out.println(user);
 
-        StringBuilder message = new StringBuilder("The new user was created");
+        String message = "The new user was created";
 
         if(result.hasErrors())
         {
-            setErrors(result, message);
             return "register";
         }else
         {
@@ -63,8 +70,7 @@ public class UserController
             catch (Exception e)
             {
                 e.printStackTrace();
-                message.delete(0, message.length());
-                message.append(e.getMessage());
+                message = e.getMessage();
             }
         }
 
@@ -79,38 +85,35 @@ public class UserController
         return "login";
     }
 
-    @PostMapping("/login")
-    public String login(HttpSession session, Model model, @RequestParam String username, @RequestParam String password)
+    @PostMapping("/sessionLogin")
+    public String login(HttpSession session, @RequestParam String username)
     {
-        String message = "Wrong username/password";
+        UserDetails userDetails = new CustomUserDetailsService(userRepo).loadUserByUsername(username);
 
-        try
+        System.out.println("credentials user: " + userDetails);
+
+        if(userDetails != null)
         {
-            if (userService.loginVerification(username, password)) {
-                message = "Welcome " + username + " :)";
-                session.setAttribute("username", username);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            message = e.getMessage();
+            session.setAttribute("username", userDetails.getUsername());
+            logger.info("Zalogowano pomyślnie użytkownika {}", userDetails.getUsername());
+        }else
+        {
+            logger.error("Logowanie na użytkownika {} nie udało się", username);
         }
 
-        model.addAttribute("message", message);
-
-        return "message";
+        return "index";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session, Model model, @SessionAttribute String username)
     {
-        String message = "Nie udało się wylogować :/";
+        String message = "Logout invalid";
 
         if (session != null)
         {
             session.invalidate();
-            message = "Logout successfully ;)";
+            message = "Logout successfully";
             logger.info("Pomyślnie wylogowano użytkownika {}", username);
-            MDC.remove("user");
         }
         else {
             logger.error("Błąd podczas wylogowywania się uzytkownika {}", username);
@@ -130,7 +133,7 @@ public class UserController
 
         if(username != null)
         {
-            return "edituser";
+            return "edit_user";
         }else
         {
             response.sendError(403);
@@ -142,12 +145,11 @@ public class UserController
     @PostMapping("/editUser")
     public String editUser(Model model, HttpSession session, @Valid @ModelAttribute User user, BindingResult result, @SessionAttribute(name = "username") String sessionUsername)
     {
-        StringBuilder message = new StringBuilder("User data was successfully changed");
+        String message = "User data was successfully changed";
 
         if(result.hasErrors())
         {
-            setErrors(result, message);
-            return "edituser";
+            return "edit_user";
         }else
         {
             if(!sessionUsername.equals(user.getUsername()))
@@ -159,8 +161,7 @@ public class UserController
                 userService.editUser(user);
             } catch (Exception e) {
                 e.printStackTrace();
-                message.delete(0, message.length());
-                message.append(e.getMessage());
+                message = e.getMessage();
             }
         }
 
@@ -172,7 +173,7 @@ public class UserController
     @GetMapping("/deleteUser")
     public String redirectToDeleteUser()
     {
-        return "deleteuser";
+        return "delete_user";
     }
 
     @PostMapping("/deleteUser")
@@ -182,12 +183,12 @@ public class UserController
                                 .orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException)
                                 .getPassword();
 
-        confirmedPassword = PBKDF2Hash.encode(confirmedPassword);
-
+        boolean isMatch = passwordEncoder.matches(confirmedPassword, userPassword);
         String message = "User was removed";
+
         try
         {
-            if(userPassword.equals(confirmedPassword))
+            if(isMatch)
             {
                 taskService.deleteAllTasks(username);
                 userService.removeUser(username);
@@ -208,7 +209,7 @@ public class UserController
     @GetMapping("/reset")
     public String redirectToResetPass()
     {
-        return "resetpass";
+        return "reset_pass";
     }
 
     @PostMapping
@@ -217,7 +218,7 @@ public class UserController
         User user = userService.getUserByEmail(email);
 
         String message = "Password reset, please check Your email :)";
-        String newPass = user.getPassword().substring(0, 10);
+        String newPass = user.getPassword().substring(8, 20);
 
         try
         {
@@ -234,12 +235,5 @@ public class UserController
         model.addAttribute("message", message);
 
         return "message";
-    }
-
-    private void setErrors(BindingResult result, StringBuilder message)
-    {
-        List<ObjectError> errors = result.getAllErrors();
-        message.delete(0, message.length());
-        errors.forEach(error -> message.append(error.getDefaultMessage()).append("\n"));
     }
 }

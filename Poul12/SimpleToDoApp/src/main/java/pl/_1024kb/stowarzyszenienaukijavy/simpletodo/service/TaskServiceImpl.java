@@ -10,7 +10,6 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.TaskRepository;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,8 +32,8 @@ public class TaskServiceImpl implements TaskService
     }
 
     @Override
-    public void createTask(Task task, String username) throws SQLException {
-        String messageInfo = "Pomyślnie zapisano zadanie ;)";
+    public void createTask(Task task, String username) throws Exception {
+        String messageInfo = "Successfully created new task";
 
         if (userService.getUserByUsername(username).isPresent())
         {
@@ -48,9 +47,9 @@ public class TaskServiceImpl implements TaskService
             logger.info(messageInfo + " - " + task.getTitle());
         } catch (Exception e) {
             e.printStackTrace();
-            String messageError = "Nie udało się zapisać zadania!";
+            String messageError = "The task could not be created";
             logger.error(messageError + " - " + task.getTitle());
-            throw new SQLException(messageError);
+            throw new Exception(messageError);
         }
     }
 
@@ -68,7 +67,7 @@ public class TaskServiceImpl implements TaskService
 
         } catch (Exception e) {
             e.printStackTrace();
-            String messageError = "Nie udało się pobrać wszystich zadań!";
+            String messageError = "All tasks could not be downloaded";
             logger.error(messageError);
         }
 
@@ -76,8 +75,8 @@ public class TaskServiceImpl implements TaskService
     }
 
     @Override
-    public void changeTask(Task task, String username) throws SQLException {
-        String messageInfo = "Pomyślnie zaktualizowano zadanie :)";
+    public void changeTask(Task task, String username) throws Exception {
+        String messageInfo = "Task was successfully updated";
 
         if (userService.getUserByUsername(username).isPresent())
         {
@@ -88,7 +87,7 @@ public class TaskServiceImpl implements TaskService
         try
         {
             Task taskToUpdate = new Task();
-            taskToUpdate.setTaskId(task.getTaskId());
+            taskToUpdate.setId(task.getId());
             taskToUpdate.setTitle(task.getTitle());
             taskToUpdate.setDate(task.getDate());
             taskToUpdate.setDescription(task.getDescription());
@@ -97,24 +96,24 @@ public class TaskServiceImpl implements TaskService
             logger.info(messageInfo + " - " + task.getTitle());
         } catch (Exception e) {
             e.printStackTrace();
-            String messageError = "Nie udało się zaktualizować zadania";
+            String messageError = "Task could not be updated";
             logger.error(messageError + " - " + task.getTitle());
-            throw new SQLException(messageError);
+            throw new Exception(messageError);
         }
     }
 
     @Override
-    public void deleteTaskById(Long taskId) throws SQLException {
-        String messageInfo = "Pomyślnie usunięto zadanie";
+    public void deleteTaskById(Long taskId) throws Exception {
+        String messageInfo = "Task was successfully deleted";
         try {
             taskRepo.deleteById(taskId);
             logger.info(messageInfo + " - id: " + taskId);
 
         } catch (Exception e) {
             e.printStackTrace();
-            String messageError = "Nie udało się usunąć zadania";
+            String messageError = "Cannot delete the task";
             logger.error(messageError + " - id: " + taskId);
-            throw new SQLException(messageError);
+            throw new Exception(messageError);
         }
     }
 
@@ -134,7 +133,7 @@ public class TaskServiceImpl implements TaskService
     public Task getTaskById(String username, Long taskId)
     {
         return getAllTasksByUsername(username).stream()
-                    .filter(task -> task.getTaskId().equals(taskId))
+                    .filter(task -> task.getId().equals(taskId))
                     .findFirst()
                     .orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException);
     }

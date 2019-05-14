@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.FilterOption;
@@ -36,18 +35,17 @@ public class TaskController
     public String redirectToAddTask(Model model)
     {
         model.addAttribute("task", new Task());
-        return "addtask";
+        return "add_task";
     }
 
     @PostMapping("/addTask")
     public String addTask(@Valid @ModelAttribute Task task, BindingResult result, Model model, @SessionAttribute String username)
     {
-        StringBuilder message = new StringBuilder("Task was successfully created ;)");
+        String message = "Task was successfully created ;)";
 
         if(result.hasErrors())
         {
-            setErrors(result, message);
-            return "addtask";
+            return "add_task";
         }else
         {
             try
@@ -57,8 +55,7 @@ public class TaskController
             } catch (Exception e)
             {
                 e.printStackTrace();
-                message.delete(0, message.length());
-                message.append(e.getMessage());
+                message = e.getMessage();
             }
         }
 
@@ -68,12 +65,12 @@ public class TaskController
     }
 
     @GetMapping("/deleteTask")
-    public String deleteTask(@RequestParam Long taskId)
+    public String deleteTask(@RequestParam Long id)
     {
         try
         {
-            taskService.deleteTaskById(taskId);
-        } catch (SQLException e)
+            taskService.deleteTaskById(id);
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -82,10 +79,10 @@ public class TaskController
     }
 
     @GetMapping("/editTask")
-    public String redirectToEditTask(Model model, @RequestParam String taskId, @RequestParam String title,
+    public String redirectToEditTask(Model model, @RequestParam String id, @RequestParam String title,
                            @RequestParam String date, @RequestParam String description, @RequestParam String taskDone, @SessionAttribute String username)
     {
-        Task task = taskService.getTaskById(username, Long.valueOf(taskId));
+        Task task = taskService.getTaskById(username, Long.valueOf(id));
         task.setTitle(title);
         task.setDate(LocalDate.parse(date));
         task.setDescription(description);
@@ -93,18 +90,17 @@ public class TaskController
 
         model.addAttribute("task", task);
 
-        return "edittask";
+        return "edit_task";
     }
 
     @PostMapping("/editTask")
     public String editTask(Model model, @Valid @ModelAttribute Task task, BindingResult result, @SessionAttribute String username)
     {
-        StringBuilder message = new StringBuilder("Task was successfully updated ;)");
+        String message = "Task was successfully updated ;)";
 
         if(result.hasErrors())
         {
-            setErrors(result, message);
-            return "edittask";
+            return "edit_task";
         }else
         {
             try
@@ -113,8 +109,7 @@ public class TaskController
 
             } catch (Exception e) {
                 e.printStackTrace();
-                message.delete(0, message.length());
-                message.append(e.getMessage());
+                message = e.getMessage();
             }
         }
 
@@ -130,7 +125,7 @@ public class TaskController
 
         model.addAttribute("tasksList", taskList);
 
-        return "taskslist";
+        return "task_list";
     }
 
     @PostMapping("/tasks")
@@ -141,7 +136,7 @@ public class TaskController
 
         model.addAttribute("tasksList", taskList);
 
-        return "taskslist";
+        return "task_list";
     }
 
     private void filterTask(String username, HttpServletRequest request)
@@ -189,12 +184,5 @@ public class TaskController
                     break;
             }
         }
-    }
-
-    private void setErrors(BindingResult result, StringBuilder message)
-    {
-        List<ObjectError> errors = result.getAllErrors();
-        message.delete(0, message.length());
-        errors.forEach(error -> message.append(error.getDefaultMessage()).append("\n"));
     }
 }
