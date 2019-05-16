@@ -1,1 +1,1 @@
-INSERT INTO user_role(role, description) VALUES ("ROLE_USER", "default role for user");
+INSERT INTO roles(role, description) VALUES ("ROLE_USER", "role for user");

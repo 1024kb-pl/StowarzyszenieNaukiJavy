@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@Match(firstField = "password", secondField = "repeatedPassword")
+@Match(firstField = "password", secondField = "repeatedPassword", message = "{pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User.repeatedPassword.Match}")
 public class User implements Serializable
 {
     private static final long serialVersionUID = 2L;
@@ -41,6 +41,7 @@ public class User implements Serializable
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<UserRole> roles = new HashSet<>();
 
     @Builder

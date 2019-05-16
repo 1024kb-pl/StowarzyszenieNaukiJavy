@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "roles")
 public class UserRole implements Serializable
 {
     private static final long serialVersionUID = 3L;
@@ -18,9 +19,9 @@ public class UserRole implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id", nullable = false)
     private Long id;
-    @Column(nullable = false, length = 15, unique = true)
+    @Column(nullable = false, length = 15)
     private String role;
-    @Column(nullable = false, length = 150, unique = true)
+    @Column(nullable = false, length = 150)
     private String description;
 
     @Builder

@@ -22,17 +22,17 @@ public class UserServiceImpl implements UserService
     private static final String DEFAULT_ROLE = "ROLE_USER";
     private UserRepository userRepo;
     private TaskRepository taskRepo;
-    private UserRoleRepository userRoleRepository;
+    private UserRoleRepository userRoleRepo;
     private PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepo, TaskRepository taskRepo, UserRoleRepository userRoleRepository)
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepo, TaskRepository taskRepo, UserRoleRepository userRoleRepo)
     {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.taskRepo = taskRepo;
-        this.userRoleRepository = userRoleRepository;
+        this.userRoleRepo = userRoleRepo;
     }
 
     @Override
@@ -55,10 +55,11 @@ public class UserServiceImpl implements UserService
                 throw new EmailIsAlreadyExistException(message);
             }
 
-            UserRole userRole = userRoleRepository.findByRole(DEFAULT_ROLE);
+            UserRole userRole = userRoleRepo.findByRole(DEFAULT_ROLE);
             user.getRoles().add(userRole);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepo.save(user);
+            userRoleRepo.delete(userRole);
             logger.info(messageInfo + " - " + user.getUsername());
 
         } catch (Exception e) {

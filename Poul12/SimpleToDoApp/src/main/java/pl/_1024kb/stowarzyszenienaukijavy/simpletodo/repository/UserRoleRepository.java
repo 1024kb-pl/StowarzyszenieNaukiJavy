@@ -9,4 +9,7 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.UserRole;
 public interface UserRoleRepository extends JpaRepository<UserRole, Long>
 {
     UserRole findByRole(String role);
+
+    @Override
+    void delete(UserRole entity);
 }
