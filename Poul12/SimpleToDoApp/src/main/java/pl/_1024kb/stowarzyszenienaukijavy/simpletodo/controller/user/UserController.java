@@ -212,13 +212,13 @@ public class UserController
         return "reset_pass";
     }
 
-    @PostMapping
+    @PostMapping("/reset")
     public String resetPassword(Model model, @RequestParam String email)
     {
         User user = userService.getUserByEmail(email);
 
         String message = "Password reset, please check Your email :)";
-        String newPass = user.getPassword().substring(8, 20);
+        String newPass = user.getPassword().substring(24, 36);
 
         try
         {
