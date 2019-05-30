@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL" ng-app="app">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL">
 <head>
     <title>Main Page</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,35 +19,15 @@
         }
     </style>
 </head>
-<body ng-controller="ProductController as prodControl">
+<body>
 
 <nav th:include="menu :: _menu" class="navbar navbar-inverse"></nav>
 
 <div class="container">
-    <h3>{{homeControl.appTitle}}</h3>
+    <h3>Simple ToDo App</h3>
     <p>You can store tasks on this website.
     <p>Create new task, display it, and manage. Check for done, delete old task. </p>
 </div>
-
-
-<h1>{{prodControl.appName}}</h1>
-<form>
-    <input type="text" ng-model="prodControl.product.name" placeholder="Name"><br>
-    <input type="text" ng-model="prodControl.product.producer" placeholder="Producer"><br>
-    <input type="text" ng-model="prodControl.product.kcal" placeholder="kcal"><br>
-    <button ng-click="prodControl.addProduct(prodControl.product)">Add Product</button>
-</form>
-
-<ul>
-    <li ng-repeat="prod in prodControl.products" ng-click="prodControl.loadDetails(prod.id)">{{prod.name}} - {{prod.producer}} ({{prod.kcal}} kcal)</li>
-</ul>
-
-<div ng-show="prodControl.details">
-    <h2>{{prodControl.details.name}}</h2>
-    <p>Producent: {{prodControl.details.producer}}, Kcal: {{prodControl.details.kcal}}</p>
-</div>
-
-
 
 <footer th:include="footer :: _footer" class="footer" ></footer>
 

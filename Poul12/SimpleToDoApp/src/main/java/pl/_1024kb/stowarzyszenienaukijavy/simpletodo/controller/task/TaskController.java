@@ -30,6 +30,13 @@ public class TaskController
         this.taskList = Collections.synchronizedList(new LinkedList<>());
     }
 
+    /*@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Task>> allTask(@SessionAttribute String username)
+    {
+        List<Task> allTask = taskService.getAllTasksByUsername(username);
+        return ResponseEntity.ok(allTask);
+    }*/
+
     @GetMapping("/addTask")
     public String redirectToAddTask(Model model)
     {
