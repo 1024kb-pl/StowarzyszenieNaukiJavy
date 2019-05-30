@@ -1,0 +1,12 @@
+{
+  "name": "simple-todo-app",
+  "version": "1.0.0",
+  "description": "simple todo app",
+  "main": "index.js",
+  "author": "Poul12",
+  "license": "MIT",
+  "dependencies": {
+    "angular": "^1.7.8",
+    "angular-resource": "^1.7.8"
+  }
+}

@@ -1,11 +1,13 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL" ng-app="app">
 <head>
     <title>Main Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/../WEB-INF/css/styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular/angular.js"></script>
+    <script type="text/javascript" src="node_modules/angular-resource/angular-resource.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
     <style>
         .footer {
             position: absolute;
@@ -17,15 +19,35 @@
         }
     </style>
 </head>
-<body>
+<body ng-controller="ProductController as prodControl">
 
 <nav th:include="menu :: _menu" class="navbar navbar-inverse"></nav>
 
 <div class="container">
-    <h3>Simple ToDo App</h3>
+    <h3>{{homeControl.appTitle}}</h3>
     <p>You can store tasks on this website.
     <p>Create new task, display it, and manage. Check for done, delete old task. </p>
 </div>
+
+
+<h1>{{prodControl.appName}}</h1>
+<form>
+    <input type="text" ng-model="prodControl.product.name" placeholder="Name"><br>
+    <input type="text" ng-model="prodControl.product.producer" placeholder="Producer"><br>
+    <input type="text" ng-model="prodControl.product.kcal" placeholder="kcal"><br>
+    <button ng-click="prodControl.addProduct(prodControl.product)">Add Product</button>
+</form>
+
+<ul>
+    <li ng-repeat="prod in prodControl.products" ng-click="prodControl.loadDetails(prod.id)">{{prod.name}} - {{prod.producer}} ({{prod.kcal}} kcal)</li>
+</ul>
+
+<div ng-show="prodControl.details">
+    <h2>{{prodControl.details.name}}</h2>
+    <p>Producent: {{prodControl.details.producer}}, Kcal: {{prodControl.details.kcal}}</p>
+</div>
+
+
 
 <footer th:include="footer :: _footer" class="footer" ></footer>
 

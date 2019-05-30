@@ -26,6 +26,11 @@ public class UserServiceImpl implements UserService
     private PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    public UserServiceImpl()
+    {
+
+    }
+
     @Autowired
     public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepo, TaskRepository taskRepo, UserRoleRepository userRoleRepo)
     {

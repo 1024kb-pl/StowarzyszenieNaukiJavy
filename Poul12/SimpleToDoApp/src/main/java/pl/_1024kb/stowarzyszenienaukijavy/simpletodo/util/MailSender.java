@@ -16,9 +16,10 @@ public class MailSender
 {
     private final static String USERNAME = "simpletodo@pocz.pl";
     private final static String PASSWORD = DataReader.read();
+    public final static String MESSAGE = "Success";
     private static final Logger logger = LoggerFactory.getLogger(MailSender.class);
 
-    public static void sendEmail(String receiverAddress, String newPassword) throws MessagingException
+    public static String sendEmail(String receiverAddress, String newPassword) throws MessagingException
     {
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
@@ -46,6 +47,7 @@ public class MailSender
 
             System.out.println("Mail sent");
             logger.info("Mail sent to {}", receiverAddress);
+            return MESSAGE;
 
         } catch(MessagingException e)
         {

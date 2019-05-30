@@ -12,7 +12,6 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.service.TaskServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.LinkedList;
