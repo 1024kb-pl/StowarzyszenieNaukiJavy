@@ -1,6 +1,8 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.controller.task;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,12 +32,12 @@ public class TaskController
         this.taskList = Collections.synchronizedList(new LinkedList<>());
     }
 
-    /*@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Task>> allTask(@SessionAttribute String username)
     {
         List<Task> allTask = taskService.getAllTasksByUsername(username);
         return ResponseEntity.ok(allTask);
-    }*/
+    }
 
     @GetMapping("/addTask")
     public String redirectToAddTask(Model model)
@@ -124,7 +126,7 @@ public class TaskController
         return "message";
     }
 
-    @GetMapping("/tasks")
+   @GetMapping("/tasks")
     public String redirectToTasks(Model model, @SessionAttribute String username)
     {
         taskList = taskService.getAllTasksByUsername(username);
