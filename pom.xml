@@ -7,6 +7,8 @@
     <groupId>pl._1024kb.stowarzyszenienaukijavy.simpletodo</groupId>
     <artifactId>SimpleToDoApp</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
     <build>
         <plugins>
             <plugin>
