@@ -2,23 +2,31 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.NotFoundDesiredDataRuntimeException;
+import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.MailDataRepository;
 
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.MessagingException;
 import java.util.Properties;
 
+@Component
 public class MailSender
 {
-    private final static String USERNAME = "simpletodo@pocz.pl";
-    private final static String PASSWORD = DataReader.read();
+    private MailDataRepository mailRepository;
+
+    @Autowired
+    public MailSender(MailDataRepository mailRepository)
+    {
+        this.mailRepository = mailRepository;
+    }
+
+    public final static String MESSAGE = "Success";
     private static final Logger logger = LoggerFactory.getLogger(MailSender.class);
 
-    public static void sendEmail(String receiverAddress, String newPassword) throws MessagingException
+    public String sendEmail(String receiverAddress, String newPassword) throws MessagingException
     {
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
@@ -27,17 +35,20 @@ public class MailSender
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.ssl.trust", "t.pl");
 
+        String addressName = mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getAddressName();
+        String password = mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getPassword();
+
         Session session = Session.getInstance(properties,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(USERNAME, PASSWORD);
+                        return new PasswordAuthentication(addressName, password);
                     }
                 });
 
         try
         {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(USERNAME));
+            message.setFrom(new InternetAddress(addressName));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiverAddress));
             message.setSubject("Reset Password");
             message.setText("You requested for a password reset.\n\nYour new password is: " + newPassword);
@@ -46,6 +57,7 @@ public class MailSender
 
             System.out.println("Mail sent");
             logger.info("Mail sent to {}", receiverAddress);
+            return MESSAGE;
 
         } catch(MessagingException e)
         {

@@ -17,6 +17,14 @@ HELP.md
 *.iml
 *.ipr
 *.data
+.metadata/
+.recommenders/
+**/target/
+**/.settings/
+**/.project
+**/.classpath
+**/.tern-project
+**/bin/
 
 ### NetBeans ###
 /nbproject/private/

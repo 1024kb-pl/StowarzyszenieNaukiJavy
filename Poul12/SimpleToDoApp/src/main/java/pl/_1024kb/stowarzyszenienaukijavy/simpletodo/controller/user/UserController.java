@@ -29,14 +29,16 @@ public class UserController
     private TaskServiceImpl taskService;
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepo;
+    private MailSender mailSender;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    public UserController(UserServiceImpl userService, TaskServiceImpl taskService, PasswordEncoder passwordEncoder)
+    public UserController(UserServiceImpl userService, TaskServiceImpl taskService, PasswordEncoder passwordEncoder, MailSender mailSender)
     {
         this.userService = userService;
         this.taskService = taskService;
         this.passwordEncoder = passwordEncoder;
+        this.mailSender = mailSender;
     }
 
     @Autowired
@@ -212,17 +214,17 @@ public class UserController
         return "reset_pass";
     }
 
-    @PostMapping
+    @PostMapping("/reset")
     public String resetPassword(Model model, @RequestParam String email)
     {
         User user = userService.getUserByEmail(email);
 
         String message = "Password reset, please check Your email :)";
-        String newPass = user.getPassword().substring(8, 20);
+        String newPass = user.getPassword().substring(24, 36);
 
         try
         {
-            MailSender.sendEmail(email, newPass);
+            mailSender.sendEmail(email, newPass);
             user.setPassword(newPass);
             user.setRepeatedPassword(newPass);
             userService.editUser(user);

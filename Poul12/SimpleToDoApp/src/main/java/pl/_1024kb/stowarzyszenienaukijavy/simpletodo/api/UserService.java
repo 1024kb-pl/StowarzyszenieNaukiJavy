@@ -1,10 +1,12 @@
 package pl._1024kb.stowarzyszenienaukijavy.simpletodo.api;
 
+import org.springframework.stereotype.Component;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public interface UserService
 {
 

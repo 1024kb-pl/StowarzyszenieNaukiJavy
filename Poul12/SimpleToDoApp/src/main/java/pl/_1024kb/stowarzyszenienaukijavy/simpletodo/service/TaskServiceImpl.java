@@ -3,7 +3,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.api.TaskService;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.NotFoundDesiredDataRuntimeException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.Task;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class TaskServiceImpl implements TaskService
 {
     private TaskRepository taskRepo;
