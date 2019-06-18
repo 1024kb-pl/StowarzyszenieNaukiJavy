@@ -148,28 +148,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.6.2</version>
-                <configuration>
-                    <container>
-                        <containerId>tomcat9x</containerId>
-                        <home>${catalina.base}</home>
-                    </container>
-                    <configuration>
-                        <type>existing</type>
-                        <home>${catalina.base}</home>
-                    </configuration>
-                    <deployables>
-                        <deployable>
-                            <properties>
-                                <context>SimpleToDoApp</context>
-                            </properties>
-                        </deployable>
-                    </deployables>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
