@@ -65,10 +65,9 @@
         </thead>
 
         <div th:if="not ${tasksList.isEmpty()}">
-            <div th:with="row=${1}"></div>
-            <tbody th:each="task:${tasksList}" th:object="${task}">
+            <tbody th:each="task, idx:${tasksList}" th:object="${task}">
             <tr>
-                <th scope="row" th:text="${row} + ${1}"></th>
+                <th scope="row" th:text="${idx.index+1}"></th>
                 <td th:text="*{title}"></td>
                 <td th:text="*{date}"></td>
                 <td th:text="*{description}"></td>
