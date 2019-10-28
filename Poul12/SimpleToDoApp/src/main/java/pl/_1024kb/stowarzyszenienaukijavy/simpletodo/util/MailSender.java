@@ -36,7 +36,8 @@ public class MailSender
         properties.put("mail.smtp.ssl.trust", "t.pl");
 
         String addressName = mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getAddressName();
-        String password = mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getPassword();
+        //String password = mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getPassword();
+        String password = System.getenv("PASS_FOR_MAIL");
 
         Session session = Session.getInstance(properties,
                 new javax.mail.Authenticator() {
