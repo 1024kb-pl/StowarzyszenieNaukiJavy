@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.exception.NotFoundDesiredDataRuntimeException;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.MailDataRepository;
 
 import javax.mail.*;
@@ -35,9 +34,10 @@ public class MailSender
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.ssl.trust", "t.pl");
 
-        String addressName = mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getAddressName();
+        String addressName = "simpletodo@pocz.pl";//mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getAddressName();
         //String password = mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getPassword();
-        String password = System.getenv("PASS_FOR_MAIL");
+        logger.info("Pass from env tomcat: {}", System.getenv("PASS_FOR_EMAIL_SIMPLE_TODO"));
+        String password = System.getenv("PASS_FOR_EMAIL_SIMPLE_TODO");
 
         Session session = Session.getInstance(properties,
                 new javax.mail.Authenticator() {
