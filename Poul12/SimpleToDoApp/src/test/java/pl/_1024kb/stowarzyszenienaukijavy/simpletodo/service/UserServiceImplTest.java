@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.model.User;
@@ -15,7 +14,9 @@ import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.TaskRepository;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.UserRepository;
 import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.UserRoleRepository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -30,9 +31,6 @@ public class UserServiceImplTest
     private UserRepository uRepo;
     private TaskRepository tRepo;
     private UserRoleRepository urRepo;
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private UserRepository userRepository;
@@ -61,28 +59,30 @@ public class UserServiceImplTest
     @Test
     public void givenUserWhenCreatingNewUserThenSavedIntoDatabase() throws Exception
     {
-        //when(uRepo.save(VALID_USER)).thenReturn(VALID_USER);
+        /*when(uRepo.save(VALID_USER)).thenReturn(VALID_USER);
 
-        //userService.createUser(VALID_USER);
-        //User user = userService.getUserByUsername(VALID_USER.getUsername()).get();
+        userServiceImpl.createUser(VALID_USER);
+        User user = userServiceImpl.getUserByUsername(VALID_USER.getUsername()).get();
 
-        //assertEquals(VALID_USER, user);
+        assertEquals(VALID_USER, user);
+        */
     }
 
     @Test
     public void givenValidUserWhenFindByNameThenReturnUser()
     {
-        // given
-        //User alex = new User(0L, "alex", "alexpass", "alexpass", "alex@g.mail");
-        //userRepository.save(VALID_USER);
+        /*
+        //given
+        User alex = new User(0L, "alex", "alexpass", "alexpass", "alex@g.mail");
+        userRepository.save(VALID_USER);
 
         // when
-        //User found = userRepository.findUserByUsername(VALID_USER.getUsername());
-        //userRepository.delete(VALID_USER);
-        //taskRepository.deleteAllByUser(VALID_USER);
+        User found = userRepository.findUserByUsername(VALID_USER.getUsername());
+        userRepository.delete(VALID_USER);
+        taskRepository.deleteAllByUser(VALID_USER);
 
         // then
-        //assertEquals(found.getUsername(), VALID_USER.getUsername());
-
+        assertEquals(found.getUsername(), VALID_USER.getUsername());
+        */
     }
 }
