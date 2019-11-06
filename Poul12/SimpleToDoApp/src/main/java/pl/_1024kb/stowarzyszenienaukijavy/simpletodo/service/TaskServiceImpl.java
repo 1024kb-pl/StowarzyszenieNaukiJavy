@@ -44,7 +44,7 @@ public class TaskServiceImpl implements TaskService
 
         try {
             taskRepo.save(task);
-            logger.info(messageInfo + " - " + task.getTitle());
+            logger.debug(messageInfo + " - " + task.getTitle());
         } catch (Exception e) {
             e.printStackTrace();
             String messageError = "The task could not be created";
@@ -93,7 +93,7 @@ public class TaskServiceImpl implements TaskService
             taskToUpdate.setDescription(task.getDescription());
             taskToUpdate.setTaskDone(task.getTaskDone());
             taskRepo.save(task);
-            logger.info(messageInfo + " - " + task.getTitle());
+            logger.debug(messageInfo + " - " + task.getTitle());
         } catch (Exception e) {
             e.printStackTrace();
             String messageError = "Task could not be updated";
@@ -107,7 +107,7 @@ public class TaskServiceImpl implements TaskService
         String messageInfo = "Task was successfully deleted";
         try {
             taskRepo.deleteById(taskId);
-            logger.info(messageInfo + " - id: " + taskId);
+            logger.debug(messageInfo + " - id: " + taskId);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,7 +123,7 @@ public class TaskServiceImpl implements TaskService
 
         try {
             taskRepo.deleteAllByUser(user);
-            logger.info("Usunięto wszystkie zadania użytkownika {}", username);
+            logger.debug("Usunięto wszystkie zadania użytkownika {}", username);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("Nie udało się usunąć wszystkich zadań użytkownika {}", username);

@@ -26,11 +26,6 @@ public class UserServiceImpl implements UserService
     private PasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserServiceImpl()
-    {
-
-    }
-
     @Autowired
     public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepo, TaskRepository taskRepo, UserRoleRepository userRoleRepo)
     {
@@ -65,7 +60,7 @@ public class UserServiceImpl implements UserService
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepo.save(user);
             userRoleRepo.delete(userRole);
-            logger.info(messageInfo + " - " + user.getUsername());
+            logger.debug(messageInfo + " - " + user.getUsername());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,7 +83,7 @@ public class UserServiceImpl implements UserService
                 userToUpdate.setPassword(user.getPassword());
                 userToUpdate.setEmail(user.getEmail());
                 userRepo.save(userToUpdate);
-                logger.info(message);
+                logger.debug(message);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -105,7 +100,7 @@ public class UserServiceImpl implements UserService
         try {
             userRepo.deleteById(userId);
             taskRepo.deleteAllByUser(user);
-            logger.info(message);
+            logger.debug(message);
         } catch (Exception e) {
             e.printStackTrace();
             message = "The user could not be deleted";

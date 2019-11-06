@@ -2,9 +2,7 @@ package pl._1024kb.stowarzyszenienaukijavy.simpletodo.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl._1024kb.stowarzyszenienaukijavy.simpletodo.repository.MailDataRepository;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -14,14 +12,6 @@ import java.util.Properties;
 @Component
 public class MailSender
 {
-    private MailDataRepository mailRepository;
-
-    @Autowired
-    public MailSender(MailDataRepository mailRepository)
-    {
-        this.mailRepository = mailRepository;
-    }
-
     public final static String MESSAGE = "Success";
     private static final Logger logger = LoggerFactory.getLogger(MailSender.class);
 
@@ -34,9 +24,8 @@ public class MailSender
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.ssl.trust", "t.pl");
 
-        String addressName = "simpletodo@pocz.pl";//mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getAddressName();
-        //String password = mailRepository.findById(1L).orElseThrow(NotFoundDesiredDataRuntimeException::newRunTimeException).getPassword();
-        logger.info("Pass from env tomcat: {}", System.getenv("PASS_FOR_EMAIL_SIMPLE_TODO"));
+        String addressName = "simpletodo@pocz.pl";
+        logger.debug("Pass from env tomcat: {}", System.getenv("PASS_FOR_EMAIL_SIMPLE_TODO"));
         String password = System.getenv("PASS_FOR_EMAIL_SIMPLE_TODO");
 
         Session session = Session.getInstance(properties,

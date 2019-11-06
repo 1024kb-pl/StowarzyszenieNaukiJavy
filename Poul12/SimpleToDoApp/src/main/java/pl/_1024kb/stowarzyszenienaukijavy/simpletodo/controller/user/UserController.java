@@ -97,10 +97,10 @@ public class UserController
         if(userDetails != null)
         {
             session.setAttribute("username", userDetails.getUsername());
-            logger.info("Zalogowano pomyślnie użytkownika {}", userDetails.getUsername());
+            logger.debug("Zalogowano pomyślnie użytkownika {}", userDetails.getUsername());
         }else
         {
-            logger.error("Logowanie na użytkownika {} nie udało się", username);
+            logger.debug("Logowanie na użytkownika {} nie udało się", username);
         }
 
         return "index";
@@ -115,10 +115,10 @@ public class UserController
         {
             session.invalidate();
             message = "Logout successfully";
-            logger.info("Pomyślnie wylogowano użytkownika {}", username);
+            logger.debug("Pomyślnie wylogowano użytkownika {}", username);
         }
         else {
-            logger.error("Błąd podczas wylogowywania się uzytkownika {}", username);
+            logger.debug("Błąd podczas wylogowywania się uzytkownika {}", username);
         }
 
         model.addAttribute("message", message);
