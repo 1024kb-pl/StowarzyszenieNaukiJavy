@@ -1,0 +1,50 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL">
+<head>
+    <title>Create new task</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="../static/styles.css" th:href="@{/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav th:include="menu :: _menu" class="navbar navbar-inverse"></nav>
+
+<div class="container">'
+
+    <div class="row">
+
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+
+            <form th:action="@{/addTask}" method="post" th:object="${task}">
+                <h2>Add new task</h2>
+                <div class="form-group">
+                    <label for="InputTitle">Title</label>
+                    <input type="text" class="form-control" id="InputTitle" placeholder="Enter title" th:field="*{title}" required>
+                    <p class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                </div>
+                <div class="form-group">
+                    <label for="InputDate">Date</label>
+                    <input type="date" class="form-control" id="InputDate" th:field="*{date}" />
+                    <p class="alert alert-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">
+                </div>
+                <div class="form-group">
+                    <label for="InputDescription">Description</label>
+                    <textarea class="form-control" rows="5" id="InputDescription" th:field="*{description}" wrap="hard"
+                              maxlength="150" placeholder="Description task... (max 150 signs)"></textarea>
+                    <p class="alert alert-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                </div>
+                <input type="hidden" th:field="*{taskDone}">
+                <button type="submit" class="btn btn-block btn-primary">Add</button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<footer th:include="footer :: _footer" class="footer"></footer>
+
+</body>
+</html>

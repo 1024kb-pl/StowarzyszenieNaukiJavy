@@ -1,0 +1,29 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL">
+<head>
+    <title>Message</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="../static/styles.css" th:href="@{/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav th:include="menu :: _menu" class="navbar navbar-inverse"></nav>
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-sm-6 col-md-4 col-md-offset-4 text-info">
+            <h3 th:text="${message}"></h3>
+        </div>
+
+    </div>
+
+</div>
+
+<footer th:include="footer :: _footer" class="footer"></footer>
+
+</body>
+</html>

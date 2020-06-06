@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL">
+
+<nav th:fragment="_menu" >
+
+    <div class="container">
+
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="glyphicon glyphicon-list"></span>
+            </button>
+            <a class="navbar-brand" th:href="@{/}">SimpleTodoApp</a>
+
+        </div>
+
+        <div class="collapse navbar-collapse" id="myNavbar">
+
+            <ul class="nav navbar-nav">
+                <li class="active"><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/addTask}">Create task</a></li>
+                <li><a th:href="@{/tasks}">Display task</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <div class="nav navbar-nav navbar-right" th:if="${session.username == null}">
+                    <li><a th:href="@{/register}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a th:href="@{/login}"><span class="glyphicon glyphicon-log-in"></span> Sign In</a></li>
+                </div>
+                <div class="nav navbar-nav navbar-right" th:if="${session.username != null}">
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user" ></span> <th:block th:text="${session.username}"/>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/editUser}">Edit Account</a></li>
+                            <li><a th:href="@{/deleteUser}">Delete Account</a></li>
+                        </ul>
+                    </li>
+                    <li><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                </div>
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+</html>

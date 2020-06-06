@@ -1,0 +1,104 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="pl-PL">
+<head>
+    <title>Task list</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="../static/styles.css" th:href="@{/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav th:include="menu :: _menu" class="navbar navbar-inverse"></nav>
+
+<div class="row">
+
+    <div class="col-md-4 col-md-offset-3">
+
+        <div class="form-group">
+            <form class="form-inline" th:action="@{/tasks}" method="post">
+                <label for="filters">Filters </label>
+                <select class="form-control" id="filters" name="filter" value="default">
+                    <option></option>
+                    <option value="true">Checked</option>
+                    <option value="false">Unchecked</option>
+                    <option value="date">Date</option>
+                </select>
+                <input type="date" name="dateFilter" />
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="form-group">
+            <form class="form-inline" th:action="@{/tasks}" method="post">
+                <label for="sort">Sort </label>
+                <select class="form-control" id="sort" name="sort" value="default">
+                    <option></option>
+                    <option value="title">Title</option>
+                    <option value="date">Date</option>
+                    <option value="status">Checked</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Sort</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container">
+
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Done</th>
+            <th scope="col">Operation</th>
+        </tr>
+        </thead>
+
+        <div th:if="not ${tasksList.isEmpty()}">
+            <tbody th:each="task, idx:${tasksList}" th:object="${task}">
+            <tr>
+                <th scope="row" th:text="${idx.index+1}"></th>
+                <td th:text="*{title}"></td>
+                <td th:text="*{date}"></td>
+                <td th:text="*{description}"></td>
+                <td>
+
+                    <div th:if="*{taskDone == true}">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </div>
+                    <div th:if="*{taskDone == false}">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </div>
+
+                </td>
+                <td>
+                    <a th:href="@{/editTask(id=*{id},title=*{title},date=*{date},description=*{description},taskDone=*{taskDone})}">
+                        <button type="button" class="btn btn-primary">Edit</button>
+                    </a>
+                    <a th:href="@{/deleteTask(id=*{id})}">
+                        <button type="button" class="btn btn-primary">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+
+        </div>
+
+    </table>
+
+</div>
+
+<footer th:include="footer :: _footer" class="footer"></footer>
+
+</body>
+</html>
